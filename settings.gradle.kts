@@ -1,4 +1,5 @@
 rootProject.name = "GameVerse"
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -29,3 +30,4 @@ dependencyResolutionManagement {
 }
 
 include(":shared")
+include(":androidApp")
