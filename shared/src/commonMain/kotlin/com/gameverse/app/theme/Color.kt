@@ -1,0 +1,23 @@
+package com.gameverse.app.theme
+
+import androidx.compose.ui.graphics.Color
+
+val Primary = Color(0xFF7C4DFF)        
+val OnPrimary = Color(0xFFFFFFFF)
+val PrimaryContainer = Color(0xFFBCB1FF) 
+val OnPrimaryContainer = Color(0xFF000000)
+val Secondary = Color(0xFF9060C7)      
+val OnSecondary = Color(0xFFFFFFFF)
+val SecondaryContainer = Color(0xFF2D2644)
+val OnSecondaryContainer = Color(0xFFEADDFF)
+val Tertiary = Color(0xFFC05179)       
+val OnTertiary = Color(0xFFFFFFFF)
+val TertiaryContainer = Color(0xFF4D1A2F)
+val OnTertiaryContainer = Color(0xFFFFD9E2)
+val Background = Color(0xFF130E20)
+val OnBackground = Color(0xFFE6E1E5)
+val Surface = Color(0xFF1E182E)
+val OnSurface = Color(0xFFFDFBFF)
+val SurfaceVariant = Color(0xFF2B233C)
+val OnSurfaceVariant = Color(0xFFCAC4D0)
+val Outline = Color(0xFF382F4D)
