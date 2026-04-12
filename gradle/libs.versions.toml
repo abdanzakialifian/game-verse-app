@@ -8,6 +8,7 @@ androidx-lifecycle = "2.10.0"
 composeMultiplatform = "1.10.3"
 kotlin = "2.3.20"
 material3 = "1.10.0-alpha05"
+sonarqube = "5.1.0.4882"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
@@ -27,3 +28,4 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
