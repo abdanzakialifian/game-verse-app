@@ -1,6 +1,9 @@
 package com.gameverse.app
 
 import androidx.compose.ui.window.ComposeUIViewController
+import com.gameverse.app.data.config.defaultConfig
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.darwin.Darwin
 import platform.Foundation.NSLog
 import platform.UIKit.UIDevice
 
@@ -26,6 +29,12 @@ actual object PlatformLogger {
 
     actual fun i(tag: String, message: String) {
         NSLog("INFO: [$tag] $message")
+    }
+}
+
+actual class HttpClientFactory {
+    actual fun create(): HttpClient = HttpClient(Darwin) {
+        defaultConfig()
     }
 }
 

@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.sonarqube)
     alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.koin.compiler)
 }
 
 kotlin {
@@ -25,8 +26,13 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
+        androidMain.dependencies {
+            implementation(libs.ktor.client.okhttp)
+            implementation(libs.kotlinx.coroutines.android)
+        }
+
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -39,8 +45,28 @@ kotlin {
             implementation(libs.jetbrains.navigation3.ui)
             implementation(libs.jetbrains.material3.adaptiveNavigation3)
             implementation(libs.jetbrains.lifecycle.viewmodelNavigation3)
-            implementation(libs.kotlinx.serialization.json)
+            implementation(project.dependencies.platform(libs.ktor.bom))
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.contentNegotiation)
+            implementation(libs.ktor.client.resources)
+            implementation(libs.ktor.client.logging)
+            implementation(project.dependencies.platform(libs.koin.bom))
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.koin.compose.navigation)
+            implementation(libs.koin.annotations)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.napier)
         }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
+        }
+    }
+
+    koinCompiler {
+        userLogs = true
     }
 }
 
