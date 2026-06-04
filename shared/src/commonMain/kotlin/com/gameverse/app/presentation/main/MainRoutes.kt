@@ -9,7 +9,7 @@ sealed interface MainRoutes : NavKey {
     data object Home : MainRoutes
 
     @Serializable
-    data object Search : MainRoutes
+    data object Catalogue : MainRoutes
 
     @Serializable
     data object Favorite : MainRoutes

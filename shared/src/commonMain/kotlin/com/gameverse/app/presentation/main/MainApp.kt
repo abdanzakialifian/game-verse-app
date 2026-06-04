@@ -31,10 +31,10 @@ import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.gameverse.app.presentation.catalogue.CatalogueScreen
 import com.gameverse.app.presentation.favorite.FavoriteScreen
 import com.gameverse.app.presentation.home.HomeScreen
 import com.gameverse.app.presentation.profile.ProfileScreen
-import com.gameverse.app.presentation.search.SearchScreen
 import com.gameverse.app.theme.GameVerseColor
 import com.gameverse.app.theme.GameVerseTheme
 import com.gameverse.app.theme.GameVerseTypography
@@ -51,7 +51,7 @@ fun MainApp() {
             serializersModule = SerializersModule {
                 polymorphic(NavKey::class) {
                     subclass(MainRoutes.Home::class, MainRoutes.Home.serializer())
-                    subclass(MainRoutes.Search::class, MainRoutes.Search.serializer())
+                    subclass(MainRoutes.Catalogue::class, MainRoutes.Catalogue.serializer())
                     subclass(MainRoutes.Favorite::class, MainRoutes.Favorite.serializer())
                     subclass(MainRoutes.Profile::class, MainRoutes.Profile.serializer())
                 }
@@ -108,8 +108,8 @@ fun MainApp() {
                     HomeScreen()
                 }
 
-                entry<MainRoutes.Search> {
-                    SearchScreen()
+                entry<MainRoutes.Catalogue> {
+                    CatalogueScreen()
                 }
 
                 entry<MainRoutes.Favorite> {

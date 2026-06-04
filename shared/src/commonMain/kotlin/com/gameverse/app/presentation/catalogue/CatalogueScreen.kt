@@ -1,23 +1,23 @@
-package com.gameverse.app.presentation.search
+package com.gameverse.app.presentation.catalogue
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.gameverse.app.theme.GameVerseTheme
 
 @Composable
-fun SearchScreen() {
-    SearchContent()
+fun CatalogueScreen() {
+    CatalogueContent()
 }
 
 @Composable
-private fun SearchContent() {
+private fun CatalogueContent() {
 
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SearchContentPreview() {
+private fun CatalogueContentPreview() {
     GameVerseTheme {
-        SearchContent()
+        CatalogueContent()
     }
 }
