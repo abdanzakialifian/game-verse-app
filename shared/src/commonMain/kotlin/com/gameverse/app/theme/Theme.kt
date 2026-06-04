@@ -47,7 +47,6 @@ private val AppColorScheme = darkColorScheme(
 
 @Composable
 fun GameVerseTheme(content: @Composable () -> Unit) {
-
     MaterialTheme(
         colorScheme = AppColorScheme,
         typography = getAppTypography(),

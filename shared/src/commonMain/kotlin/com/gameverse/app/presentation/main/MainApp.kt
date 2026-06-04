@@ -38,8 +38,6 @@ import com.gameverse.app.presentation.search.SearchScreen
 import com.gameverse.app.theme.GameVerseColor
 import com.gameverse.app.theme.GameVerseTheme
 import com.gameverse.app.theme.GameVerseTypography
-import com.gameverse.app.theme.Lavender
-import com.gameverse.app.theme.SoftViolet
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.painterResource
@@ -77,7 +75,6 @@ fun MainApp() {
                                 Icon(
                                     painter = painterResource(destination.icon),
                                     contentDescription = destination.contentDescription,
-                                    tint = if (selectedDestination == index) SoftViolet else Lavender
                                 )
 
                                 Spacer(modifier = Modifier.height(4.dp))
@@ -85,7 +82,6 @@ fun MainApp() {
                                 Text(
                                     text = destination.label,
                                     style = GameVerseTypography.labelSmall,
-                                    color = if (selectedDestination == index) SoftViolet else Lavender
                                 )
                             }
                         },
