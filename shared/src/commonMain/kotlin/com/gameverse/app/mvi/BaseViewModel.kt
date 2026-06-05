@@ -1,16 +1,11 @@
 package com.gameverse.app.mvi
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
-import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * BaseViewModel implements the core MVI flow using Intent–Event–State separation.
@@ -88,34 +83,4 @@ abstract class BaseViewModel<State : Reducer.ViewState, Event : Reducer.ViewEven
      * - emit ViewEffect for one-time actions
      */
     abstract fun sendIntent(intent: Intent)
-
-    /**
-     * Launches a coroutine with loading and error handling.
-     *
-     * If the error is already handled (e.g. 401/403), execution is stopped and [onError] is not called.
-     *
-     * @param dispatcher Coroutine dispatcher.
-     * @param onLoading Loading state callback.
-     * @param onError Callback for unhandled exceptions.
-     * @param body Suspend block to execute.
-     */
-    protected fun CoroutineScope.launchCatching(
-        dispatcher: CoroutineDispatcher,
-        onLoading: suspend (isLoading: Boolean) -> Unit = {},
-        onError: suspend (Exception) -> Unit = {},
-        body: suspend CoroutineScope.() -> Unit,
-    ): Job {
-        return launch(dispatcher) {
-            onLoading(true)
-            try {
-                body()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: Exception) {
-                onError(e)
-            } finally {
-                onLoading(false)
-            }
-        }
-    }
 }
