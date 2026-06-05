@@ -58,6 +58,8 @@ kotlin {
             implementation(libs.koin.annotations)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.napier)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
         }
 
         iosMain.dependencies {
