@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.gameverse.app.component.GVSearch
+import com.gameverse.app.data.response.GamesResponse
 import com.gameverse.app.theme.GameVerseTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -21,7 +23,7 @@ fun HomeScreen(
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getGames()
+        viewModel.sendIntent(HomeReducer.Intent.OnGetGames)
     }
 
     HomeContent(
@@ -46,6 +48,18 @@ private fun HomeContent(
             onValueChange = { value ->
                 onIntent(HomeReducer.Intent.OnSearchValueChanged(value))
             }
+        )
+
+        GameItem(uiState.gamesData)
+    }
+}
+
+@Composable
+private fun GameItem(data: GamesResponse?) {
+    data?.results?.forEach {
+        AsyncImage(
+            model = it.backgroundImage,
+            contentDescription = null
         )
     }
 }

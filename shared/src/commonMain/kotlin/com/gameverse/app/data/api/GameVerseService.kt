@@ -9,7 +9,10 @@ import org.koin.core.annotation.Singleton
 
 @Singleton
 class GameVerseService(private val client: HttpClient) {
-    suspend fun getGames(): GamesResponse {
-        return client.get(Games()).body<GamesResponse>()
+    suspend fun getGames(
+        page: Int? = null,
+        pageSize: Int? = null,
+    ): GamesResponse {
+        return client.get(Games(page = page, pageSize = pageSize)).body<GamesResponse>()
     }
 }

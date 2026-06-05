@@ -18,12 +18,22 @@ class HomeViewModel(
             is HomeReducer.Intent.OnSearchValueChanged -> sendEvent(
                 HomeReducer.Event.SearchValueChanged(intent.value)
             )
+
+            HomeReducer.Intent.OnGetGames -> getGames()
         }
     }
 
-    fun getGames() {
+    private fun getGames() {
         viewModelScope.launch {
-            repository.getGames()
+            sendEvent(HomeReducer.Event.GetGamesLoading(true))
+            try {
+                val response = repository.getGames()
+                sendEvent(HomeReducer.Event.GetGamesData(response))
+            } catch (e: Exception) {
+                sendEvent(HomeReducer.Event.GetGamesError(e))
+            } finally {
+                sendEvent(HomeReducer.Event.GetGamesLoading(false))
+            }
         }
     }
 }
