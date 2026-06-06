@@ -93,7 +93,7 @@ private fun Games(
         items(items.orEmpty(), key = { it.id ?: 0 }) { result ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = GVShapes.large,
+                shape = GVShapes.medium,
                 colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
             ) {
                 Column {
@@ -109,7 +109,7 @@ private fun Games(
 
                     Platforms(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        platforms = result.platforms.orEmpty()
+                        platforms = result.parentPlatforms.orEmpty()
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -138,7 +138,7 @@ private fun Games(
 @Composable
 private fun Platforms(
     modifier: Modifier = Modifier,
-    platforms: List<GamesResponse.ResultsItem.PlatformsItem>
+    platforms: List<GamesResponse.ResultsItem.ParentPlatformsItem>
 ) {
     Row(
         modifier = modifier,
@@ -169,45 +169,50 @@ private fun HomeContentPreview() {
                             id = it,
                             backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
                             name = "Grand Theft Auto V",
-                            platforms = listOf(
-                                GamesResponse.ResultsItem.PlatformsItem(
+                            parentPlatforms = listOf(
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(
-                                        id = 21
+                                        id = 1
                                     )
                                 ),
-                                GamesResponse.ResultsItem.PlatformsItem(
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(
-                                        id = 80
+                                        id = 2
                                     )
                                 ),
-                                GamesResponse.ResultsItem.PlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 19
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.PlatformsItem(
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(
                                         id = 3
                                     )
                                 ),
-                                GamesResponse.ResultsItem.PlatformsItem(
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(
                                         id = 4
                                     )
                                 ),
-                                GamesResponse.ResultsItem.PlatformsItem(
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
+                                    platform = GamesResponse.ResultsItem.Platform(
+                                        id = 5
+                                    )
+                                ),
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(
                                         id = 6
                                     )
                                 ),
-                                GamesResponse.ResultsItem.PlatformsItem(
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(
-                                        id = 18
+                                        id = 7
                                     )
                                 ),
-                                GamesResponse.ResultsItem.PlatformsItem(
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(
-                                        id = 100
+                                        id = 8
+                                    )
+                                ),
+                                GamesResponse.ResultsItem.ParentPlatformsItem(
+                                    platform = GamesResponse.ResultsItem.Platform(
+                                        id = 9
                                     )
                                 )
                             )
