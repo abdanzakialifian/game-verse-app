@@ -1,5 +1,10 @@
 package com.gameverse.app.presentation.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -19,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gameverse.app.common.Platform
+import com.gameverse.app.common.formatDate
 import com.gameverse.app.component.GVSearch
 import com.gameverse.app.data.response.GamesResponse
 import com.gameverse.app.theme.GVColor
@@ -41,6 +49,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.collections.map
 import kotlin.collections.orEmpty
+import kotlin.text.orEmpty
 
 @Composable
 fun HomeScreen(
@@ -76,14 +85,22 @@ private fun HomeContent(
             }
         )
 
-        Games(items = uiState.gamesData?.results)
+        Games(
+            items = uiState.gamesData?.results,
+            isExpanded = uiState.isExpanded,
+            onExpand = {
+                onIntent(HomeReducer.Intent.OnExpanded(!uiState.isExpanded))
+            }
+        )
     }
 }
 
 @Composable
 private fun Games(
     modifier: Modifier = Modifier,
-    items: List<GamesResponse.ResultsItem>?
+    items: List<GamesResponse.ResultsItem>?,
+    isExpanded: Boolean,
+    onExpand: () -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -120,11 +137,23 @@ private fun Games(
                         style = GVTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
                     )
 
+                    MoreInformation(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        result = result,
+                        isExpanded = isExpanded,
+                    )
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     Text(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        text = "View More",
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = onExpand
+                            ),
+                        text = if (isExpanded) "View less" else "View more",
                         style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
                     )
 
@@ -157,6 +186,60 @@ private fun Platforms(
     }
 }
 
+@Composable
+private fun MoreInformation(
+    modifier: Modifier = Modifier,
+    result: GamesResponse.ResultsItem,
+    isExpanded: Boolean,
+) {
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = isExpanded,
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        Column {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Release date:",
+                    style = GVTypography.labelSmall
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = result.released.orEmpty().formatDate(),
+                    style = GVTypography.labelSmall
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Genres:",
+                    style = GVTypography.labelSmall
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = result.genres?.joinToString(", ") { it.name.orEmpty() }.orEmpty(),
+                    style = GVTypography.labelSmall
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun HomeContentPreview() {
@@ -169,6 +252,18 @@ private fun HomeContentPreview() {
                             id = it,
                             backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
                             name = "Grand Theft Auto V",
+                            released = "2013-09-17",
+                            genres = listOf(
+                                GamesResponse.ResultsItem.GenresItem(
+                                    name = "Action"
+                                ),
+                                GamesResponse.ResultsItem.GenresItem(
+                                    name = "RPG"
+                                ),
+                                GamesResponse.ResultsItem.GenresItem(
+                                    name = "Shooter"
+                                ),
+                            ),
                             parentPlatforms = listOf(
                                 GamesResponse.ResultsItem.ParentPlatformsItem(
                                     platform = GamesResponse.ResultsItem.Platform(

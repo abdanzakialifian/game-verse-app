@@ -9,6 +9,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     sealed interface Intent : Reducer.ViewIntent {
         data class OnSearchValueChanged(val value: String) : Intent
         data object OnGetGames : Intent
+        data class OnExpanded(val isExpanded: Boolean) : Intent
     }
 
     @Immutable
@@ -17,6 +18,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
         data class GetGamesLoading(val isLoading: Boolean) : Event
         data class GetGamesData(val data: GamesResponse) : Event
         data class GetGamesError(val error: Throwable) : Event
+        data class Expanded(val isExpanded: Boolean) : Event
     }
 
     @Immutable
@@ -28,6 +30,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
         val isGamesLoading: Boolean = false,
         val gamesData: GamesResponse? = null,
         val gamesError: Throwable? = null,
+        val isExpanded: Boolean = false,
     ) : Reducer.ViewState
 
     override fun reduce(
@@ -39,6 +42,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
             is Event.GetGamesLoading -> state.copy(isGamesLoading = event.isLoading)
             is Event.GetGamesData -> state.copy(gamesData = event.data)
             is Event.GetGamesError -> state.copy(gamesError = event.error)
+            is Event.Expanded -> state.copy(isExpanded = event.isExpanded)
         }
     }
 }

@@ -20,6 +20,7 @@ class HomeViewModel(
             )
 
             HomeReducer.Intent.OnGetGames -> getGames()
+            is HomeReducer.Intent.OnExpanded -> sendEvent(HomeReducer.Event.Expanded(intent.isExpanded))
         }
     }
 
