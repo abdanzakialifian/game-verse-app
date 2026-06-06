@@ -40,16 +40,13 @@ import coil3.compose.AsyncImage
 import com.gameverse.app.common.Platform
 import com.gameverse.app.common.formatDate
 import com.gameverse.app.component.GVSearch
-import com.gameverse.app.data.response.GamesResponse
+import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
-import kotlin.collections.map
-import kotlin.collections.orEmpty
-import kotlin.text.orEmpty
 
 @Composable
 fun HomeScreen(
@@ -86,10 +83,9 @@ private fun HomeContent(
         )
 
         Games(
-            items = uiState.gamesData?.results,
-            isExpanded = uiState.isExpanded,
-            onExpand = {
-                onIntent(HomeReducer.Intent.OnExpanded(!uiState.isExpanded))
+            games = uiState.gamesData,
+            onExpand = { id, isExpanded ->
+                onIntent(HomeReducer.Intent.OnExpanded(id, !isExpanded))
             }
         )
     }
@@ -98,16 +94,15 @@ private fun HomeContent(
 @Composable
 private fun Games(
     modifier: Modifier = Modifier,
-    items: List<GamesResponse.ResultsItem>?,
-    isExpanded: Boolean,
-    onExpand: () -> Unit
+    games: List<GamesModel>,
+    onExpand: (id: Int, isExpanded: Boolean) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        items(items.orEmpty(), key = { it.id ?: 0 }) { result ->
+        items(games, key = { it.id }) { result ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = GVShapes.medium,
@@ -126,21 +121,22 @@ private fun Games(
 
                     Platforms(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        platforms = result.parentPlatforms.orEmpty()
+                        platforms = result.parentPlatforms
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        text = result.name.orEmpty(),
+                        text = result.name,
                         style = GVTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
                     )
 
                     MoreInformation(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        result = result,
-                        isExpanded = isExpanded,
+                        released = result.released,
+                        genres = result.genres,
+                        isExpanded = result.isExpanded,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -151,9 +147,11 @@ private fun Games(
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
-                                onClick = onExpand
+                                onClick = {
+                                    onExpand(result.id, result.isExpanded)
+                                }
                             ),
-                        text = if (isExpanded) "View less" else "View more",
+                        text = if (result.isExpanded) "View less" else "View more",
                         style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
                     )
 
@@ -167,13 +165,13 @@ private fun Games(
 @Composable
 private fun Platforms(
     modifier: Modifier = Modifier,
-    platforms: List<GamesResponse.ResultsItem.ParentPlatformsItem>
+    platforms: List<GamesModel.ParentPlatformsItem>
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        val platformIds = platforms.map { it.platform?.id ?: 0 }
+        val platformIds = platforms.map { it.id }
         val platformIcons = Platform.iconFromIds(platformIds)
         platformIcons.forEach { iconDrawable ->
             Icon(
@@ -189,7 +187,8 @@ private fun Platforms(
 @Composable
 private fun MoreInformation(
     modifier: Modifier = Modifier,
-    result: GamesResponse.ResultsItem,
+    released: String,
+    genres: List<GamesModel.GenresItem>,
     isExpanded: Boolean,
 ) {
     AnimatedVisibility(
@@ -213,7 +212,7 @@ private fun MoreInformation(
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
-                    text = result.released.orEmpty().formatDate(),
+                    text = released.formatDate(),
                     style = GVTypography.labelSmall
                 )
             }
@@ -232,7 +231,7 @@ private fun MoreInformation(
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
-                    text = result.genres?.joinToString(", ") { it.name.orEmpty() }.orEmpty(),
+                    text = genres.joinToString(", ") { it.name },
                     style = GVTypography.labelSmall
                 )
             }
@@ -246,74 +245,67 @@ private fun HomeContentPreview() {
     GVTheme {
         HomeContent(
             uiState = HomeReducer.State(
-                gamesData = GamesResponse(
-                    results = List(5) {
-                        GamesResponse.ResultsItem(
-                            id = it,
-                            backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
-                            name = "Grand Theft Auto V",
-                            released = "2013-09-17",
-                            genres = listOf(
-                                GamesResponse.ResultsItem.GenresItem(
-                                    name = "Action"
-                                ),
-                                GamesResponse.ResultsItem.GenresItem(
-                                    name = "RPG"
-                                ),
-                                GamesResponse.ResultsItem.GenresItem(
-                                    name = "Shooter"
-                                ),
+                gamesData = List(5) {
+                    GamesModel(
+                        id = it,
+                        name = "Grand Theft Auto V",
+                        backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                        released = "2013-09-17",
+                        genres = listOf(
+                            GamesModel.GenresItem(
+                                id = 1,
+                                name = "Action"
                             ),
-                            parentPlatforms = listOf(
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 1
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 2
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 3
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 4
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 5
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 6
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 7
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 8
-                                    )
-                                ),
-                                GamesResponse.ResultsItem.ParentPlatformsItem(
-                                    platform = GamesResponse.ResultsItem.Platform(
-                                        id = 9
-                                    )
-                                )
+                            GamesModel.GenresItem(
+                                id = 2,
+                                name = "RPG"
+                            ),
+                            GamesModel.GenresItem(
+                                id = 3,
+                                name = "Shooter"
+                            ),
+                        ),
+                        parentPlatforms = listOf(
+                            GamesModel.ParentPlatformsItem(
+                                id = 1,
+                                name = "Windows"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 2,
+                                name = "PlayStation"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 3,
+                                name = "Xbox"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 4,
+                                name = "Apple"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 5,
+                                name = "Apple Mac"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 6,
+                                name = "Linux"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 7,
+                                name = "Nintendo"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 8,
+                                name = "Android"
+                            ),
+                            GamesModel.ParentPlatformsItem(
+                                id = 9,
+                                name = "Others"
                             )
-                        )
-                    }
-                )
+                        ),
+                        isExpanded = false
+                    )
+                }
             ),
             onIntent = {}
         )

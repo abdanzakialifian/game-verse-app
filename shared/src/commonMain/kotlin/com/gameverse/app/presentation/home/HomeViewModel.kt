@@ -20,7 +20,12 @@ class HomeViewModel(
             )
 
             HomeReducer.Intent.OnGetGames -> getGames()
-            is HomeReducer.Intent.OnExpanded -> sendEvent(HomeReducer.Event.Expanded(intent.isExpanded))
+            is HomeReducer.Intent.OnExpanded -> sendEvent(
+                HomeReducer.Event.Expanded(
+                    id = intent.id,
+                    isExpanded = intent.isExpanded
+                )
+            )
         }
     }
 
@@ -28,8 +33,8 @@ class HomeViewModel(
         viewModelScope.launch {
             sendEvent(HomeReducer.Event.GetGamesLoading(true))
             try {
-                val response = repository.getGames()
-                sendEvent(HomeReducer.Event.GetGamesData(response))
+                val games = repository.getGames()
+                sendEvent(HomeReducer.Event.GetGamesData(games))
             } catch (e: Exception) {
                 sendEvent(HomeReducer.Event.GetGamesError(e))
             } finally {
