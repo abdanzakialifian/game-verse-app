@@ -2,7 +2,7 @@ package com.gameverse.app.presentation.profile
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.gameverse.app.theme.GameVerseTheme
+import com.gameverse.app.theme.GVTheme
 
 @Composable
 fun ProfileScreen() {
@@ -17,7 +17,7 @@ private fun ProfileContent() {
 @Preview(showBackground = true)
 @Composable
 private fun ProfileContentPreview() {
-    GameVerseTheme {
+    GVTheme {
         ProfileContent()
     }
 }

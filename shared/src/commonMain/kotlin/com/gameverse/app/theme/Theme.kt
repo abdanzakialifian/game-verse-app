@@ -8,17 +8,17 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 
-val GameVerseColor: ColorScheme
+val GVColor: ColorScheme
     @Composable
     @ReadOnlyComposable
     get() = MaterialTheme.colorScheme
 
-val GameVerseTypography: Typography
+val GVTypography: Typography
     @Composable
     @ReadOnlyComposable
     get() = MaterialTheme.typography
 
-val GameVerseShapes: Shapes
+val GVShapes: Shapes
     @Composable
     @ReadOnlyComposable
     get() = MaterialTheme.shapes
@@ -46,7 +46,7 @@ private val AppColorScheme = darkColorScheme(
 )
 
 @Composable
-fun GameVerseTheme(content: @Composable () -> Unit) {
+fun GVTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = AppColorScheme,
         typography = getAppTypography(),

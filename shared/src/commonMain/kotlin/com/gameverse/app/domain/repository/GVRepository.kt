@@ -2,6 +2,6 @@ package com.gameverse.app.domain.repository
 
 import com.gameverse.app.data.response.GamesResponse
 
-interface GameVerseRepository {
+interface GVRepository {
     suspend fun getGames(): GamesResponse
 }

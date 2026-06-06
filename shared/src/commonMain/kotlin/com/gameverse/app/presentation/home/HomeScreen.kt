@@ -33,10 +33,10 @@ import coil3.compose.AsyncImage
 import com.gameverse.app.common.Platform
 import com.gameverse.app.component.GVSearch
 import com.gameverse.app.data.response.GamesResponse
-import com.gameverse.app.theme.GameVerseColor
-import com.gameverse.app.theme.GameVerseShapes
-import com.gameverse.app.theme.GameVerseTheme
-import com.gameverse.app.theme.GameVerseTypography
+import com.gameverse.app.theme.GVColor
+import com.gameverse.app.theme.GVShapes
+import com.gameverse.app.theme.GVTheme
+import com.gameverse.app.theme.GVTypography
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.collections.map
@@ -93,8 +93,8 @@ private fun Games(
         items(items.orEmpty(), key = { it.id ?: 0 }) { result ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = GameVerseShapes.large,
-                colors = CardDefaults.cardColors(contentColor = GameVerseColor.secondary)
+                shape = GVShapes.large,
+                colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
             ) {
                 Column {
                     AsyncImage(
@@ -117,7 +117,7 @@ private fun Games(
                     Text(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         text = result.name.orEmpty(),
-                        style = GameVerseTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
+                        style = GVTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -125,7 +125,7 @@ private fun Games(
                     Text(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         text = "View More",
-                        style = GameVerseTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
+                        style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -160,7 +160,7 @@ private fun Platforms(
 @Preview(showBackground = true)
 @Composable
 private fun HomeContentPreview() {
-    GameVerseTheme {
+    GVTheme {
         HomeContent(
             uiState = HomeReducer.State(
                 gamesData = GamesResponse(

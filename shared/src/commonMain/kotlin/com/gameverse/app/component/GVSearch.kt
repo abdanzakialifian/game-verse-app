@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
-import com.gameverse.app.theme.GameVerseColor
-import com.gameverse.app.theme.GameVerseShapes
-import com.gameverse.app.theme.GameVerseTypography
+import com.gameverse.app.theme.GVColor
+import com.gameverse.app.theme.GVShapes
+import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
 import gameverse.shared.generated.resources.ic_search
 import org.jetbrains.compose.resources.painterResource
@@ -35,21 +35,21 @@ fun GVSearch(
             .fillMaxWidth()
             .height(40.dp)
             .background(
-                color = GameVerseColor.secondary,
-                shape = GameVerseShapes.large
+                color = GVColor.secondary,
+                shape = GVShapes.large
             )
             .padding(horizontal = 16.dp),
         value = value,
         onValueChange = onValueChange,
-        textStyle = GameVerseTypography.labelLarge.copy(color = GameVerseColor.onSurfaceVariant),
+        textStyle = GVTypography.labelLarge.copy(color = GVColor.onSurfaceVariant),
         singleLine = true,
-        cursorBrush = SolidColor(GameVerseColor.onSurfaceVariant),
+        cursorBrush = SolidColor(GVColor.onSurfaceVariant),
         decorationBox = { innerTextField ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     modifier = Modifier.size(20.dp),
                     painter = painterResource(Res.drawable.ic_search),
-                    tint = GameVerseColor.onSurfaceVariant,
+                    tint = GVColor.onSurfaceVariant,
                     contentDescription = null,
                 )
 
@@ -59,8 +59,8 @@ fun GVSearch(
                     if (value.isBlank()) {
                         Text(
                             text = hint,
-                            color = GameVerseColor.outline,
-                            style = GameVerseTypography.labelLarge
+                            color = GVColor.outline,
+                            style = GVTypography.labelLarge
                         )
                     }
                     innerTextField()

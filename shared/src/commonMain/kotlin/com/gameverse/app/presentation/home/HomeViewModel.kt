@@ -1,14 +1,14 @@
 package com.gameverse.app.presentation.home
 
 import androidx.lifecycle.viewModelScope
-import com.gameverse.app.domain.repository.GameVerseRepository
+import com.gameverse.app.domain.repository.GVRepository
 import com.gameverse.app.mvi.BaseViewModel
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class HomeViewModel(
-    private val repository: GameVerseRepository
+    private val repository: GVRepository
 ) : BaseViewModel<HomeReducer.State, HomeReducer.Event, HomeReducer.Effect, HomeReducer.Intent>(
     initialState = HomeReducer.State(),
     reducer = HomeReducer()

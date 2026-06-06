@@ -2,7 +2,7 @@ package com.gameverse.app.presentation.favorite
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.gameverse.app.theme.GameVerseTheme
+import com.gameverse.app.theme.GVTheme
 
 @Composable
 fun FavoriteScreen() {
@@ -17,7 +17,7 @@ private fun FavoriteContent() {
 @Preview(showBackground = true)
 @Composable
 private fun FavoriteContentPreview() {
-    GameVerseTheme {
+    GVTheme {
         FavoriteContent()
     }
 }

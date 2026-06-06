@@ -35,9 +35,9 @@ import com.gameverse.app.presentation.catalogue.CatalogueScreen
 import com.gameverse.app.presentation.favorite.FavoriteScreen
 import com.gameverse.app.presentation.home.HomeScreen
 import com.gameverse.app.presentation.profile.ProfileScreen
-import com.gameverse.app.theme.GameVerseColor
-import com.gameverse.app.theme.GameVerseTheme
-import com.gameverse.app.theme.GameVerseTypography
+import com.gameverse.app.theme.GVColor
+import com.gameverse.app.theme.GVTheme
+import com.gameverse.app.theme.GVTypography
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.painterResource
@@ -65,7 +65,7 @@ fun MainApp() {
     Scaffold(
         bottomBar = {
             NavigationBar(
-                containerColor = GameVerseColor.background
+                containerColor = GVColor.background
             ) {
                 NavBarDestination.entries.forEachIndexed { index, destination ->
                     NavigationBarItem(
@@ -81,7 +81,7 @@ fun MainApp() {
 
                                 Text(
                                     text = destination.label,
-                                    style = GameVerseTypography.labelSmall,
+                                    style = GVTypography.labelSmall,
                                 )
                             }
                         },
@@ -146,7 +146,7 @@ private fun ProvideNavigationEventDispatcher(
 @Preview(showBackground = true)
 @Composable
 private fun MainAppPreview() {
-    GameVerseTheme {
+    GVTheme {
         ProvideNavigationEventDispatcher {
             MainApp()
         }

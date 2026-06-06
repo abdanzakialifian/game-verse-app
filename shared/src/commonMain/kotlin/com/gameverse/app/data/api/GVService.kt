@@ -8,7 +8,7 @@ import io.ktor.client.plugins.resources.get
 import org.koin.core.annotation.Singleton
 
 @Singleton
-class GameVerseService(private val client: HttpClient) {
+class GVService(private val client: HttpClient) {
     suspend fun getGames(
         page: Int? = null,
         pageSize: Int? = null,
