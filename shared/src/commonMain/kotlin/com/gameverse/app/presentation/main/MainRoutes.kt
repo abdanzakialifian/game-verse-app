@@ -16,4 +16,7 @@ sealed interface MainRoutes : NavKey {
 
     @Serializable
     data object Profile : MainRoutes
+
+    @Serializable
+    data object GameList : MainRoutes
 }

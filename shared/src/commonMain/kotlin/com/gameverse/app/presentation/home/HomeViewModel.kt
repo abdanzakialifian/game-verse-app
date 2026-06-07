@@ -26,6 +26,8 @@ class HomeViewModel(
                     isExpanded = intent.isExpanded
                 )
             )
+
+            HomeReducer.Intent.OnNavigateToGameList -> sendEffect(HomeReducer.Effect.NavigateToGameList)
         }
     }
 

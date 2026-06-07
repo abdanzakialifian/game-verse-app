@@ -33,6 +33,7 @@ import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.gameverse.app.presentation.catalogue.CatalogueScreen
 import com.gameverse.app.presentation.favorite.FavoriteScreen
+import com.gameverse.app.presentation.games.GameListScreen
 import com.gameverse.app.presentation.home.HomeScreen
 import com.gameverse.app.presentation.profile.ProfileScreen
 import com.gameverse.app.theme.GVColor
@@ -105,7 +106,11 @@ fun MainApp() {
             ),
             entryProvider = entryProvider {
                 entry<MainRoutes.Home> {
-                    HomeScreen()
+                    HomeScreen(
+                        onNavigateToGameList = {
+                            backStack.add(MainRoutes.GameList)
+                        }
+                    )
                 }
 
                 entry<MainRoutes.Catalogue> {
@@ -118,6 +123,10 @@ fun MainApp() {
 
                 entry<MainRoutes.Profile> {
                     ProfileScreen()
+                }
+                
+                entry<MainRoutes.GameList> {
+                    GameListScreen()
                 }
             }
         )
