@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -235,6 +237,20 @@ private fun MoreInformation(
                     style = GVTypography.labelSmall
                 )
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                shape = GVShapes.small,
+                colors = ButtonDefaults.buttonColors(containerColor = GVColor.outline),
+                onClick = {}
+            ) {
+                Text(
+                    text = "Show more like this",
+                    style = GVTypography.labelSmall
+                )
+            }
         }
     }
 }
@@ -303,7 +319,7 @@ private fun HomeContentPreview() {
                                 name = "Others"
                             )
                         ),
-                        isExpanded = false
+                        isExpanded = true
                     )
                 }
             ),
