@@ -6,6 +6,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -41,6 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.gameverse.app.common.Platform
 import com.gameverse.app.common.formatDate
+import com.gameverse.app.common.shimmer
 import com.gameverse.app.component.GVSearch
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.theme.GVColor
@@ -102,12 +105,16 @@ private fun HomeContent(
             )
         }
 
-        Games(
-            games = uiState.gamesData,
-            onExpand = { id, isExpanded ->
-                onIntent(HomeReducer.Intent.OnExpanded(id, !isExpanded))
-            }
-        )
+        if (uiState.isGamesLoading) {
+            GamesPlaceholder()
+        } else {
+            Games(
+                games = uiState.gamesData,
+                onExpand = { id, isExpanded ->
+                    onIntent(HomeReducer.Intent.OnExpanded(id, !isExpanded))
+                }
+            )
+        }
     }
 }
 
@@ -132,6 +139,7 @@ private fun Games(
                     AsyncImage(
                         modifier = Modifier.fillMaxWidth().height(200.dp),
                         model = result.backgroundImage,
+                        placeholder = ColorPainter(GVColor.outline),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                         filterQuality = FilterQuality.Medium,
@@ -173,6 +181,64 @@ private fun Games(
                             ),
                         text = if (result.isExpanded) "View less" else "View more",
                         style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GamesPlaceholder(modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+        items(10) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = GVShapes.medium,
+                colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
+            ) {
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .shimmer()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .width(200.dp)
+                            .height(24.dp)
+                            .shimmer(12.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .width(150.dp)
+                            .height(24.dp)
+                            .shimmer(12.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .width(80.dp)
+                            .height(16.dp)
+                            .shimmer(12.dp)
+                            .align(Alignment.CenterHorizontally)
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -343,5 +409,13 @@ private fun HomeContentPreview() {
             ),
             onIntent = {}
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GamesPlaceholderPreview() {
+    GVTheme {
+        GamesPlaceholder()
     }
 }
