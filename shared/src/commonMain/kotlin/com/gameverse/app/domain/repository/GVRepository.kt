@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GVRepository {
     suspend fun getGames(): List<GamesModel>
-    fun getGamesPaging(): Flow<PagingData<GamesModel>>
+    val getGamesPaging: Flow<PagingData<GamesModel>>
 }

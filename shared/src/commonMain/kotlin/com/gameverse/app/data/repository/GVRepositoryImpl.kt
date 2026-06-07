@@ -26,7 +26,7 @@ class GVRepositoryImpl(
         apiService.getGames().toDomain()
     }
 
-    override fun getGamesPaging(): Flow<PagingData<GamesModel>> = Pager(
+    override val getGamesPaging: Flow<PagingData<GamesModel>> = Pager(
         config = PagingConfig(
             pageSize = Constants.PAGE_SIZE,
             enablePlaceholders = true,
