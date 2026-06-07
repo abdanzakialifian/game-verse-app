@@ -84,6 +84,24 @@ private fun HomeContent(
             }
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "For you",
+                style = GVTypography.titleMedium.copy(fontWeight = FontWeight.Bold)
+            )
+
+            Text(
+                text = "See all",
+                style = GVTypography.labelSmall
+            )
+        }
+
         Games(
             games = uiState.gamesData,
             onExpand = { id, isExpanded ->
@@ -112,9 +130,9 @@ private fun Games(
             ) {
                 Column {
                     AsyncImage(
-                        modifier = Modifier.fillMaxWidth().height(130.dp),
+                        modifier = Modifier.fillMaxWidth().height(200.dp),
                         model = result.backgroundImage,
-                        contentScale = ContentScale.FillWidth,
+                        contentScale = ContentScale.Crop,
                         contentDescription = null,
                         filterQuality = FilterQuality.Medium,
                     )
