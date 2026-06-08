@@ -1,6 +1,8 @@
 package com.gameverse.app.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,14 +15,18 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
+import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.ic_close
 import gameverse.shared.generated.resources.ic_search
 import org.jetbrains.compose.resources.painterResource
 
@@ -28,6 +34,7 @@ import org.jetbrains.compose.resources.painterResource
 fun GVSearch(
     hint: String,
     value: String,
+    onClear: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
     BasicTextField(
@@ -55,7 +62,7 @@ fun GVSearch(
 
                 Spacer(modifier = Modifier.width(6.dp))
 
-                Box {
+                Box(modifier = Modifier.weight(1f)) {
                     if (value.isBlank()) {
                         Text(
                             text = hint,
@@ -65,7 +72,37 @@ fun GVSearch(
                     }
                     innerTextField()
                 }
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                if (value.isNotBlank()) {
+                    Icon(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = onClear
+                            ),
+                        painter = painterResource(Res.drawable.ic_close),
+                        tint = GVColor.onSurfaceVariant,
+                        contentDescription = null,
+                    )
+                }
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GVSearchPreview() {
+    GVTheme {
+        GVSearch(
+            hint = "Search games...",
+            value = "test",
+            onClear = {},
+            onValueChange = {}
+        )
+    }
 }
