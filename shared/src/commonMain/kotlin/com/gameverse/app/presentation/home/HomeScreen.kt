@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,7 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
-import com.gameverse.app.component.GVSearch
+import com.gameverse.app.common.Greeting
+import com.gameverse.app.common.LaunchEffectOnce
+import com.gameverse.app.common.Utils
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.presentation.shared.GameInformation
 import com.gameverse.app.presentation.shared.GamePlaceholders
@@ -40,6 +43,9 @@ import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
+import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.ic_profile
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -49,13 +55,13 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
+    LaunchEffectOnce(Unit) {
         viewModel.sendIntent(HomeReducer.Intent.OnGetGames)
     }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
-            when(effect) {
+            when (effect) {
                 HomeReducer.Effect.NavigateToGameList -> onNavigateToGameList()
             }
         }
@@ -77,13 +83,35 @@ private fun HomeContent(
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {
-        GVSearch(
-            hint = "Search games....",
-            value = uiState.searchValue,
-            onValueChange = { value ->
-                onIntent(HomeReducer.Intent.OnSearchValueChanged(value))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_profile),
+                tint = GVColor.onSurfaceVariant,
+                contentDescription = null,
+            )
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = when (Utils.getGreeting()) {
+                        Greeting.MORNING -> "Good morning,"
+                        Greeting.AFTERNOON -> "Good afternoon,"
+                        Greeting.EVENING -> "Good evening,"
+                        Greeting.NIGHT -> "Good night,"
+                    },
+                    style = GVTypography.titleSmall
+                )
+
+                Text(
+                    text = "Abdan Zaki Alifian",
+                    style = GVTypography.bodySmall
+                )
             }
-        )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
