@@ -21,10 +21,7 @@ class HomeViewModel(
 
             HomeReducer.Intent.OnGetGames -> getGames()
             is HomeReducer.Intent.OnExpanded -> sendEvent(
-                HomeReducer.Event.Expanded(
-                    id = intent.id,
-                    isExpanded = intent.isExpanded
-                )
+                HomeReducer.Event.Expanded(intent.id)
             )
 
             HomeReducer.Intent.OnNavigateToGameList -> sendEffect(HomeReducer.Effect.NavigateToGameList)

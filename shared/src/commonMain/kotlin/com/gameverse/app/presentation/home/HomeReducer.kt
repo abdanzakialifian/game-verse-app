@@ -9,7 +9,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     sealed interface Intent : Reducer.ViewIntent {
         data class OnSearchValueChanged(val value: String) : Intent
         data object OnGetGames : Intent
-        data class OnExpanded(val id: Int, val isExpanded: Boolean) : Intent
+        data class OnExpanded(val id: Int) : Intent
         data object OnNavigateToGameList : Intent
     }
 
@@ -19,7 +19,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
         data class GetGamesLoading(val isLoading: Boolean) : Event
         data class GetGamesData(val data: List<GamesModel>) : Event
         data class GetGamesError(val error: Throwable) : Event
-        data class Expanded(val id: Int, val isExpanded: Boolean) : Event
+        data class Expanded(val id: Int) : Event
     }
 
     @Immutable
@@ -33,6 +33,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
         val isGamesLoading: Boolean = false,
         val gamesData: List<GamesModel> = emptyList(),
         val gamesError: Throwable? = null,
+        val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState
 
     override fun reduce(
@@ -45,14 +46,12 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
             is Event.GetGamesData -> state.copy(gamesData = event.data)
             is Event.GetGamesError -> state.copy(gamesError = event.error)
             is Event.Expanded -> {
-                val gamesData = state.gamesData.map {
-                    if (it.id == event.id) {
-                        it.copy(isExpanded = event.isExpanded)
-                    } else {
-                        it
-                    }
+                val expandedIds = if (event.id in state.expandedIds) {
+                    state.expandedIds - event.id
+                } else {
+                    state.expandedIds + event.id
                 }
-                state.copy(gamesData = gamesData)
+                state.copy(expandedIds = expandedIds)
             }
         }
     }

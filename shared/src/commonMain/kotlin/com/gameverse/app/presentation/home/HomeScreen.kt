@@ -114,9 +114,10 @@ private fun HomeContent(
             GamePlaceholders()
         } else {
             Games(
+                expandedIds = uiState.expandedIds,
                 games = uiState.gamesData,
-                onExpand = { id, isExpanded ->
-                    onIntent(HomeReducer.Intent.OnExpanded(id, !isExpanded))
+                onExpand = { id ->
+                    onIntent(HomeReducer.Intent.OnExpanded(id))
                 }
             )
         }
@@ -126,8 +127,9 @@ private fun HomeContent(
 @Composable
 private fun Games(
     modifier: Modifier = Modifier,
+    expandedIds: Set<Int>,
     games: List<GamesModel>,
-    onExpand: (id: Int, isExpanded: Boolean) -> Unit
+    onExpand: (id: Int) -> Unit
 ) {
     LazyColumn(
         modifier = modifier,
@@ -135,6 +137,8 @@ private fun Games(
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         items(games, key = { it.id }) { result ->
+            val isExpanded = result.id in expandedIds
+
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = GVShapes.medium,
@@ -169,7 +173,7 @@ private fun Games(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         released = result.released,
                         genres = result.genres,
-                        isExpanded = result.isExpanded,
+                        isExpanded = isExpanded,
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -181,10 +185,10 @@ private fun Games(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() },
                                 onClick = {
-                                    onExpand(result.id, result.isExpanded)
+                                    onExpand(result.id)
                                 }
                             ),
-                        text = if (result.isExpanded) "View less" else "View more",
+                        text = if (isExpanded) "View less" else "View more",
                         style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
                     )
 
@@ -199,69 +203,70 @@ private fun Games(
 @Composable
 private fun HomeContentPreview() {
     GVTheme {
+        val gamesData = List(5) {
+            GamesModel(
+                id = it,
+                name = "Grand Theft Auto V",
+                backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                released = "2013-09-17",
+                genres = listOf(
+                    GamesModel.GenresItem(
+                        id = 1,
+                        name = "Action"
+                    ),
+                    GamesModel.GenresItem(
+                        id = 2,
+                        name = "RPG"
+                    ),
+                    GamesModel.GenresItem(
+                        id = 3,
+                        name = "Shooter"
+                    ),
+                ),
+                parentPlatforms = listOf(
+                    GamesModel.ParentPlatformsItem(
+                        id = 1,
+                        name = "Windows"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 2,
+                        name = "PlayStation"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 3,
+                        name = "Xbox"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 4,
+                        name = "Apple"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 5,
+                        name = "Apple Mac"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 6,
+                        name = "Linux"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 7,
+                        name = "Nintendo"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 8,
+                        name = "Android"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 9,
+                        name = "Others"
+                    )
+                ),
+            )
+        }
         HomeContent(
             uiState = HomeReducer.State(
-                gamesData = List(5) {
-                    GamesModel(
-                        id = it,
-                        name = "Grand Theft Auto V",
-                        backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
-                        released = "2013-09-17",
-                        genres = listOf(
-                            GamesModel.GenresItem(
-                                id = 1,
-                                name = "Action"
-                            ),
-                            GamesModel.GenresItem(
-                                id = 2,
-                                name = "RPG"
-                            ),
-                            GamesModel.GenresItem(
-                                id = 3,
-                                name = "Shooter"
-                            ),
-                        ),
-                        parentPlatforms = listOf(
-                            GamesModel.ParentPlatformsItem(
-                                id = 1,
-                                name = "Windows"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 2,
-                                name = "PlayStation"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 3,
-                                name = "Xbox"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 4,
-                                name = "Apple"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 5,
-                                name = "Apple Mac"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 6,
-                                name = "Linux"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 7,
-                                name = "Nintendo"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 8,
-                                name = "Android"
-                            ),
-                            GamesModel.ParentPlatformsItem(
-                                id = 9,
-                                name = "Others"
-                            )
-                        ),
-                        isExpanded = true
-                    )
-                }
+                expandedIds = gamesData.map { it.id }.toSet(),
+                gamesData = gamesData
             ),
             onIntent = {}
         )

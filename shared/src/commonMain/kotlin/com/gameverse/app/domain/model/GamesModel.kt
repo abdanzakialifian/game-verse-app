@@ -7,7 +7,6 @@ data class GamesModel(
     val released: String,
     val genres: List<GenresItem>,
     val parentPlatforms: List<ParentPlatformsItem>,
-    val isExpanded: Boolean = false,
 ) {
     data class GenresItem(
         val name: String,
