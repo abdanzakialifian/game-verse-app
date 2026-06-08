@@ -22,6 +22,7 @@ import kotlinx.datetime.format.MonthNames
 import kotlinx.datetime.format.char
 
 fun String.formatDate(separator: Char = ' '): String {
+    if (isBlank()) return "-"
     val parseDate = LocalDate.parse(this)
     val customFormat = LocalDate.Format {
         day()
