@@ -7,6 +7,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 @Resource("games")
 class Games(
+    @SerialName("search")
+    val search: String? = null,
+
     @SerialName("page")
     val page: Int? = null,
 

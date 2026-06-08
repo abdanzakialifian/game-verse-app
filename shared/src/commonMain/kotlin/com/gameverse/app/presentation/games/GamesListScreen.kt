@@ -75,6 +75,9 @@ private fun GameListContent(
         GVSearch(
             hint = "Search games....",
             value = uiState.searchValue,
+            onClear = {
+                onIntent(GamesListReducer.Intent.OnSearchValueChanged(""))
+            },
             onValueChange = { value ->
                 onIntent(GamesListReducer.Intent.OnSearchValueChanged(value))
             }
@@ -232,7 +235,6 @@ private fun GameListContentPreview() {
                         name = "Others"
                     )
                 ),
-                isExpanded = true
             )
         }
         val gamesPaging = flowOf(

@@ -26,7 +26,7 @@ class GVRepositoryImpl(
         apiService.getGames().toDomain()
     }
 
-    override val getGamesPaging: Flow<PagingData<GamesModel>> = Pager(
+    override fun getGamesPaging(query: String): Flow<PagingData<GamesModel>> = Pager(
         config = PagingConfig(
             pageSize = Constants.PAGE_SIZE,
             enablePlaceholders = true,
@@ -34,7 +34,10 @@ class GVRepositoryImpl(
             prefetchDistance = Constants.PREFETCH_DISTANCE
         ),
         pagingSourceFactory = {
-            GameListPagingSource(apiService)
+            GameListPagingSource(
+                query = query,
+                apiService = apiService
+            )
         }
     ).flow.map { pagingData ->
         pagingData.map { result ->

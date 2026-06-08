@@ -10,9 +10,16 @@ import org.koin.core.annotation.Singleton
 @Singleton
 class GVService(private val client: HttpClient) {
     suspend fun getGames(
+        query: String? = null,
         page: Int? = null,
         pageSize: Int? = null,
     ): GamesResponse {
-        return client.get(Games(page = page, pageSize = pageSize)).body<GamesResponse>()
+        return client.get(
+            Games(
+                search = query,
+                page = page,
+                pageSize = pageSize
+            )
+        ).body<GamesResponse>()
     }
 }
