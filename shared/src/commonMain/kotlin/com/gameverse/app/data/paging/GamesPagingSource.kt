@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.gameverse.app.data.api.GVService
 import com.gameverse.app.data.response.GamesResponse
 
-class GameListPagingSource(
+class GamesPagingSource(
     private val apiService: GVService,
     private val query: String,
 ) : PagingSource<Int, GamesResponse.ResultsItem>() {

@@ -7,7 +7,7 @@ import androidx.paging.map
 import com.gameverse.app.common.Constants
 import com.gameverse.app.data.api.GVService
 import com.gameverse.app.data.mapper.toDomain
-import com.gameverse.app.data.paging.GameListPagingSource
+import com.gameverse.app.data.paging.GamesPagingSource
 import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.repository.GVRepository
@@ -34,7 +34,7 @@ class GVRepositoryImpl(
             prefetchDistance = Constants.PREFETCH_DISTANCE
         ),
         pagingSourceFactory = {
-            GameListPagingSource(
+            GamesPagingSource(
                 query = query,
                 apiService = apiService
             )
