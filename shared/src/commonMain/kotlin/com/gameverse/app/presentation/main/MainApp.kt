@@ -1,5 +1,6 @@
 package com.gameverse.app.presentation.main
 
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ import androidx.navigationevent.NavigationEventDispatcher
 import androidx.navigationevent.NavigationEventDispatcherOwner
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import androidx.savedstate.serialization.SavedStateConfiguration
+import com.gameverse.app.common.Utils
 import com.gameverse.app.presentation.catalogue.CatalogueScreen
 import com.gameverse.app.presentation.favorite.FavoriteScreen
 import com.gameverse.app.presentation.games.GameListScreen
@@ -95,41 +97,44 @@ fun MainApp() {
             }
         }
     ) { innerPadding ->
-        NavDisplay(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            backStack = backStack,
-            entryDecorators = listOf(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator()
-            ),
-            entryProvider = entryProvider {
-                entry<MainRoutes.Home> {
-                    HomeScreen(
-                        onNavigateToGameList = {
-                            backStack.add(MainRoutes.GameList)
-                        }
-                    )
-                }
+        SharedTransitionLayout {
+            NavDisplay(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+                backStack = backStack,
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
+                sharedTransitionScope = this,
+                entryProvider = entryProvider {
+                    entry<MainRoutes.Home> {
+                        HomeScreen(
+                            onNavigateToGameList = {
+                                backStack.add(MainRoutes.GameList)
+                            }
+                        )
+                    }
 
-                entry<MainRoutes.Catalogue> {
-                    CatalogueScreen()
-                }
+                    entry<MainRoutes.Catalogue> {
+                        CatalogueScreen()
+                    }
 
-                entry<MainRoutes.Favorite> {
-                    FavoriteScreen()
-                }
+                    entry<MainRoutes.Favorite> {
+                        FavoriteScreen()
+                    }
 
-                entry<MainRoutes.Profile> {
-                    ProfileScreen()
+                    entry<MainRoutes.Profile> {
+                        ProfileScreen()
+                    }
+
+                    entry<MainRoutes.GameList>(metadata = Utils.slideAnimation()) {
+                        GameListScreen()
+                    }
                 }
-                
-                entry<MainRoutes.GameList> {
-                    GameListScreen()
-                }
-            }
-        )
+            )
+        }
     }
 }
 
