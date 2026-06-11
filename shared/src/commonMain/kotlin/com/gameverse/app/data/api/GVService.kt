@@ -22,4 +22,18 @@ class GVService(private val client: HttpClient) {
             )
         ).body<GamesResponse>()
     }
+
+    suspend fun getGamesSeries(
+        gamePk: String,
+        page: Int,
+        pageSize: Int,
+    ): GamesResponse {
+        return client.get(
+            Games.Series(
+                gamePk = gamePk,
+                page = page,
+                pageSize = pageSize
+            )
+        ).body<GamesResponse>()
+    }
 }

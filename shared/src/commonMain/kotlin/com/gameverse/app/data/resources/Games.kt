@@ -15,4 +15,17 @@ class Games(
 
     @SerialName("page_size")
     val pageSize: Int? = null,
-)
+) {
+    @Serializable
+    @Resource("games/{game_pk}/game-series")
+    class Series(
+        @SerialName("game_pk")
+        val gamePk: String,
+
+        @SerialName("page")
+        val page: Int,
+
+        @SerialName("page_size")
+        val pageSize: Int,
+    )
+}

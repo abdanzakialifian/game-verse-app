@@ -8,6 +8,7 @@ import com.gameverse.app.common.Constants
 import com.gameverse.app.data.api.GVService
 import com.gameverse.app.data.mapper.toDomain
 import com.gameverse.app.data.paging.GamesPagingSource
+import com.gameverse.app.data.paging.GamesSeriesPagingSource
 import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.repository.GVRepository
@@ -36,6 +37,25 @@ class GVRepositoryImpl(
         pagingSourceFactory = {
             GamesPagingSource(
                 query = query,
+                apiService = apiService
+            )
+        }
+    ).flow.map { pagingData ->
+        pagingData.map { result ->
+            result.toDomain()
+        }
+    }
+
+    override fun getGamesSeriesPaging(gamePk: String): Flow<PagingData<GamesModel>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.PAGE_SIZE,
+            enablePlaceholders = true,
+            initialLoadSize = Constants.PAGE_SIZE,
+            prefetchDistance = Constants.PREFETCH_DISTANCE
+        ),
+        pagingSourceFactory = {
+            GamesSeriesPagingSource(
+                gamePk = gamePk,
                 apiService = apiService
             )
         }
