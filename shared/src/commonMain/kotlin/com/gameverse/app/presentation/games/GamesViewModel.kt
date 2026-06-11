@@ -13,18 +13,18 @@ import org.koin.core.annotation.KoinViewModel
 @KoinViewModel
 class GamesViewModel(
     repository: GVRepository
-) : BaseViewModel<GamesListReducer.State, GamesListReducer.Event, GamesListReducer.Effect, GamesListReducer.Intent>(
-    initialState = GamesListReducer.State(),
-    reducer = GamesListReducer()
+) : BaseViewModel<GamesReducer.State, GamesReducer.Event, GamesReducer.Effect, GamesReducer.Intent>(
+    initialState = GamesReducer.State(),
+    reducer = GamesReducer()
 ) {
-    override fun sendIntent(intent: GamesListReducer.Intent) {
+    override fun sendIntent(intent: GamesReducer.Intent) {
         when (intent) {
-            is GamesListReducer.Intent.OnSearchValueChanged -> sendEvent(
-                GamesListReducer.Event.SearchValueChanged(intent.value)
+            is GamesReducer.Intent.OnSearchValueChanged -> sendEvent(
+                GamesReducer.Event.SearchValueChanged(intent.value)
             )
 
-            is GamesListReducer.Intent.OnExpanded -> sendEvent(
-                GamesListReducer.Event.Expanded(intent.id)
+            is GamesReducer.Intent.OnExpanded -> sendEvent(
+                GamesReducer.Event.Expanded(intent.id)
             )
         }
     }

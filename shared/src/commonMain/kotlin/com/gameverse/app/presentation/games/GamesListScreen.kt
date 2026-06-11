@@ -63,9 +63,9 @@ fun GameListScreen(
 
 @Composable
 private fun GameListContent(
-    uiState: GamesListReducer.State,
+    uiState: GamesReducer.State,
     gamesPaging: LazyPagingItems<GamesModel>,
-    onIntent: (GamesListReducer.Intent) -> Unit,
+    onIntent: (GamesReducer.Intent) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -76,10 +76,10 @@ private fun GameListContent(
             hint = "Search games....",
             value = uiState.searchValue,
             onClear = {
-                onIntent(GamesListReducer.Intent.OnSearchValueChanged(""))
+                onIntent(GamesReducer.Intent.OnSearchValueChanged(""))
             },
             onValueChange = { value ->
-                onIntent(GamesListReducer.Intent.OnSearchValueChanged(value))
+                onIntent(GamesReducer.Intent.OnSearchValueChanged(value))
             }
         )
 
@@ -90,7 +90,7 @@ private fun GameListContent(
                 expandedIds = uiState.expandedIds,
                 gamesPaging = gamesPaging,
                 onExpand = { id ->
-                    onIntent(GamesListReducer.Intent.OnExpanded(id))
+                    onIntent(GamesReducer.Intent.OnExpanded(id))
                 }
             )
         }
@@ -249,7 +249,7 @@ private fun GameListContentPreview() {
         ).collectAsLazyPagingItems()
 
         GameListContent(
-            uiState = GamesListReducer.State(
+            uiState = GamesReducer.State(
                 expandedIds = gamesData.map { it.id }.toSet()
             ),
             gamesPaging = gamesPaging,
