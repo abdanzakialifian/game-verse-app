@@ -1,4 +1,4 @@
-package com.gameverse.app.presentation.games
+package com.gameverse.app.presentation.games.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -48,11 +49,20 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameListScreen(
-    viewModel: GamesViewModel = koinViewModel(),
+    viewModel: GamesListViewModel = koinViewModel(),
+    onNavigateToGameSeries: (gamePk: String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     val gamesPaging = viewModel.getGamesPaging.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                is GamesListReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
+            }
+        }
+    }
 
     GameListContent(
         uiState = uiState,
@@ -63,9 +73,9 @@ fun GameListScreen(
 
 @Composable
 private fun GameListContent(
-    uiState: GamesReducer.State,
+    uiState: GamesListReducer.State,
     gamesPaging: LazyPagingItems<GamesModel>,
-    onIntent: (GamesReducer.Intent) -> Unit,
+    onIntent: (GamesListReducer.Intent) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -76,10 +86,10 @@ private fun GameListContent(
             hint = "Search games....",
             value = uiState.searchValue,
             onClear = {
-                onIntent(GamesReducer.Intent.OnSearchValueChanged(""))
+                onIntent(GamesListReducer.Intent.OnSearchValueChanged(""))
             },
             onValueChange = { value ->
-                onIntent(GamesReducer.Intent.OnSearchValueChanged(value))
+                onIntent(GamesListReducer.Intent.OnSearchValueChanged(value))
             }
         )
 
@@ -90,11 +100,13 @@ private fun GameListContent(
                 expandedIds = uiState.expandedIds,
                 gamesPaging = gamesPaging,
                 onExpand = { id ->
-                    onIntent(GamesReducer.Intent.OnExpanded(id))
+                    onIntent(GamesListReducer.Intent.OnExpanded(id))
+                },
+                onShowMoreClicked = { gamePk ->
+                    onIntent(GamesListReducer.Intent.OnNavigateToGameSeries(gamePk))
                 }
             )
         }
-
     }
 }
 
@@ -103,7 +115,8 @@ private fun Games(
     modifier: Modifier = Modifier,
     expandedIds: Set<Int>,
     gamesPaging: LazyPagingItems<GamesModel>,
-    onExpand: (id: Int) -> Unit
+    onExpand: (id: Int) -> Unit,
+    onShowMoreClicked: (gamePk: String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -148,6 +161,9 @@ private fun Games(
                         released = result.released,
                         genres = result.genres,
                         isExpanded = result.id in expandedIds,
+                        onButtonClicked = {
+                            onShowMoreClicked(result.id.toString())
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -249,7 +265,7 @@ private fun GameListContentPreview() {
         ).collectAsLazyPagingItems()
 
         GameListContent(
-            uiState = GamesReducer.State(
+            uiState = GamesListReducer.State(
                 expandedIds = gamesData.map { it.id }.toSet()
             ),
             gamesPaging = gamesPaging,
