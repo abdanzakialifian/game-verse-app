@@ -50,6 +50,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     viewModel: HomeViewModel = koinViewModel(),
     onNavigateToGameList: () -> Unit,
     onNavigateToGameSeries: (gamePk: String) -> Unit,
@@ -70,6 +71,7 @@ fun HomeScreen(
     }
 
     HomeContent(
+        modifier = modifier,
         uiState = uiState,
         onIntent = viewModel::sendIntent
     )
@@ -79,9 +81,10 @@ fun HomeScreen(
 private fun HomeContent(
     uiState: HomeReducer.State,
     onIntent: (HomeReducer.Intent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {

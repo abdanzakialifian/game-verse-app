@@ -24,6 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameListScreen(
+    modifier: Modifier = Modifier,
     viewModel: GameListViewModel = koinViewModel(),
     onNavigateToGameSeries: (gamePk: String) -> Unit,
 ) {
@@ -40,6 +41,7 @@ fun GameListScreen(
     }
 
     GameListContent(
+        modifier = modifier,
         uiState = uiState,
         gamesPaging = gamesPaging,
         onIntent = viewModel::sendIntent
@@ -51,9 +53,10 @@ private fun GameListContent(
     uiState: GameListReducer.State,
     gamesPaging: LazyPagingItems<GamesModel>,
     onIntent: (GameListReducer.Intent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {

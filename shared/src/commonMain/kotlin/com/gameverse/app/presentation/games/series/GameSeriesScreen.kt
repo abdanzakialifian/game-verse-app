@@ -24,6 +24,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun GameSeriesScreen(
     gamePk: String,
+    modifier: Modifier = Modifier,
     viewModel: GameSeriesViewModel = koinViewModel { parametersOf(gamePk) },
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
@@ -31,6 +32,7 @@ fun GameSeriesScreen(
     val gamesSeriesPaging = viewModel.getGamesSeriesPaging.collectAsLazyPagingItems()
 
     GameSeriesContent(
+        modifier = modifier,
         uiState = uiState,
         gamesSeriesPaging = gamesSeriesPaging,
         onIntent = viewModel::sendIntent
@@ -42,9 +44,10 @@ private fun GameSeriesContent(
     uiState: GameSeriesReducer.State,
     gamesSeriesPaging: LazyPagingItems<GamesModel>,
     onIntent: (GameSeriesReducer.Intent) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp)
     ) {

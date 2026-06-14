@@ -71,49 +71,24 @@ fun MainApp() {
 
     var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
 
+    val currentRoute = backStack.lastOrNull()
+
     Scaffold(
         bottomBar = {
-            AnimatedVisibility(
-                visible = backStack.lastOrNull() in NavBarDestination.entries.map { it.route },
-                enter = expandVertically(),
-                exit = shrinkVertically()
-            ) {
-                NavigationBar(
-                    containerColor = GVColor.background
-                ) {
-                    NavBarDestination.entries.forEachIndexed { index, destination ->
-                        NavigationBarItem(
-                            selected = selectedDestination == index,
-                            icon = {
-                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Icon(
-                                        painter = painterResource(destination.icon),
-                                        contentDescription = destination.contentDescription,
-                                    )
-
-                                    Spacer(modifier = Modifier.height(4.dp))
-
-                                    Text(
-                                        text = destination.label,
-                                        style = GVTypography.labelSmall,
-                                    )
-                                }
-                            },
-                            onClick = {
-                                backStack.add(destination.route)
-                                selectedDestination = index
-                            }
-                        )
-                    }
+            val isShowBottomBar = currentRoute in NavBarDestination.entries.map { it.route }
+            MainBottomBar(
+                isVisible = isShowBottomBar,
+                selectedDestination = selectedDestination,
+                onBottomBarClicked = { route, index ->
+                    backStack.add(route)
+                    selectedDestination = index
                 }
-            }
+            )
         }
     ) { innerPadding ->
         SharedTransitionLayout {
             NavDisplay(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
+                modifier = Modifier.fillMaxSize(),
                 backStack = backStack,
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
@@ -123,6 +98,7 @@ fun MainApp() {
                 entryProvider = entryProvider {
                     entry<MainRoutes.Home> {
                         HomeScreen(
+                            modifier = Modifier.padding(innerPadding),
                             onNavigateToGameList = {
                                 backStack.add(MainRoutes.GameList)
                             },
@@ -146,6 +122,7 @@ fun MainApp() {
 
                     entry<MainRoutes.GameList>(metadata = Utils.slideAnimation()) {
                         GameListScreen(
+                            modifier = Modifier.padding(innerPadding),
                             onNavigateToGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
                             }
@@ -153,10 +130,54 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.GameSeries>(metadata = Utils.slideAnimation()) {
-                        GameSeriesScreen(it.gamePk)
+                        GameSeriesScreen(
+                            modifier = Modifier.padding(innerPadding),
+                            gamePk = it.gamePk,
+                        )
                     }
                 }
             )
+        }
+    }
+}
+
+@Composable
+private fun MainBottomBar(
+    isVisible: Boolean,
+    selectedDestination: Int,
+    onBottomBarClicked: (route: MainRoutes, index: Int) -> Unit,
+) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        NavigationBar(
+            containerColor = GVColor.background
+        ) {
+            NavBarDestination.entries.forEachIndexed { index, destination ->
+                NavigationBarItem(
+                    selected = selectedDestination == index,
+                    icon = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                painter = painterResource(destination.icon),
+                                contentDescription = destination.contentDescription,
+                            )
+
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Text(
+                                text = destination.label,
+                                style = GVTypography.labelSmall,
+                            )
+                        }
+                    },
+                    onClick = {
+                        onBottomBarClicked(destination.route, index)
+                    }
+                )
+            }
         }
     }
 }
