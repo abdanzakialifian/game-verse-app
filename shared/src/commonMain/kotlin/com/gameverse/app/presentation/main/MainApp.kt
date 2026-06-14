@@ -35,7 +35,8 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.gameverse.app.common.Utils
 import com.gameverse.app.presentation.catalogue.CatalogueScreen
 import com.gameverse.app.presentation.favorite.FavoriteScreen
-import com.gameverse.app.presentation.games.GameListScreen
+import com.gameverse.app.presentation.games.list.GameListScreen
+import com.gameverse.app.presentation.games.series.GamesSeriesScreen
 import com.gameverse.app.presentation.home.HomeScreen
 import com.gameverse.app.presentation.profile.ProfileScreen
 import com.gameverse.app.theme.GVColor
@@ -57,6 +58,8 @@ fun MainApp() {
                     subclass(MainRoutes.Catalogue::class, MainRoutes.Catalogue.serializer())
                     subclass(MainRoutes.Favorite::class, MainRoutes.Favorite.serializer())
                     subclass(MainRoutes.Profile::class, MainRoutes.Profile.serializer())
+                    subclass(MainRoutes.GameList::class, MainRoutes.GameList.serializer())
+                    subclass(MainRoutes.GameSeries::class, MainRoutes.GameSeries.serializer())
                 }
             }
         },
@@ -105,7 +108,7 @@ fun MainApp() {
                 backStack = backStack,
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
-                    rememberViewModelStoreNavEntryDecorator()
+                    rememberViewModelStoreNavEntryDecorator(),
                 ),
                 sharedTransitionScope = this,
                 entryProvider = entryProvider {
@@ -113,6 +116,9 @@ fun MainApp() {
                         HomeScreen(
                             onNavigateToGameList = {
                                 backStack.add(MainRoutes.GameList)
+                            },
+                            onNavigateToGameSeries = { gamePk ->
+                                backStack.add(MainRoutes.GameSeries(gamePk))
                             }
                         )
                     }
@@ -130,7 +136,15 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.GameList>(metadata = Utils.slideAnimation()) {
-                        GameListScreen()
+                        GameListScreen(
+                            onNavigateToGameSeries = { gamePk ->
+                                backStack.add(MainRoutes.GameSeries(gamePk))
+                            }
+                        )
+                    }
+
+                    entry<MainRoutes.GameSeries>(metadata = Utils.slideAnimation()) {
+                        GamesSeriesScreen(it.gamePk)
                     }
                 }
             )
