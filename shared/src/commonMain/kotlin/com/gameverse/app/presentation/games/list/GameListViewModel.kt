@@ -19,6 +19,10 @@ class GameListViewModel(
 ) {
     override fun sendIntent(intent: GameListReducer.Intent) {
         when (intent) {
+            is GameListReducer.Intent.OnSearchVisibility -> sendEvent(
+                GameListReducer.Event.SearchVisibility(intent.isSearchVisible)
+            )
+
             is GameListReducer.Intent.OnSearchValueChanged -> sendEvent(
                 GameListReducer.Event.SearchValueChanged(intent.value)
             )
@@ -29,6 +33,10 @@ class GameListViewModel(
 
             is GameListReducer.Intent.OnNavigateToGameSeries -> sendEffect(
                 GameListReducer.Effect.NavigateToGameSeries(intent.gamePk)
+            )
+
+            GameListReducer.Intent.OnNavigateBack -> sendEffect(
+                GameListReducer.Effect.NavigateBack
             )
         }
     }

@@ -122,9 +122,11 @@ fun MainApp() {
 
                     entry<MainRoutes.GameList>(metadata = Utils.slideAnimation()) {
                         GameListScreen(
-                            modifier = Modifier.padding(innerPadding),
                             onNavigateToGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
+                            },
+                            onNavigateBack = {
+                                backStack.removeLastOrNull()
                             }
                         )
                     }

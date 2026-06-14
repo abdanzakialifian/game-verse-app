@@ -6,13 +6,16 @@ import com.gameverse.app.mvi.Reducer
 class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
+        data class OnSearchVisibility(val isSearchVisible: Boolean) : Intent
         data class OnSearchValueChanged(val value: String) : Intent
         data class OnExpanded(val id: Int) : Intent
         data class OnNavigateToGameSeries(val gamePk: String) : Intent
+        data object OnNavigateBack : Intent
     }
 
     @Immutable
     sealed interface Event : Reducer.ViewEvent {
+        data class SearchVisibility(val isSearchVisible: Boolean) : Event
         data class SearchValueChanged(val value: String) : Event
         data class Expanded(val id: Int) : Event
     }
@@ -20,10 +23,12 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     @Immutable
     sealed interface Effect : Reducer.ViewEffect {
         data class NavigateToGameSeries(val gamePk: String) : Effect
+        data object NavigateBack : Effect
     }
 
     @Immutable
     data class State(
+        val isSearchVisible: Boolean = false,
         val searchValue: String = "",
         val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState
@@ -33,6 +38,7 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
         event: Event
     ): State {
         return when (event) {
+            is Event.SearchVisibility -> state.copy(isSearchVisible = event.isSearchVisible)
             is Event.SearchValueChanged -> state.copy(searchValue = event.value)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {

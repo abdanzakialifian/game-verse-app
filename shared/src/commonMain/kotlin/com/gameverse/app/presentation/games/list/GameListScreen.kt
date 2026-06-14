@@ -1,12 +1,33 @@
 package com.gameverse.app.presentation.games.list
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,15 +39,21 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.gameverse.app.component.GVSearch
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.presentation.shared.GameListPaging
+import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
+import com.gameverse.app.theme.GVTypography
+import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.ic_back
+import gameverse.shared.generated.resources.ic_search
 import kotlinx.coroutines.flow.flowOf
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameListScreen(
-    modifier: Modifier = Modifier,
     viewModel: GameListViewModel = koinViewModel(),
     onNavigateToGameSeries: (gamePk: String) -> Unit,
+    onNavigateBack: () -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -36,12 +63,12 @@ fun GameListScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 is GameListReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
+                is GameListReducer.Effect.NavigateBack -> onNavigateBack()
             }
         }
     }
 
     GameListContent(
-        modifier = modifier,
         uiState = uiState,
         gamesPaging = gamesPaging,
         onIntent = viewModel::sendIntent
@@ -52,35 +79,114 @@ fun GameListScreen(
 private fun GameListContent(
     uiState: GameListReducer.State,
     gamesPaging: LazyPagingItems<GamesModel>,
-    modifier: Modifier = Modifier,
     onIntent: (GameListReducer.Intent) -> Unit,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        GVSearch(
-            hint = "Search games....",
-            value = uiState.searchValue,
-            onClear = {
-                onIntent(GameListReducer.Intent.OnSearchValueChanged(""))
-            },
-            onValueChange = { value ->
-                onIntent(GameListReducer.Intent.OnSearchValueChanged(value))
-            }
-        )
+    Scaffold(
+        topBar = {
+            val focusRequester = remember { FocusRequester() }
 
-        GameListPaging(
-            expandedIds = uiState.expandedIds,
-            gamesPaging = gamesPaging,
-            onExpand = { id ->
-                onIntent(GameListReducer.Intent.OnExpanded(id))
-            },
-            onShowMoreClicked = { gamePk ->
-                onIntent(GameListReducer.Intent.OnNavigateToGameSeries(gamePk))
+            LaunchedEffect(uiState.isSearchVisible) {
+                if (uiState.isSearchVisible) {
+                    focusRequester.requestFocus()
+                }
             }
-        )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = GVColor.secondaryContainer,
+                        shape = RoundedCornerShape(
+                            bottomStart = 16.dp,
+                            bottomEnd = 16.dp
+                        )
+                    )
+                    .statusBarsPadding()
+                    .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            if (uiState.isSearchVisible) {
+                                onIntent(GameListReducer.Intent.OnSearchVisibility(false))
+                            } else {
+                                onIntent(GameListReducer.Intent.OnNavigateBack)
+                            }
+                        }
+                    ),
+                    painter = painterResource(Res.drawable.ic_back),
+                    tint = GVColor.onPrimary,
+                    contentDescription = null,
+                )
+
+                Text(
+                    modifier = Modifier
+                        .weight(1F)
+                        .padding(horizontal = 8.dp),
+                    text = "All Games",
+                    style = GVTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center
+                )
+
+                AnimatedVisibility(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    visible = uiState.isSearchVisible,
+                    enter = slideInHorizontally(
+                        initialOffsetX = { fullWidth -> fullWidth }
+                    ),
+                    exit = slideOutHorizontally(
+                        targetOffsetX = { fullWidth -> fullWidth }
+                    )
+                ) {
+                    GVSearch(
+                        modifier = Modifier.focusRequester(focusRequester),
+                        hint = "Search games....",
+                        value = uiState.searchValue,
+                        onClear = {
+                            onIntent(GameListReducer.Intent.OnSearchValueChanged(""))
+                        },
+                        onValueChange = { value ->
+                            onIntent(GameListReducer.Intent.OnSearchValueChanged(value))
+                        }
+                    )
+                }
+
+                Icon(
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            onIntent(GameListReducer.Intent.OnSearchVisibility(true))
+                        }
+                    ),
+                    painter = painterResource(Res.drawable.ic_search),
+                    tint = GVColor.onPrimary,
+                    contentDescription = null,
+                )
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+        ) {
+            GameListPaging(
+                expandedIds = uiState.expandedIds,
+                gamesPaging = gamesPaging,
+                onExpand = { id ->
+                    onIntent(GameListReducer.Intent.OnExpanded(id))
+                },
+                onShowMoreClicked = { gamePk ->
+                    onIntent(GameListReducer.Intent.OnNavigateToGameSeries(gamePk))
+                }
+            )
+        }
     }
 }
 
