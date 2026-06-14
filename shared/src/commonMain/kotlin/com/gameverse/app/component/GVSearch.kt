@@ -34,11 +34,12 @@ import org.jetbrains.compose.resources.painterResource
 fun GVSearch(
     hint: String,
     value: String,
+    modifier: Modifier = Modifier,
     onClear: () -> Unit,
     onValueChange: (String) -> Unit,
 ) {
     BasicTextField(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(40.dp)
             .background(
