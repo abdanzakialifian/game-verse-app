@@ -52,6 +52,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
     onNavigateToGameList: () -> Unit,
+    onNavigateToGameSeries: (gamePk: String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -63,6 +64,7 @@ fun HomeScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 HomeReducer.Effect.NavigateToGameList -> onNavigateToGameList()
+                is HomeReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
             }
         }
     }
@@ -146,6 +148,9 @@ private fun HomeContent(
                 games = uiState.gamesData,
                 onExpand = { id ->
                     onIntent(HomeReducer.Intent.OnExpanded(id))
+                },
+                onShowMoreClicked = { gamePk ->
+                    onIntent(HomeReducer.Intent.OnNavigateToGameSeries(gamePk))
                 }
             )
         }
@@ -157,7 +162,8 @@ private fun Games(
     modifier: Modifier = Modifier,
     expandedIds: Set<Int>,
     games: List<GamesModel>,
-    onExpand: (id: Int) -> Unit
+    onExpand: (id: Int) -> Unit,
+    onShowMoreClicked: (gamePk: String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -202,6 +208,9 @@ private fun Games(
                         released = result.released,
                         genres = result.genres,
                         isExpanded = isExpanded,
+                        onButtonClicked = {
+                            onShowMoreClicked(result.id.toString())
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
