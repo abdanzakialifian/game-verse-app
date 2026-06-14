@@ -1,11 +1,23 @@
 package com.gameverse.app.presentation.games.series
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -16,7 +28,9 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.presentation.shared.GameListPaging
+import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
+import com.gameverse.app.theme.GVTypography
 import kotlinx.coroutines.flow.flowOf
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -24,7 +38,6 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun GameSeriesScreen(
     gamePk: String,
-    modifier: Modifier = Modifier,
     viewModel: GameSeriesViewModel = koinViewModel { parametersOf(gamePk) },
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
@@ -32,7 +45,6 @@ fun GameSeriesScreen(
     val gamesSeriesPaging = viewModel.getGamesSeriesPaging.collectAsLazyPagingItems()
 
     GameSeriesContent(
-        modifier = modifier,
         uiState = uiState,
         gamesSeriesPaging = gamesSeriesPaging,
         onIntent = viewModel::sendIntent
@@ -43,21 +55,46 @@ fun GameSeriesScreen(
 private fun GameSeriesContent(
     uiState: GameSeriesReducer.State,
     gamesSeriesPaging: LazyPagingItems<GamesModel>,
-    modifier: Modifier = Modifier,
     onIntent: (GameSeriesReducer.Intent) -> Unit,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
-        GameListPaging(
-            expandedIds = uiState.expandedIds,
-            gamesPaging = gamesSeriesPaging,
-            onExpand = { id ->
-                onIntent(GameSeriesReducer.Intent.OnExpanded(id))
-            },
-        )
+    Scaffold(
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = GVColor.secondaryContainer,
+                        shape = RoundedCornerShape(
+                            bottomStart = 16.dp,
+                            bottomEnd = 16.dp
+                        )
+                    )
+                    .statusBarsPadding()
+                    .height(TopAppBarDefaults.TopAppBarExpandedHeight),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Game Series",
+                    style = GVTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier.padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
+            GameListPaging(
+                expandedIds = uiState.expandedIds,
+                gamesPaging = gamesSeriesPaging,
+                onExpand = { id ->
+                    onIntent(GameSeriesReducer.Intent.OnExpanded(id))
+                },
+            )
+        }
     }
 }
 

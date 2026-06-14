@@ -130,10 +130,7 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.GameSeries>(metadata = Utils.slideAnimation()) {
-                        GameSeriesScreen(
-                            modifier = Modifier.padding(innerPadding),
-                            gamePk = it.gamePk,
-                        )
+                        GameSeriesScreen(it.gamePk)
                     }
                 }
             )
