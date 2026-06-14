@@ -3,7 +3,7 @@ package com.gameverse.app.presentation.games.series
 import androidx.compose.runtime.Immutable
 import com.gameverse.app.mvi.Reducer
 
-class GamesSeriesReducer : Reducer<GamesSeriesReducer.State, GamesSeriesReducer.Event> {
+class GameSeriesReducer : Reducer<GameSeriesReducer.State, GameSeriesReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
         data class OnExpanded(val id: Int) : Intent

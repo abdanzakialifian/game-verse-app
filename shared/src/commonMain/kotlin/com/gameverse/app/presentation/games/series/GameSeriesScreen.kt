@@ -22,9 +22,9 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun GamesSeriesScreen(
+fun GameSeriesScreen(
     gamePk: String,
-    viewModel: GamesSeriesViewModel = koinViewModel { parametersOf(gamePk) },
+    viewModel: GameSeriesViewModel = koinViewModel { parametersOf(gamePk) },
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -39,9 +39,9 @@ fun GamesSeriesScreen(
 
 @Composable
 private fun GameSeriesContent(
-    uiState: GamesSeriesReducer.State,
+    uiState: GameSeriesReducer.State,
     gamesSeriesPaging: LazyPagingItems<GamesModel>,
-    onIntent: (GamesSeriesReducer.Intent) -> Unit,
+    onIntent: (GameSeriesReducer.Intent) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -52,7 +52,7 @@ private fun GameSeriesContent(
             expandedIds = uiState.expandedIds,
             gamesPaging = gamesSeriesPaging,
             onExpand = { id ->
-                onIntent(GamesSeriesReducer.Intent.OnExpanded(id))
+                onIntent(GameSeriesReducer.Intent.OnExpanded(id))
             },
         )
     }
@@ -134,7 +134,7 @@ private fun GameSeriesContentPreview() {
         ).collectAsLazyPagingItems()
 
         GameSeriesContent(
-            uiState = GamesSeriesReducer.State(
+            uiState = GameSeriesReducer.State(
                 expandedIds = gamesData.map { it.id }.toSet()
             ),
             gamesSeriesPaging = gamesSeriesPaging,

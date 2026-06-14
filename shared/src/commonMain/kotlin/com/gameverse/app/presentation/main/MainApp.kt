@@ -36,7 +36,7 @@ import com.gameverse.app.common.Utils
 import com.gameverse.app.presentation.catalogue.CatalogueScreen
 import com.gameverse.app.presentation.favorite.FavoriteScreen
 import com.gameverse.app.presentation.games.list.GameListScreen
-import com.gameverse.app.presentation.games.series.GamesSeriesScreen
+import com.gameverse.app.presentation.games.series.GameSeriesScreen
 import com.gameverse.app.presentation.home.HomeScreen
 import com.gameverse.app.presentation.profile.ProfileScreen
 import com.gameverse.app.theme.GVColor
@@ -144,7 +144,7 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.GameSeries>(metadata = Utils.slideAnimation()) {
-                        GamesSeriesScreen(it.gamePk)
+                        GameSeriesScreen(it.gamePk)
                     }
                 }
             )

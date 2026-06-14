@@ -8,17 +8,17 @@ import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
-class GamesSeriesViewModel(
+class GameSeriesViewModel(
     repository: GVRepository,
     @InjectedParam gamePk: String = ""
-) : BaseViewModel<GamesSeriesReducer.State, GamesSeriesReducer.Event, GamesSeriesReducer.Effect, GamesSeriesReducer.Intent>(
-    initialState = GamesSeriesReducer.State(),
-    reducer = GamesSeriesReducer()
+) : BaseViewModel<GameSeriesReducer.State, GameSeriesReducer.Event, GameSeriesReducer.Effect, GameSeriesReducer.Intent>(
+    initialState = GameSeriesReducer.State(),
+    reducer = GameSeriesReducer()
 ) {
-    override fun sendIntent(intent: GamesSeriesReducer.Intent) {
+    override fun sendIntent(intent: GameSeriesReducer.Intent) {
         when (intent) {
-            is GamesSeriesReducer.Intent.OnExpanded -> sendEvent(
-                GamesSeriesReducer.Event.Expanded(intent.id)
+            is GameSeriesReducer.Intent.OnExpanded -> sendEvent(
+                GameSeriesReducer.Event.Expanded(intent.id)
             )
         }
     }

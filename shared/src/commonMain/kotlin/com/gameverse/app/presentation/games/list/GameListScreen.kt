@@ -24,7 +24,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameListScreen(
-    viewModel: GamesListViewModel = koinViewModel(),
+    viewModel: GameListViewModel = koinViewModel(),
     onNavigateToGameSeries: (gamePk: String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
@@ -34,7 +34,7 @@ fun GameListScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is GamesListReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
+                is GameListReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
             }
         }
     }
@@ -48,9 +48,9 @@ fun GameListScreen(
 
 @Composable
 private fun GameListContent(
-    uiState: GamesListReducer.State,
+    uiState: GameListReducer.State,
     gamesPaging: LazyPagingItems<GamesModel>,
-    onIntent: (GamesListReducer.Intent) -> Unit,
+    onIntent: (GameListReducer.Intent) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -61,10 +61,10 @@ private fun GameListContent(
             hint = "Search games....",
             value = uiState.searchValue,
             onClear = {
-                onIntent(GamesListReducer.Intent.OnSearchValueChanged(""))
+                onIntent(GameListReducer.Intent.OnSearchValueChanged(""))
             },
             onValueChange = { value ->
-                onIntent(GamesListReducer.Intent.OnSearchValueChanged(value))
+                onIntent(GameListReducer.Intent.OnSearchValueChanged(value))
             }
         )
 
@@ -72,10 +72,10 @@ private fun GameListContent(
             expandedIds = uiState.expandedIds,
             gamesPaging = gamesPaging,
             onExpand = { id ->
-                onIntent(GamesListReducer.Intent.OnExpanded(id))
+                onIntent(GameListReducer.Intent.OnExpanded(id))
             },
             onShowMoreClicked = { gamePk ->
-                onIntent(GamesListReducer.Intent.OnNavigateToGameSeries(gamePk))
+                onIntent(GameListReducer.Intent.OnNavigateToGameSeries(gamePk))
             }
         )
     }
@@ -158,7 +158,7 @@ private fun GameListContentPreview() {
         ).collectAsLazyPagingItems()
 
         GameListContent(
-            uiState = GamesListReducer.State(
+            uiState = GameListReducer.State(
                 expandedIds = gamesData.map { it.id }.toSet()
             ),
             gamesPaging = gamesPaging,

@@ -11,24 +11,24 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
-class GamesListViewModel(
+class GameListViewModel(
     repository: GVRepository
-) : BaseViewModel<GamesListReducer.State, GamesListReducer.Event, GamesListReducer.Effect, GamesListReducer.Intent>(
-    initialState = GamesListReducer.State(),
-    reducer = GamesListReducer()
+) : BaseViewModel<GameListReducer.State, GameListReducer.Event, GameListReducer.Effect, GameListReducer.Intent>(
+    initialState = GameListReducer.State(),
+    reducer = GameListReducer()
 ) {
-    override fun sendIntent(intent: GamesListReducer.Intent) {
+    override fun sendIntent(intent: GameListReducer.Intent) {
         when (intent) {
-            is GamesListReducer.Intent.OnSearchValueChanged -> sendEvent(
-                GamesListReducer.Event.SearchValueChanged(intent.value)
+            is GameListReducer.Intent.OnSearchValueChanged -> sendEvent(
+                GameListReducer.Event.SearchValueChanged(intent.value)
             )
 
-            is GamesListReducer.Intent.OnExpanded -> sendEvent(
-                GamesListReducer.Event.Expanded(intent.id)
+            is GameListReducer.Intent.OnExpanded -> sendEvent(
+                GameListReducer.Event.Expanded(intent.id)
             )
 
-            is GamesListReducer.Intent.OnNavigateToGameSeries -> sendEffect(
-                GamesListReducer.Effect.NavigateToGameSeries(intent.gamePk)
+            is GameListReducer.Intent.OnNavigateToGameSeries -> sendEffect(
+                GameListReducer.Effect.NavigateToGameSeries(intent.gamePk)
             )
         }
     }

@@ -3,7 +3,7 @@ package com.gameverse.app.presentation.games.list
 import androidx.compose.runtime.Immutable
 import com.gameverse.app.mvi.Reducer
 
-class GamesListReducer : Reducer<GamesListReducer.State, GamesListReducer.Event> {
+class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
         data class OnSearchValueChanged(val value: String) : Intent
