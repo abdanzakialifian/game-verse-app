@@ -1,6 +1,9 @@
 package com.gameverse.app.presentation.main
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -70,32 +73,38 @@ fun MainApp() {
 
     Scaffold(
         bottomBar = {
-            NavigationBar(
-                containerColor = GVColor.background
+            AnimatedVisibility(
+                visible = backStack.lastOrNull() in NavBarDestination.entries.map { it.route },
+                enter = expandVertically(),
+                exit = shrinkVertically()
             ) {
-                NavBarDestination.entries.forEachIndexed { index, destination ->
-                    NavigationBarItem(
-                        selected = selectedDestination == index,
-                        icon = {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    painter = painterResource(destination.icon),
-                                    contentDescription = destination.contentDescription,
-                                )
+                NavigationBar(
+                    containerColor = GVColor.background
+                ) {
+                    NavBarDestination.entries.forEachIndexed { index, destination ->
+                        NavigationBarItem(
+                            selected = selectedDestination == index,
+                            icon = {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Icon(
+                                        painter = painterResource(destination.icon),
+                                        contentDescription = destination.contentDescription,
+                                    )
 
-                                Spacer(modifier = Modifier.height(4.dp))
+                                    Spacer(modifier = Modifier.height(4.dp))
 
-                                Text(
-                                    text = destination.label,
-                                    style = GVTypography.labelSmall,
-                                )
+                                    Text(
+                                        text = destination.label,
+                                        style = GVTypography.labelSmall,
+                                    )
+                                }
+                            },
+                            onClick = {
+                                backStack.add(destination.route)
+                                selectedDestination = index
                             }
-                        },
-                        onClick = {
-                            backStack.add(destination.route)
-                            selectedDestination = index
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
