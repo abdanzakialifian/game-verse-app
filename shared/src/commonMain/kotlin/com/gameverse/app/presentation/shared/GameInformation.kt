@@ -28,6 +28,7 @@ fun GameInformation(
     released: String,
     genres: List<GamesModel.GenresItem>,
     isExpanded: Boolean,
+    onButtonClicked: (() -> Unit)? = null,
 ) {
     AnimatedVisibility(
         modifier = modifier,
@@ -76,16 +77,18 @@ fun GameInformation(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                shape = GVShapes.small,
-                colors = ButtonDefaults.buttonColors(containerColor = GVColor.outline),
-                onClick = {}
-            ) {
-                Text(
-                    text = "Show more like this",
-                    style = GVTypography.labelSmall
-                )
+            if (onButtonClicked != null) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = GVShapes.small,
+                    colors = ButtonDefaults.buttonColors(containerColor = GVColor.outline),
+                    onClick = onButtonClicked
+                ) {
+                    Text(
+                        text = "Show more like this",
+                        style = GVTypography.labelSmall
+                    )
+                }
             }
         }
     }
