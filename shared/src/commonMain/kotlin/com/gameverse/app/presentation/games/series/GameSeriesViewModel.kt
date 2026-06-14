@@ -20,6 +20,10 @@ class GameSeriesViewModel(
             is GameSeriesReducer.Intent.OnExpanded -> sendEvent(
                 GameSeriesReducer.Event.Expanded(intent.id)
             )
+
+            GameSeriesReducer.Intent.OnNavigateBack -> sendEffect(
+                GameSeriesReducer.Effect.NavigateBack
+            )
         }
     }
 

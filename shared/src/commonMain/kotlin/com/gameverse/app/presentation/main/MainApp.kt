@@ -132,7 +132,12 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.GameSeries>(metadata = Utils.slideAnimation()) {
-                        GameSeriesScreen(it.gamePk)
+                        GameSeriesScreen(
+                            gamePk = it.gamePk,
+                            onNavigateBack = {
+                                backStack.removeLastOrNull()
+                            }
+                        )
                     }
                 }
             )
