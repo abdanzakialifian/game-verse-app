@@ -34,9 +34,9 @@ import com.gameverse.app.theme.GVTypography
 
 @Composable
 fun GameListPaging(
-    modifier: Modifier = Modifier,
     expandedIds: Set<Int>,
     gamesPaging: LazyPagingItems<GamesModel>,
+    modifier: Modifier = Modifier,
     onExpand: (id: Int) -> Unit,
     onShowMoreClicked: ((gamePk: String) -> Unit)? = null,
 ) {

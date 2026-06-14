@@ -52,8 +52,8 @@ fun GameListScreen(
 private fun GameListContent(
     uiState: GameListReducer.State,
     gamesPaging: LazyPagingItems<GamesModel>,
-    onIntent: (GameListReducer.Intent) -> Unit,
     modifier: Modifier = Modifier,
+    onIntent: (GameListReducer.Intent) -> Unit,
 ) {
     Column(
         modifier = modifier

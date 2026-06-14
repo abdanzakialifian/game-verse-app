@@ -80,8 +80,8 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: HomeReducer.State,
-    onIntent: (HomeReducer.Intent) -> Unit,
     modifier: Modifier = Modifier,
+    onIntent: (HomeReducer.Intent) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -162,9 +162,9 @@ private fun HomeContent(
 
 @Composable
 private fun Games(
-    modifier: Modifier = Modifier,
     expandedIds: Set<Int>,
     games: List<GamesModel>,
+    modifier: Modifier = Modifier,
     onExpand: (id: Int) -> Unit,
     onShowMoreClicked: (gamePk: String) -> Unit,
 ) {

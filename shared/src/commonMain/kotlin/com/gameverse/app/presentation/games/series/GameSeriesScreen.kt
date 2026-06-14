@@ -43,8 +43,8 @@ fun GameSeriesScreen(
 private fun GameSeriesContent(
     uiState: GameSeriesReducer.State,
     gamesSeriesPaging: LazyPagingItems<GamesModel>,
-    onIntent: (GameSeriesReducer.Intent) -> Unit,
     modifier: Modifier = Modifier,
+    onIntent: (GameSeriesReducer.Intent) -> Unit,
 ) {
     Box(
         modifier = modifier

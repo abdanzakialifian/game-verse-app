@@ -24,10 +24,10 @@ import com.gameverse.app.theme.GVTypography
 
 @Composable
 fun GameInformation(
-    modifier: Modifier = Modifier,
     released: String,
     genres: List<GamesModel.GenresItem>,
     isExpanded: Boolean,
+    modifier: Modifier = Modifier,
     onButtonClicked: (() -> Unit)? = null,
 ) {
     AnimatedVisibility(

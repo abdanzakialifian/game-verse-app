@@ -14,8 +14,8 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun GamePlatforms(
+    platforms: List<GamesModel.ParentPlatformsItem>,
     modifier: Modifier = Modifier,
-    platforms: List<GamesModel.ParentPlatformsItem>
 ) {
     Row(
         modifier = modifier,
