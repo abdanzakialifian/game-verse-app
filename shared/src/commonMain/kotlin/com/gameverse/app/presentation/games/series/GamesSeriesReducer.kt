@@ -1,18 +1,16 @@
-package com.gameverse.app.presentation.games
+package com.gameverse.app.presentation.games.series
 
 import androidx.compose.runtime.Immutable
 import com.gameverse.app.mvi.Reducer
 
-class GamesReducer : Reducer<GamesReducer.State, GamesReducer.Event> {
+class GamesSeriesReducer : Reducer<GamesSeriesReducer.State, GamesSeriesReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
-        data class OnSearchValueChanged(val value: String) : Intent
         data class OnExpanded(val id: Int) : Intent
     }
 
     @Immutable
     sealed interface Event : Reducer.ViewEvent {
-        data class SearchValueChanged(val value: String) : Event
         data class Expanded(val id: Int) : Event
     }
 
@@ -30,7 +28,6 @@ class GamesReducer : Reducer<GamesReducer.State, GamesReducer.Event> {
         event: Event
     ): State {
         return when (event) {
-            is Event.SearchValueChanged -> state.copy(searchValue = event.value)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {
                     state.expandedIds - event.id
