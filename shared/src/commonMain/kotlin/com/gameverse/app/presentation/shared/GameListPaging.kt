@@ -59,7 +59,11 @@ fun GameListPaging(
 ) {
     when (gamesPaging.loadState.refresh) {
         is LoadState.Loading -> GamePlaceholders()
-        is LoadState.Error -> {}
+        is LoadState.Error -> GameError(
+            onButtonClicked = {
+                gamesPaging.retry()
+            }
+        )
         else -> {
             LazyColumn(
                 modifier = modifier,
