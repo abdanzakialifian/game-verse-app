@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -33,6 +34,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
+import com.gameverse.app.common.shimmer
 import com.gameverse.app.common.toFormattedNumber
 import com.gameverse.app.domain.model.GenresModel
 import com.gameverse.app.presentation.shared.GeneralError
@@ -76,10 +78,11 @@ private fun CatalogueContent(
 @Composable
 private fun GenresPaging(genresPaging: LazyPagingItems<GenresModel>) {
     when (genresPaging.loadState.refresh) {
-        is LoadState.Loading -> {}
+        is LoadState.Loading -> GenresPlaceholder()
         is LoadState.Error -> GeneralError {
             genresPaging.refresh()
         }
+
         else -> LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(vertical = 16.dp)
@@ -196,6 +199,100 @@ private fun GenresPaging(genresPaging: LazyPagingItems<GenresModel>) {
     }
 }
 
+@Composable
+private fun GenresPlaceholder() {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
+    ) {
+        items(10) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                shape = GVShapes.medium,
+                colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
+            ) {
+                Box(
+                    modifier = Modifier.weight(1F).fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .width(100.dp)
+                            .height(24.dp)
+                            .shimmer(12.dp),
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 16.dp
+                        )
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .width(100.dp)
+                                .height(16.dp)
+                                .shimmer(12.dp),
+                        )
+
+                        Box(
+                            modifier = Modifier
+                                .width(60.dp)
+                                .height(16.dp)
+                                .shimmer(12.dp),
+                        )
+                    }
+
+                    HorizontalDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        thickness = 2.dp,
+                        color = GVColor.outline
+                    )
+
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        repeat(3) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .width(100.dp)
+                                        .height(16.dp)
+                                        .shimmer(12.dp),
+                                )
+
+                                Box(
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .height(16.dp)
+                                        .shimmer(12.dp),
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun CatalogueContentPreview() {
@@ -228,7 +325,7 @@ private fun CatalogueContentPreview() {
         val genresPaging = flowOf(
             PagingData.from(
                 sourceLoadStates = LoadStates(
-                    refresh = LoadState.NotLoading(endOfPaginationReached = false),
+                    refresh = LoadState.Loading,
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.Loading
                 ),
