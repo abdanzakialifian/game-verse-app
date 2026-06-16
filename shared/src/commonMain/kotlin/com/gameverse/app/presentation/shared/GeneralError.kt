@@ -24,7 +24,7 @@ import gameverse.shared.generated.resources.img_error_illustration
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun GameError(
+fun GeneralError(
     modifier: Modifier = Modifier,
     onButtonClicked: () -> Unit
 ) {
@@ -68,8 +68,8 @@ fun GameError(
 
 @Preview(showBackground = true)
 @Composable
-private fun GameErrorPreview() {
+private fun GeneralErrorPreview() {
     GVTheme {
-        GameError {}
+        GeneralError {}
     }
 }

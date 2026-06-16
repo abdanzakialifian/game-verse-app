@@ -35,7 +35,7 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.gameverse.app.common.toFormattedNumber
 import com.gameverse.app.domain.model.GenresModel
-import com.gameverse.app.presentation.shared.GameError
+import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
@@ -77,7 +77,7 @@ private fun CatalogueContent(
 private fun GenresPaging(genresPaging: LazyPagingItems<GenresModel>) {
     when (genresPaging.loadState.refresh) {
         is LoadState.Loading -> {}
-        is LoadState.Error -> GameError {
+        is LoadState.Error -> GeneralError {
             genresPaging.refresh()
         }
         else -> LazyColumn(
