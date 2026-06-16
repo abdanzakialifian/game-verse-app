@@ -36,6 +36,7 @@ import com.gameverse.app.common.Greeting
 import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.Utils
 import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.presentation.shared.GameError
 import com.gameverse.app.presentation.shared.GameInformation
 import com.gameverse.app.presentation.shared.GamePlaceholders
 import com.gameverse.app.presentation.shared.GamePlatforms
@@ -143,10 +144,14 @@ private fun HomeContent(
             )
         }
 
-        if (uiState.isGamesLoading) {
-            GamePlaceholders()
-        } else {
-            Games(
+        when {
+            uiState.isGamesLoading -> GamePlaceholders()
+            uiState.gamesError != null -> GameError(
+                onButtonClicked = {
+                    onIntent(HomeReducer.Intent.OnGetGames)
+                }
+            )
+            else -> Games(
                 expandedIds = uiState.expandedIds,
                 games = uiState.gamesData,
                 onExpand = { id ->
