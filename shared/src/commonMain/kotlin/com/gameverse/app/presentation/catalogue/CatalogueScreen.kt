@@ -1,11 +1,14 @@
 package com.gameverse.app.presentation.catalogue
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,8 +18,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -42,8 +51,13 @@ import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
+import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.ic_retry
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun CatalogueScreen(
@@ -190,6 +204,67 @@ private fun GenresPaging(genresPaging: LazyPagingItems<GenresModel>) {
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    when (genresPaging.loadState.append) {
+                        is LoadState.Loading -> {
+                            val loadingMessages = listOf(
+                                "Loading more genres...",
+                                "Discovering new genres...",
+                                "Finding your next favorite genre...",
+                                "Exploring gaming categories...",
+                                "Preparing more genres for you..."
+                            )
+
+                            var loadingText by remember { mutableStateOf(loadingMessages.random()) }
+
+                            LaunchedEffect(Unit) {
+                                while (true) {
+                                    delay(1000L.milliseconds)
+                                    loadingText = loadingMessages.random()
+                                }
+                            }
+
+                            Text(
+                                text = loadingText,
+                                style = GVTypography.labelLarge,
+                            )
+                        }
+
+                        is LoadState.Error -> {
+                            Column(
+                                modifier = Modifier.clickable(
+                                    indication = null,
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    onClick = { genresPaging.retry() }
+                                ),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_retry),
+                                    tint = GVColor.onPrimary,
+                                    contentDescription = null,
+                                )
+
+                                Spacer(modifier = Modifier.height(6.dp))
+
+                                Text(
+                                    text = "Couldn't load more games",
+                                    style = GVTypography.labelLarge,
+                                )
+                            }
+                        }
+
+                        else -> Unit
                     }
                 }
             }
