@@ -9,8 +9,10 @@ import com.gameverse.app.data.api.GVService
 import com.gameverse.app.data.mapper.toDomain
 import com.gameverse.app.data.paging.GamesPagingSource
 import com.gameverse.app.data.paging.GamesSeriesPagingSource
+import com.gameverse.app.data.paging.GenresPagingSource
 import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GenresModel
 import com.gameverse.app.domain.repository.GVRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -58,6 +60,22 @@ class GVRepositoryImpl(
                 gamePk = gamePk,
                 apiService = apiService
             )
+        }
+    ).flow.map { pagingData ->
+        pagingData.map { result ->
+            result.toDomain()
+        }
+    }
+
+    override fun getGenresPaging(): Flow<PagingData<GenresModel>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.PAGE_SIZE,
+            enablePlaceholders = true,
+            initialLoadSize = Constants.PAGE_SIZE,
+            prefetchDistance = Constants.PREFETCH_DISTANCE
+        ),
+        pagingSourceFactory = {
+            GenresPagingSource(apiService)
         }
     ).flow.map { pagingData ->
         pagingData.map { result ->

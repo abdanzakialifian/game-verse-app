@@ -1,7 +1,9 @@
 package com.gameverse.app.data.mapper
 
 import com.gameverse.app.data.response.GamesResponse
+import com.gameverse.app.data.response.GenresResponse
 import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GenresModel
 
 fun GamesResponse.toDomain(): List<GamesModel> = results?.map { result ->
     GamesModel(
@@ -41,4 +43,18 @@ fun GamesResponse.ResultsItem.toDomain(): GamesModel = GamesModel(
             name = parentPlatform.platform?.name.orEmpty(),
         )
     }.orEmpty(),
+)
+
+fun GenresResponse.ResultsItem.toDomain(): GenresModel = GenresModel(
+    id = id ?: 0,
+    name = name.orEmpty(),
+    imageBackground = imageBackground.orEmpty(),
+    gamesCount = gamesCount ?: 0,
+    games = games?.map {
+        GenresModel.GamesItem(
+            id = it.id ?: 0,
+            name = it.name.orEmpty(),
+            added = it.added ?: 0,
+        )
+    }.orEmpty()
 )
