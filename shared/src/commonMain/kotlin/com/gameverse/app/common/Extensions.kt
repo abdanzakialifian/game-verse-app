@@ -17,3 +17,9 @@ fun String.formatDate(separator: Char = ' '): String {
     }
     return parseDate.format(customFormat)
 }
+
+fun Int.toFormattedNumber(): String = toString()
+    .reversed()
+    .chunked(3)
+    .joinToString(",")
+    .reversed()
