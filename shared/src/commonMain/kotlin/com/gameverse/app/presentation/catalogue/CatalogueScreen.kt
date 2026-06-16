@@ -124,14 +124,12 @@ private fun GenresPaging(genresPaging: LazyPagingItems<GenresModel>) {
 
                         Column(modifier = Modifier.fillMaxSize()) {
                             Box(
-                                modifier = Modifier.weight(1F),
+                                modifier = Modifier.weight(1F).fillMaxWidth(),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    modifier = Modifier.fillMaxWidth(),
                                     text = result.name,
                                     style = GVTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                                    textAlign = TextAlign.Center,
                                 )
                             }
 
@@ -325,7 +323,7 @@ private fun CatalogueContentPreview() {
         val genresPaging = flowOf(
             PagingData.from(
                 sourceLoadStates = LoadStates(
-                    refresh = LoadState.Loading,
+                    refresh = LoadState.NotLoading(endOfPaginationReached = false),
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.Loading
                 ),
