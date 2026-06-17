@@ -80,7 +80,7 @@ private fun CatalogueContent(
     when (genresPaging.loadState.refresh) {
         is LoadState.Loading -> GenresPlaceholder(paddingValues)
         is LoadState.Error -> GeneralError(
-            modifier = modifier,
+            modifier = modifier.padding(paddingValues),
             onButtonClicked = {
                 genresPaging.refresh()
             }
