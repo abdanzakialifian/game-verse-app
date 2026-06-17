@@ -75,12 +75,11 @@ fun CatalogueScreen(
 private fun CatalogueContent(
     paddingValues: PaddingValues,
     genresPaging: LazyPagingItems<GenresModel>,
-    modifier: Modifier = Modifier,
 ) {
     when (genresPaging.loadState.refresh) {
         is LoadState.Loading -> GenresPlaceholder(paddingValues)
         is LoadState.Error -> GeneralError(
-            modifier = modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues),
             onButtonClicked = {
                 genresPaging.refresh()
             }
@@ -198,63 +197,65 @@ private fun CatalogueContent(
             }
 
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    when (genresPaging.loadState.append) {
-                        is LoadState.Loading -> {
-                            val loadingMessages = listOf(
-                                "Loading more genres...",
-                                "Discovering new genres...",
-                                "Finding your next favorite genre...",
-                                "Exploring gaming categories...",
-                                "Preparing more genres for you..."
-                            )
+                when (genresPaging.loadState.append) {
+                    is LoadState.Loading -> {
+                        val loadingMessages = listOf(
+                            "Loading more genres...",
+                            "Discovering new genres...",
+                            "Finding your next favorite genre...",
+                            "Exploring gaming categories...",
+                            "Preparing more genres for you..."
+                        )
 
-                            var loadingText by remember { mutableStateOf(loadingMessages.random()) }
+                        var loadingText by remember { mutableStateOf(loadingMessages.random()) }
 
-                            LaunchedEffect(Unit) {
-                                while (true) {
-                                    delay(1000L.milliseconds)
-                                    loadingText = loadingMessages.random()
-                                }
+                        LaunchedEffect(Unit) {
+                            while (true) {
+                                delay(1000L.milliseconds)
+                                loadingText = loadingMessages.random()
                             }
+                        }
 
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
                             Text(
                                 text = loadingText,
                                 style = GVTypography.labelLarge,
                             )
                         }
+                    }
 
-                        is LoadState.Error -> {
-                            Column(
-                                modifier = Modifier.clickable(
+                    is LoadState.Error -> {
+                        Column(
+                            modifier = Modifier
+                                .padding(vertical = 12.dp)
+                                .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() },
                                     onClick = { genresPaging.retry() }
                                 ),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_retry),
-                                    tint = GVColor.onPrimary,
-                                    contentDescription = null,
-                                )
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_retry),
+                                tint = GVColor.onPrimary,
+                                contentDescription = null,
+                            )
 
-                                Spacer(modifier = Modifier.height(6.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
 
-                                Text(
-                                    text = "Couldn't load more games",
-                                    style = GVTypography.labelLarge,
-                                )
-                            }
+                            Text(
+                                text = "Couldn't load more games",
+                                style = GVTypography.labelLarge,
+                            )
                         }
-
-                        else -> Unit
                     }
+
+                    else -> Unit
                 }
             }
         }
