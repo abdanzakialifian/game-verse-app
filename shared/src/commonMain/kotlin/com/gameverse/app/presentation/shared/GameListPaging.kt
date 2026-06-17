@@ -137,63 +137,65 @@ fun GameListPaging(
                 }
 
                 item {
-                    Box(
-                        modifier = modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        when (gamesPaging.loadState.append) {
-                            is LoadState.Loading -> {
-                                val loadingMessages = listOf(
-                                    "Loading more games...",
-                                    "Finding more games...",
-                                    "Looking for hidden gems...",
-                                    "Exploring new worlds...",
-                                    "Preparing the next adventure..."
-                                )
+                    when (gamesPaging.loadState.append) {
+                        is LoadState.Loading -> {
+                            val loadingMessages = listOf(
+                                "Loading more games...",
+                                "Finding more games...",
+                                "Looking for hidden gems...",
+                                "Exploring new worlds...",
+                                "Preparing the next adventure..."
+                            )
 
-                                var loadingText by remember { mutableStateOf(loadingMessages.random()) }
+                            var loadingText by remember { mutableStateOf(loadingMessages.random()) }
 
-                                LaunchedEffect(Unit) {
-                                    while (true) {
-                                        delay(1000L.milliseconds)
-                                        loadingText = loadingMessages.random()
-                                    }
+                            LaunchedEffect(Unit) {
+                                while (true) {
+                                    delay(1000L.milliseconds)
+                                    loadingText = loadingMessages.random()
                                 }
+                            }
 
+                            Box(
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 Text(
                                     text = loadingText,
                                     style = GVTypography.labelLarge,
                                 )
                             }
+                        }
 
-                            is LoadState.Error -> {
-                                Column(
-                                    modifier = Modifier.clickable(
+                        is LoadState.Error -> {
+                            Column(
+                                modifier = Modifier
+                                    .padding(vertical = 12.dp)
+                                    .clickable(
                                         indication = null,
                                         interactionSource = remember { MutableInteractionSource() },
                                         onClick = { gamesPaging.retry() }
                                     ),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Icon(
-                                        painter = painterResource(Res.drawable.ic_retry),
-                                        tint = GVColor.onPrimary,
-                                        contentDescription = null,
-                                    )
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_retry),
+                                    tint = GVColor.onPrimary,
+                                    contentDescription = null,
+                                )
 
-                                    Spacer(modifier = Modifier.height(6.dp))
+                                Spacer(modifier = Modifier.height(6.dp))
 
-                                    Text(
-                                        text = "Couldn't load more games",
-                                        style = GVTypography.labelLarge,
-                                    )
-                                }
+                                Text(
+                                    text = "Couldn't load more games",
+                                    style = GVTypography.labelLarge,
+                                )
                             }
-
-                            else -> Unit
                         }
+
+                        else -> Unit
                     }
                 }
             }
