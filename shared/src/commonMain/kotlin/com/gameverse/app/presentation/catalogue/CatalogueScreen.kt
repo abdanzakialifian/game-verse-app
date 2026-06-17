@@ -33,7 +33,6 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -61,45 +60,35 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun CatalogueScreen(
-    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
     viewModel: CatalogueViewModel = koinViewModel()
 ) {
     val genresPaging = viewModel.getGenresPaging.collectAsLazyPagingItems()
 
     CatalogueContent(
-        modifier = modifier,
+        paddingValues = paddingValues,
         genresPaging = genresPaging
     )
 }
 
 @Composable
 private fun CatalogueContent(
+    paddingValues: PaddingValues,
     genresPaging: LazyPagingItems<GenresModel>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Genres",
-            style = GVTypography.headlineSmall,
-            textAlign = TextAlign.Center
+    when (genresPaging.loadState.refresh) {
+        is LoadState.Loading -> GenresPlaceholder(paddingValues)
+        is LoadState.Error -> GeneralError(
+            modifier = modifier,
+            onButtonClicked = {
+                genresPaging.refresh()
+            }
         )
 
-        GenresPaging(genresPaging)
-    }
-}
-
-@Composable
-private fun GenresPaging(genresPaging: LazyPagingItems<GenresModel>) {
-    when (genresPaging.loadState.refresh) {
-        is LoadState.Loading -> GenresPlaceholder()
-        is LoadState.Error -> GeneralError {
-            genresPaging.refresh()
-        }
-
         else -> LazyColumn(
+            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(vertical = 16.dp)
         ) {
             items(genresPaging.itemCount, key = genresPaging.itemKey { it.id }) { index ->
                 val result = genresPaging[index] ?: return@items
@@ -273,10 +262,10 @@ private fun GenresPaging(genresPaging: LazyPagingItems<GenresModel>) {
 }
 
 @Composable
-private fun GenresPlaceholder() {
+private fun GenresPlaceholder(paddingValues: PaddingValues) {
     LazyColumn(
+        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         items(10) {
             Card(
@@ -407,6 +396,7 @@ private fun CatalogueContentPreview() {
         ).collectAsLazyPagingItems()
 
         CatalogueContent(
+            paddingValues = PaddingValues(),
             genresPaging = genresPaging
         )
     }

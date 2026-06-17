@@ -109,9 +109,7 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.Catalogue> {
-                        CatalogueScreen(
-                            modifier = Modifier.padding(innerPadding),
-                        )
+                        CatalogueScreen(innerPadding)
                     }
 
                     entry<MainRoutes.Favorite> {
