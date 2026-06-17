@@ -51,7 +51,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
     viewModel: HomeViewModel = koinViewModel(),
     onNavigateToGameList: () -> Unit,
     onNavigateToGameSeries: (gamePk: String) -> Unit,
@@ -72,7 +72,7 @@ fun HomeScreen(
     }
 
     HomeContent(
-        modifier = modifier,
+        paddingValues = paddingValues,
         uiState = uiState,
         onIntent = viewModel::sendIntent
     )
@@ -81,12 +81,13 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: HomeReducer.State,
-    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
     onIntent: (HomeReducer.Intent) -> Unit,
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
+            .padding(paddingValues)
             .padding(horizontal = 16.dp)
     ) {
         Row(
@@ -169,12 +170,10 @@ private fun HomeContent(
 private fun Games(
     expandedIds: Set<Int>,
     games: List<GamesModel>,
-    modifier: Modifier = Modifier,
     onExpand: (id: Int) -> Unit,
     onShowMoreClicked: (gamePk: String) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
@@ -313,6 +312,7 @@ private fun HomeContentPreview() {
                 expandedIds = gamesData.map { it.id }.toSet(),
                 gamesData = gamesData
             ),
+            paddingValues = PaddingValues(),
             onIntent = {}
         )
     }

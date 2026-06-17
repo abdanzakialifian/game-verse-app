@@ -98,7 +98,7 @@ fun MainApp() {
                 entryProvider = entryProvider {
                     entry<MainRoutes.Home> {
                         HomeScreen(
-                            modifier = Modifier.padding(innerPadding),
+                            paddingValues = innerPadding,
                             onNavigateToGameList = {
                                 backStack.add(MainRoutes.GameList)
                             },
