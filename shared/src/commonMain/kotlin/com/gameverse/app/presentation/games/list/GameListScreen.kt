@@ -94,13 +94,7 @@ private fun GameListContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(
-                        color = GVColor.secondaryContainer,
-                        shape = RoundedCornerShape(
-                            bottomStart = 16.dp,
-                            bottomEnd = 16.dp
-                        )
-                    )
+                    .background(GVColor.secondaryContainer)
                     .statusBarsPadding()
                     .height(TopAppBarDefaults.TopAppBarExpandedHeight)
                     .padding(horizontal = 16.dp),
@@ -174,7 +168,6 @@ private fun GameListContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp)
         ) {
             GameListPaging(
                 expandedIds = uiState.expandedIds,
