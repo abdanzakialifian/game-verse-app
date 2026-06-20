@@ -30,6 +30,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigationevent.NavigationEventInfo
+import androidx.navigationevent.compose.NavigationBackHandler
+import androidx.navigationevent.compose.rememberNavigationEventState
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -60,6 +63,8 @@ fun GameListScreen(
 
     val gamesPaging = viewModel.getGamesPaging.collectAsLazyPagingItems()
 
+    val navigationEventState = rememberNavigationEventState(NavigationEventInfo.None)
+
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
@@ -68,6 +73,16 @@ fun GameListScreen(
             }
         }
     }
+
+    NavigationBackHandler(
+        state = navigationEventState,
+        onBackCompleted = {
+            handleBackPressed(
+                isSearchVisible = uiState.isSearchVisible,
+                onIntent = viewModel::sendIntent
+            )
+        },
+    )
 
     GameListContent(
         uiState = uiState,
@@ -106,11 +121,10 @@ private fun GameListContent(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = {
-                            if (uiState.isSearchVisible) {
-                                onIntent(GameListReducer.Intent.OnSearchVisibility(false))
-                            } else {
-                                onIntent(GameListReducer.Intent.OnNavigateBack)
-                            }
+                            handleBackPressed(
+                                isSearchVisible = uiState.isSearchVisible,
+                                onIntent = onIntent,
+                            )
                         }
                     ),
                     painter = painterResource(Res.drawable.ic_back),
@@ -181,6 +195,17 @@ private fun GameListContent(
                 }
             )
         }
+    }
+}
+
+private fun handleBackPressed(
+    isSearchVisible: Boolean,
+    onIntent: (GameListReducer.Intent) -> Unit
+) {
+    if (isSearchVisible) {
+        onIntent(GameListReducer.Intent.OnSearchVisibility(false))
+    } else {
+        onIntent(GameListReducer.Intent.OnNavigateBack)
     }
 }
 
