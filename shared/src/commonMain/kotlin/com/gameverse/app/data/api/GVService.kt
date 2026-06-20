@@ -2,6 +2,7 @@ package com.gameverse.app.data.api
 
 import com.gameverse.app.data.resources.Games
 import com.gameverse.app.data.resources.Genres
+import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.data.response.GamesResponse
 import com.gameverse.app.data.response.GenresResponse
 import io.ktor.client.HttpClient
@@ -51,5 +52,11 @@ class GVService(private val client: HttpClient) {
                 pageSize = pageSize
             )
         ).body<GenresResponse>()
+    }
+
+    suspend fun getGameDetail(id: String): GameDetailResponse {
+        return client.get(
+            Games.Detail(id = id)
+        ).body<GameDetailResponse>()
     }
 }

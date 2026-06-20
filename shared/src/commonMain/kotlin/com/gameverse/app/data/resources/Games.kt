@@ -31,4 +31,11 @@ class Games(
         @SerialName("page_size")
         val pageSize: Int,
     )
+
+    @Serializable
+    @Resource("games/{id}")
+    class Detail(
+        @SerialName("id")
+        val id: String
+    )
 }

@@ -11,6 +11,7 @@ import com.gameverse.app.data.paging.GamesPagingSource
 import com.gameverse.app.data.paging.GamesSeriesPagingSource
 import com.gameverse.app.data.paging.GenresPagingSource
 import com.gameverse.app.di.IoDispatcher
+import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
 import com.gameverse.app.domain.repository.GVRepository
@@ -29,25 +30,26 @@ class GVRepositoryImpl(
         apiService.getGames().toDomain()
     }
 
-    override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GamesModel>> = Pager(
-        config = PagingConfig(
-            pageSize = Constants.PAGE_SIZE,
-            enablePlaceholders = true,
-            initialLoadSize = Constants.PAGE_SIZE,
-            prefetchDistance = Constants.PREFETCH_DISTANCE
-        ),
-        pagingSourceFactory = {
-            GamesPagingSource(
-                query = query,
-                genres = genres,
-                apiService = apiService
-            )
+    override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GamesModel>> =
+        Pager(
+            config = PagingConfig(
+                pageSize = Constants.PAGE_SIZE,
+                enablePlaceholders = true,
+                initialLoadSize = Constants.PAGE_SIZE,
+                prefetchDistance = Constants.PREFETCH_DISTANCE
+            ),
+            pagingSourceFactory = {
+                GamesPagingSource(
+                    query = query,
+                    genres = genres,
+                    apiService = apiService
+                )
+            }
+        ).flow.map { pagingData ->
+            pagingData.map { result ->
+                result.toDomain()
+            }
         }
-    ).flow.map { pagingData ->
-        pagingData.map { result ->
-            result.toDomain()
-        }
-    }
 
     override fun getGamesSeriesPaging(gamePk: String): Flow<PagingData<GamesModel>> = Pager(
         config = PagingConfig(
@@ -82,5 +84,9 @@ class GVRepositoryImpl(
         pagingData.map { result ->
             result.toDomain()
         }
+    }
+
+    override suspend fun getGameDetail(id: String): DetailModel = withContext(dispatcher) {
+        apiService.getGameDetail(id).toDomain()
     }
 }

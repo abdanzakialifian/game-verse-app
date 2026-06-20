@@ -1,6 +1,7 @@
 package com.gameverse.app.domain.repository
 
 import androidx.paging.PagingData
+import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
 import kotlinx.coroutines.flow.Flow
@@ -10,4 +11,5 @@ interface GVRepository {
     fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GamesModel>>
     fun getGamesSeriesPaging(gamePk: String): Flow<PagingData<GamesModel>>
     fun getGenresPaging(): Flow<PagingData<GenresModel>>
+    suspend fun getGameDetail(id: String): DetailModel
 }

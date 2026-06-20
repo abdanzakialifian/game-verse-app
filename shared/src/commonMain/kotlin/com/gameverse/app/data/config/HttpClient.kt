@@ -22,7 +22,7 @@ fun HttpClientConfig<*>.defaultConfig() {
             protocol = URLProtocol.HTTPS
             host = "api.rawg.io"
             path("api/")
-            parameters.append("key", "")
+            parameters.append("key", "8a3a5fce65fd47008dbffaa2a0470c0b")
         }
         header(HttpHeaders.ContentType, ContentType.Application.Json)
     }
