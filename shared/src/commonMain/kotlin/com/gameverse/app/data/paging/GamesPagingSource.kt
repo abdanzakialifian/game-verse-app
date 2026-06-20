@@ -8,12 +8,14 @@ import com.gameverse.app.data.response.GamesResponse
 class GamesPagingSource(
     private val apiService: GVService,
     private val query: String,
+    private val genres: String?,
 ) : PagingSource<Int, GamesResponse.ResultsItem>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GamesResponse.ResultsItem> =
         try {
             val nextPageNumber = params.key ?: 1
             val response = apiService.getGames(
                 query = query,
+                genres = genres,
                 page = nextPageNumber,
                 pageSize = params.loadSize
             )

@@ -13,7 +13,15 @@ class CatalogueViewModel(
     initialState = CatalogueReducer.State(),
     reducer = CatalogueReducer()
 ) {
-    override fun sendIntent(intent: CatalogueReducer.Intent) {}
+    override fun sendIntent(intent: CatalogueReducer.Intent) {
+        when (intent) {
+            is CatalogueReducer.Intent.OnCategoryClicked -> sendEffect(
+                CatalogueReducer.Effect.NavigateToGameList(
+                    intent.id
+                )
+            )
+        }
+    }
 
     val getGenresPaging = repository.getGenresPaging().cachedIn(viewModelScope)
 }

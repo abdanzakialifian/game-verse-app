@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -48,10 +47,12 @@ import gameverse.shared.generated.resources.ic_search
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun GameListScreen(
-    viewModel: GameListViewModel = koinViewModel(),
+    genreId: String?,
+    viewModel: GameListViewModel = koinViewModel { parametersOf(genreId) },
     onNavigateToGameSeries: (gamePk: String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {

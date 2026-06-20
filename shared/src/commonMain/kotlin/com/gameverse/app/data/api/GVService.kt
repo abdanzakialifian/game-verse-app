@@ -13,12 +13,14 @@ import org.koin.core.annotation.Singleton
 class GVService(private val client: HttpClient) {
     suspend fun getGames(
         query: String? = null,
+        genres: String? = null,
         page: Int? = null,
         pageSize: Int? = null,
     ): GamesResponse {
         return client.get(
             Games(
                 search = query,
+                genres = genres,
                 page = page,
                 pageSize = pageSize
             )

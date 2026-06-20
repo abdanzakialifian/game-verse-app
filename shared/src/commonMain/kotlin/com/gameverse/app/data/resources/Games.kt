@@ -15,6 +15,9 @@ class Games(
 
     @SerialName("page_size")
     val pageSize: Int? = null,
+
+    @SerialName("genres")
+    val genres: String? = null,
 ) {
     @Serializable
     @Resource("games/{game_pk}/game-series")

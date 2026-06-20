@@ -5,13 +5,17 @@ import com.gameverse.app.mvi.Reducer
 
 class CatalogueReducer : Reducer<CatalogueReducer.State, CatalogueReducer.Event> {
     @Immutable
-    sealed interface Intent : Reducer.ViewIntent
+    sealed interface Intent : Reducer.ViewIntent {
+        data class OnCategoryClicked(val id: String) : Intent
+    }
 
     @Immutable
     sealed interface Event : Reducer.ViewEvent
 
     @Immutable
-    sealed interface Effect : Reducer.ViewEffect
+    sealed interface Effect : Reducer.ViewEffect {
+        data class NavigateToGameList(val id: String) : Effect
+    }
 
     @Immutable
     data class State(

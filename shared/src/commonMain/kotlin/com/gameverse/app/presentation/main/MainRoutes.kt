@@ -18,7 +18,7 @@ sealed interface MainRoutes : NavKey {
     data object Profile : MainRoutes
 
     @Serializable
-    data object GameList : MainRoutes
+    data class GameList(val genreId: String? = null) : MainRoutes
 
     @Serializable
     data class GameSeries(val gamePk: String) : MainRoutes

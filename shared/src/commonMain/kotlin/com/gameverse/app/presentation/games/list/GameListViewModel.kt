@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class GameListViewModel(
-    repository: GVRepository
+    repository: GVRepository,
+    @InjectedParam genreId: String?,
 ) : BaseViewModel<GameListReducer.State, GameListReducer.Event, GameListReducer.Effect, GameListReducer.Intent>(
     initialState = GameListReducer.State(),
     reducer = GameListReducer()
@@ -46,7 +48,7 @@ class GameListViewModel(
         .debounce(500L)
         .distinctUntilChanged()
         .flatMapLatest { value ->
-            repository.getGamesPaging(value)
+            repository.getGamesPaging(query = value, genres = genreId)
         }
         .cachedIn(viewModelScope)
 }

@@ -92,7 +92,7 @@ fun MainApp() {
                         HomeScreen(
                             paddingValues = innerPadding,
                             onNavigateToGameList = {
-                                backStack.add(MainRoutes.GameList)
+                                backStack.add(MainRoutes.GameList())
                             },
                             onNavigateToGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
@@ -101,7 +101,12 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.Catalogue> {
-                        CatalogueScreen(innerPadding)
+                        CatalogueScreen(
+                            paddingValues = innerPadding,
+                            onGenresClicked = { id ->
+                                backStack.add(MainRoutes.GameList(id))
+                            }
+                        )
                     }
 
                     entry<MainRoutes.Favorite> {
@@ -114,6 +119,7 @@ fun MainApp() {
 
                     entry<MainRoutes.GameList>(metadata = Utils.slideAnimation()) {
                         GameListScreen(
+                            genreId = it.genreId,
                             onNavigateToGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
                             },

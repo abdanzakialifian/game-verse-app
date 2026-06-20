@@ -61,13 +61,23 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun CatalogueScreen(
     paddingValues: PaddingValues,
-    viewModel: CatalogueViewModel = koinViewModel()
+    viewModel: CatalogueViewModel = koinViewModel(),
+    onGenresClicked: (id: String) -> Unit,
 ) {
     val genresPaging = viewModel.getGenresPaging.collectAsLazyPagingItems()
 
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when (effect) {
+                is CatalogueReducer.Effect.NavigateToGameList -> onGenresClicked(effect.id)
+            }
+        }
+    }
+
     CatalogueContent(
         paddingValues = paddingValues,
-        genresPaging = genresPaging
+        genresPaging = genresPaging,
+        onIntent = viewModel::sendIntent
     )
 }
 
@@ -75,6 +85,7 @@ fun CatalogueScreen(
 private fun CatalogueContent(
     paddingValues: PaddingValues,
     genresPaging: LazyPagingItems<GenresModel>,
+    onIntent: (CatalogueReducer.Intent) -> Unit,
 ) {
     when (genresPaging.loadState.refresh) {
         is LoadState.Loading -> GenresPlaceholder(paddingValues)
@@ -95,7 +106,14 @@ private fun CatalogueContent(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp),
+                        .height(300.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = {
+                                onIntent(CatalogueReducer.Intent.OnCategoryClicked(result.id.toString()))
+                            }
+                        ),
                     shape = GVShapes.medium,
                     colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
                 ) {
@@ -398,7 +416,8 @@ private fun CatalogueContentPreview() {
 
         CatalogueContent(
             paddingValues = PaddingValues(),
-            genresPaging = genresPaging
+            genresPaging = genresPaging,
+            onIntent = {}
         )
     }
 }
