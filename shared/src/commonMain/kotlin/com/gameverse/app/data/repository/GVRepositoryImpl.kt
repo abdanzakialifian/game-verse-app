@@ -29,7 +29,7 @@ class GVRepositoryImpl(
         apiService.getGames().toDomain()
     }
 
-    override fun getGamesPaging(query: String, genres: String?): Flow<PagingData<GamesModel>> = Pager(
+    override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GamesModel>> = Pager(
         config = PagingConfig(
             pageSize = Constants.PAGE_SIZE,
             enablePlaceholders = true,

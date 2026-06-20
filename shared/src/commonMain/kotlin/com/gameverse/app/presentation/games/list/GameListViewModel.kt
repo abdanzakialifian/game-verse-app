@@ -44,7 +44,7 @@ class GameListViewModel(
     }
 
     val getGamesPaging = state
-        .map { it.searchValue }
+        .map { it.searchValue.ifBlank { null } }
         .debounce(500L)
         .distinctUntilChanged()
         .flatMapLatest { value ->
