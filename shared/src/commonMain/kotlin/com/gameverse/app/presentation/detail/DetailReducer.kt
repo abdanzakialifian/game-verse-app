@@ -1,6 +1,7 @@
 package com.gameverse.app.presentation.detail
 
 import androidx.compose.runtime.Immutable
+import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.mvi.Reducer
 
 class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
@@ -8,14 +9,20 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     sealed interface Intent : Reducer.ViewIntent
 
     @Immutable
-    sealed interface Event : Reducer.ViewEvent
+    sealed interface Event : Reducer.ViewEvent {
+        data class GetGameDetailLoading(val isLoading: Boolean) : Event
+        data class GetGameDetailData(val data: DetailModel) : Event
+        data class GetGameDetailError(val error: Throwable) : Event
+    }
 
     @Immutable
     sealed interface Effect : Reducer.ViewEffect
 
     @Immutable
     data class State(
-        val data: String = ""
+        val isDetailLoading: Boolean = false,
+        val detailData: DetailModel? = null,
+        val detailError: Throwable? = null,
     ) : Reducer.ViewState
 
     override fun reduce(
@@ -23,7 +30,9 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         event: Event
     ): State {
         return when (event) {
-            else -> state
+            is Event.GetGameDetailLoading -> state.copy(isDetailLoading = event.isLoading)
+            is Event.GetGameDetailData -> state.copy(detailData = event.data)
+            is Event.GetGameDetailError -> state.copy(detailError = event.error)
         }
     }
 }
