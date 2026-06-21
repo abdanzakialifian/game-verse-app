@@ -23,3 +23,6 @@ fun Int.toFormattedNumber(): String = toString()
     .chunked(3)
     .joinToString(",")
     .reversed()
+
+fun String.trimAfterDoubleNewline(): String? =
+    Regex("\\n\\s*\\n").split(this, limit = 2).firstOrNull()
