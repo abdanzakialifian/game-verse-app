@@ -16,7 +16,7 @@ data class DetailModel(
     val added: Int,
     val developers: List<DevelopersItem>,
     val nameOriginal: String,
-    val rating: Int,
+    val rating: Double,
     val gameSeriesCount: Int,
     val playtime: Int,
     val platforms: List<PlatformsItem>,
