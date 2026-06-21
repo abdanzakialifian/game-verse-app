@@ -4,10 +4,12 @@ import com.gameverse.app.data.response.AddedByStatus
 import com.gameverse.app.data.response.EsrbRating
 import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.data.response.GamesResponse
+import com.gameverse.app.data.response.GamesScreenshotsResponse
 import com.gameverse.app.data.response.GenresResponse
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
+import com.gameverse.app.domain.model.ScreenshotsModel
 
 fun GamesResponse.toDomain(): List<GamesModel> = results?.map { result ->
     GamesModel(
@@ -67,7 +69,7 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
     added = added ?: 0,
     developers = developers.orEmpty(),
     nameOriginal = nameOriginal.orEmpty(),
-    rating = rating ?: 0,
+    rating = rating ?: 0.0,
     gameSeriesCount = gameSeriesCount ?: 0,
     playtime = playtime ?: 0,
     platforms = platforms.orEmpty(),
@@ -115,4 +117,12 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
     backgroundImageAdditional = backgroundImageAdditional.orEmpty(),
     esrbRating = esrbRating ?: EsrbRating(),
     screenshotsCount = screenshotsCount ?: 0,
+)
+
+fun GamesScreenshotsResponse.ResultsItem.toDomain(): ScreenshotsModel = ScreenshotsModel(
+    id = id ?: 0,
+    image = image.orEmpty(),
+    isDeleted = isDeleted ?: false,
+    width = width ?: 0,
+    height = height ?: 0
 )

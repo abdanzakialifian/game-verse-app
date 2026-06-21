@@ -38,4 +38,17 @@ class Games(
         @SerialName("id")
         val id: String
     )
+
+    @Serializable
+    @Resource("games/{game_pk}/screenshots")
+    class Screenshots(
+        @SerialName("game_pk")
+        val gamePk: String,
+
+        @SerialName("page")
+        val page: Int,
+
+        @SerialName("page_size")
+        val pageSize: Int,
+    )
 }

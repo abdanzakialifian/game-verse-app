@@ -4,6 +4,7 @@ import com.gameverse.app.data.resources.Games
 import com.gameverse.app.data.resources.Genres
 import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.data.response.GamesResponse
+import com.gameverse.app.data.response.GamesScreenshotsResponse
 import com.gameverse.app.data.response.GenresResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -58,5 +59,19 @@ class GVService(private val client: HttpClient) {
         return client.get(
             Games.Detail(id = id)
         ).body<GameDetailResponse>()
+    }
+
+    suspend fun getGamesScreenshots(
+        gamePk: String,
+        page: Int,
+        pageSize: Int,
+    ): GamesScreenshotsResponse {
+        return client.get(
+            Games.Screenshots(
+                gamePk = gamePk,
+                page = page,
+                pageSize = pageSize
+            )
+        ).body<GamesScreenshotsResponse>()
     }
 }

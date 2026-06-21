@@ -8,12 +8,14 @@ import com.gameverse.app.common.Constants
 import com.gameverse.app.data.api.GVService
 import com.gameverse.app.data.mapper.toDomain
 import com.gameverse.app.data.paging.GamesPagingSource
+import com.gameverse.app.data.paging.GamesScreenshotsPagingSource
 import com.gameverse.app.data.paging.GamesSeriesPagingSource
 import com.gameverse.app.data.paging.GenresPagingSource
 import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
+import com.gameverse.app.domain.model.ScreenshotsModel
 import com.gameverse.app.domain.repository.GVRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -88,5 +90,24 @@ class GVRepositoryImpl(
 
     override suspend fun getGameDetail(id: String): DetailModel = withContext(dispatcher) {
         apiService.getGameDetail(id).toDomain()
+    }
+
+    override fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotsModel>> = Pager(
+        config = PagingConfig(
+            pageSize = Constants.PAGE_SIZE,
+            enablePlaceholders = true,
+            initialLoadSize = Constants.PAGE_SIZE,
+            prefetchDistance = Constants.PREFETCH_DISTANCE
+        ),
+        pagingSourceFactory = {
+            GamesScreenshotsPagingSource(
+                apiService = apiService,
+                gamePk = gamePK
+            )
+        }
+    ).flow.map { pagingData ->
+        pagingData.map { result ->
+            result.toDomain()
+        }
     }
 }
