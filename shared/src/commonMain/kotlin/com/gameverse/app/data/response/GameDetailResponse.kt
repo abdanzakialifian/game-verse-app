@@ -15,7 +15,7 @@ data class GameDetailResponse(
 	val nameOriginal: String? = null,
 
 	@SerialName("rating")
-	val rating: Int? = null,
+	val rating: Double? = null,
 
 	@SerialName("game_series_count")
 	val gameSeriesCount: Int? = null,
@@ -114,7 +114,7 @@ data class GameDetailResponse(
 	val creatorsCount: Int? = null,
 
 	@SerialName("ratings")
-	val ratings: List<RatingsItem?>? = null,
+	val ratings: List<RatingsItem>? = null,
 
 	@SerialName("genres")
 	val genres: List<GenresItem>? = null,

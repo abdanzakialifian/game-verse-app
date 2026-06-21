@@ -15,7 +15,7 @@ class GenresPagingSource(
                 page = nextPageNumber,
                 pageSize = params.loadSize
             )
-            return LoadResult.Page(
+            LoadResult.Page(
                 data = response.results.orEmpty(),
                 prevKey = if (response.previous != null) nextPageNumber - 1 else null,
                 nextKey = if (response.next != null) nextPageNumber + 1 else null
