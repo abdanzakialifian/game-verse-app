@@ -12,6 +12,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
         data class OnExpanded(val id: Int) : Intent
         data object OnNavigateToGameList : Intent
         data class OnNavigateToGameSeries(val gamePk: String) : Intent
+        data class OnNavigateToDetail(val gamePk: String) : Intent
     }
 
     @Immutable
@@ -27,6 +28,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     sealed interface Effect : Reducer.ViewEffect {
         data object NavigateToGameList : Effect
         data class NavigateToGameSeries(val gamePk: String) : Effect
+        data class NavigateToDetail(val gamePk: String) : Effect
     }
 
     @Immutable

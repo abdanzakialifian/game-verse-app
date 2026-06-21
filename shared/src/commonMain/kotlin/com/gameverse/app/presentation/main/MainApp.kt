@@ -32,6 +32,7 @@ import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.gameverse.app.common.Utils
 import com.gameverse.app.presentation.catalogue.CatalogueScreen
+import com.gameverse.app.presentation.detail.DetailScreen
 import com.gameverse.app.presentation.favorite.FavoriteScreen
 import com.gameverse.app.presentation.games.list.GameListScreen
 import com.gameverse.app.presentation.games.series.GameSeriesScreen
@@ -96,6 +97,9 @@ fun MainApp() {
                             },
                             onNavigateToGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
+                            },
+                            onNavigateToDetail = { gamePk ->
+                                backStack.add(MainRoutes.Detail(gamePk))
                             }
                         )
                     }
@@ -136,6 +140,10 @@ fun MainApp() {
                                 backStack.removeLastOrNull()
                             }
                         )
+                    }
+
+                    entry<MainRoutes.Detail>(metadata = Utils.slideAnimation()) {
+                        DetailScreen(it.gameId)
                     }
                 }
             )

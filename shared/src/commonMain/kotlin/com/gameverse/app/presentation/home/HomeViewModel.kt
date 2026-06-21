@@ -27,6 +27,8 @@ class HomeViewModel(
             HomeReducer.Intent.OnNavigateToGameList -> sendEffect(HomeReducer.Effect.NavigateToGameList)
 
             is HomeReducer.Intent.OnNavigateToGameSeries -> sendEffect(HomeReducer.Effect.NavigateToGameSeries(intent.gamePk))
+
+            is HomeReducer.Intent.OnNavigateToDetail -> sendEffect(HomeReducer.Effect.NavigateToDetail(intent.gamePk))
         }
     }
 

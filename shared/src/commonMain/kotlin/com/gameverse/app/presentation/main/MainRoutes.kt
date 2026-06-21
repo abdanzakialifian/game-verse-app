@@ -22,4 +22,7 @@ sealed interface MainRoutes : NavKey {
 
     @Serializable
     data class GameSeries(val gamePk: String) : MainRoutes
+
+    @Serializable
+    data class Detail(val gameId: String) : MainRoutes
 }

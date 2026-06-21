@@ -55,6 +55,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel(),
     onNavigateToGameList: () -> Unit,
     onNavigateToGameSeries: (gamePk: String) -> Unit,
+    onNavigateToDetail: (gamePk: String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -67,6 +68,7 @@ fun HomeScreen(
             when (effect) {
                 HomeReducer.Effect.NavigateToGameList -> onNavigateToGameList()
                 is HomeReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
+                is HomeReducer.Effect.NavigateToDetail -> onNavigateToDetail(effect.gamePk)
             }
         }
     }
@@ -155,6 +157,9 @@ private fun HomeContent(
             else -> Games(
                 expandedIds = uiState.expandedIds,
                 games = uiState.gamesData,
+                onGameClicked = { gamePk ->
+                    onIntent(HomeReducer.Intent.OnNavigateToDetail(gamePk))
+                },
                 onExpand = { id ->
                     onIntent(HomeReducer.Intent.OnExpanded(id))
                 },
@@ -170,6 +175,7 @@ private fun HomeContent(
 private fun Games(
     expandedIds: Set<Int>,
     games: List<GamesModel>,
+    onGameClicked: (gamePk: String) -> Unit,
     onExpand: (id: Int) -> Unit,
     onShowMoreClicked: (gamePk: String) -> Unit,
 ) {
@@ -181,7 +187,15 @@ private fun Games(
             val isExpanded = result.id in expandedIds
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {
+                            onGameClicked(result.id.toString())
+                        }
+                    ),
                 shape = GVShapes.medium,
                 colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
             ) {
