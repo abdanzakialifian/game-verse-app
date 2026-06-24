@@ -15,11 +15,13 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gameverse.app.common.formatDate
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
+import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 
 @Composable
@@ -91,5 +93,31 @@ fun GameInformation(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun GameInformationPreview() {
+    GVTheme {
+        GameInformation(
+            released = "2013-09-17",
+            genres = listOf(
+                GamesModel.GenresItem(
+                    id = 1,
+                    name = "Action"
+                ),
+                GamesModel.GenresItem(
+                    id = 2,
+                    name = "RPG"
+                ),
+                GamesModel.GenresItem(
+                    id = 3,
+                    name = "Shooter"
+                ),
+            ),
+            isExpanded = true,
+            onButtonClicked = {}
+        )
     }
 }

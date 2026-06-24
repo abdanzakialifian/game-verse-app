@@ -270,7 +270,115 @@ private fun GameListPagingPreview() {
         val gamesPaging = flowOf(
             PagingData.from(
                 sourceLoadStates = LoadStates(
-                    refresh = LoadState.NotLoading(endOfPaginationReached = false),
+                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                    append = LoadState.NotLoading(endOfPaginationReached = true)
+                ),
+                data = gamesData
+            )
+        ).collectAsLazyPagingItems()
+
+        GameListPaging(
+            expandedIds = gamesData.map { it.id }.toSet(),
+            gamesPaging = gamesPaging,
+            onExpand = {},
+            onShowMoreClicked = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun GameListPagingInitialLoadingPreview() {
+    GVTheme {
+        val gamesPaging = flowOf(
+            PagingData.from(
+                sourceLoadStates = LoadStates(
+                    refresh = LoadState.Loading,
+                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                    append = LoadState.NotLoading(endOfPaginationReached = true)
+                ),
+                data = emptyList<GamesModel>()
+            )
+        ).collectAsLazyPagingItems()
+
+        GameListPaging(
+            expandedIds = emptySet(),
+            gamesPaging = gamesPaging,
+            onExpand = {},
+            onShowMoreClicked = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun GameListPagingLoadMoreLoadingPreview() {
+    GVTheme {
+        val gamesData = List(2) {
+            GamesModel(
+                id = it,
+                name = "Grand Theft Auto V",
+                backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                released = "2013-09-17",
+                genres = listOf(
+                    GamesModel.GenresItem(
+                        id = 1,
+                        name = "Action"
+                    ),
+                    GamesModel.GenresItem(
+                        id = 2,
+                        name = "RPG"
+                    ),
+                    GamesModel.GenresItem(
+                        id = 3,
+                        name = "Shooter"
+                    ),
+                ),
+                parentPlatforms = listOf(
+                    GamesModel.ParentPlatformsItem(
+                        id = 1,
+                        name = "Windows"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 2,
+                        name = "PlayStation"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 3,
+                        name = "Xbox"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 4,
+                        name = "Apple"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 5,
+                        name = "Apple Mac"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 6,
+                        name = "Linux"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 7,
+                        name = "Nintendo"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 8,
+                        name = "Android"
+                    ),
+                    GamesModel.ParentPlatformsItem(
+                        id = 9,
+                        name = "Others"
+                    )
+                ),
+            )
+        }
+        val gamesPaging = flowOf(
+            PagingData.from(
+                sourceLoadStates = LoadStates(
+                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.Loading
                 ),
@@ -279,7 +387,7 @@ private fun GameListPagingPreview() {
         ).collectAsLazyPagingItems()
 
         GameListPaging(
-            expandedIds = gamesData.map { it.id }.toSet(),
+            expandedIds = emptySet(),
             gamesPaging = gamesPaging,
             onExpand = {},
             onShowMoreClicked = {}
