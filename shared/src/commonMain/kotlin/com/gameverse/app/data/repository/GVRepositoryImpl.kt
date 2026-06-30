@@ -15,6 +15,7 @@ import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
+import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 import com.gameverse.app.domain.repository.GVRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -109,5 +110,11 @@ class GVRepositoryImpl(
         pagingData.map { result ->
             result.toDomain()
         }
+    }
+
+    override suspend fun getMoviesGames(id: String): List<MoviesModel> = withContext(dispatcher) {
+        apiService.getGamesMovies(id).results?.map {
+            it.toDomain()
+        }.orEmpty()
     }
 }

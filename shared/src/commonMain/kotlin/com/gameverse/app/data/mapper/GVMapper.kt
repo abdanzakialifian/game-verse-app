@@ -3,12 +3,14 @@ package com.gameverse.app.data.mapper
 import com.gameverse.app.data.response.AddedByStatus
 import com.gameverse.app.data.response.EsrbRating
 import com.gameverse.app.data.response.GameDetailResponse
+import com.gameverse.app.data.response.GamesMoviesResponse
 import com.gameverse.app.data.response.GamesResponse
 import com.gameverse.app.data.response.GamesScreenshotsResponse
 import com.gameverse.app.data.response.GenresResponse
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
+import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 
 fun GamesResponse.toDomain(): List<GamesModel> = results?.map { result ->
@@ -125,4 +127,12 @@ fun GamesScreenshotsResponse.ResultsItem.toDomain(): ScreenshotsModel = Screensh
     isDeleted = isDeleted ?: false,
     width = width ?: 0,
     height = height ?: 0
+)
+
+fun GamesMoviesResponse.ResultsItem.toDomain(): MoviesModel = MoviesModel(
+    preview = preview.orEmpty(),
+    name = name.orEmpty(),
+    id = id ?: 0,
+    max = data?.max.orEmpty(),
+    jsonMember480 = data?.jsonMember480.orEmpty(),
 )

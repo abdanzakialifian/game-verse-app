@@ -3,6 +3,7 @@ package com.gameverse.app.data.api
 import com.gameverse.app.data.resources.Games
 import com.gameverse.app.data.resources.Genres
 import com.gameverse.app.data.response.GameDetailResponse
+import com.gameverse.app.data.response.GamesMoviesResponse
 import com.gameverse.app.data.response.GamesResponse
 import com.gameverse.app.data.response.GamesScreenshotsResponse
 import com.gameverse.app.data.response.GenresResponse
@@ -73,5 +74,9 @@ class GVService(private val client: HttpClient) {
                 pageSize = pageSize
             )
         ).body<GamesScreenshotsResponse>()
+    }
+
+    suspend fun getGamesMovies(id: String): GamesMoviesResponse {
+        return client.get(Games.Movies(id)).body<GamesMoviesResponse>()
     }
 }
