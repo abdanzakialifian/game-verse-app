@@ -1,5 +1,8 @@
 package com.gameverse.app.presentation.detail
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +22,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -40,8 +44,10 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import chaintech.videoplayer.ui.preview.VideoPreviewComposable
 import coil3.compose.AsyncImage
 import com.gameverse.app.common.DetailTabs
+import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.data.response.AddedByStatus
 import com.gameverse.app.data.response.EsrbRating
@@ -61,10 +67,23 @@ import org.koin.core.parameter.parametersOf
 fun DetailScreen(
     gameId: String,
     viewModel: DetailViewModel = koinViewModel { parametersOf(gameId) },
+    onNavigateToDetailVideoPlayer: (String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     val gamesScreenshotsPaging = viewModel.gamesScreenshotsPaging.collectAsLazyPagingItems()
+
+    LaunchEffectOnce(Unit) {
+        viewModel.sendIntent(DetailReducer.Intent.OnGetGamesMovies(gameId))
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when(effect) {
+                is DetailReducer.Effect.NavigateToDetailVideoPlayer -> onNavigateToDetailVideoPlayer(effect.url)
+            }
+        }
+    }
 
     DetailContent(
         uiState = uiState,
@@ -91,6 +110,8 @@ private fun DetailContent(
         val selectedTabIndex by remember { derivedStateOf { pagerState.currentPage } }
 
         val screenshotsPagerState = rememberPagerState { gamesScreenshotsPaging.itemCount }
+
+        val moviesPagerState = rememberPagerState { uiState.moviesData.size }
 
         AsyncImage(
             modifier = Modifier
@@ -145,7 +166,8 @@ private fun DetailContent(
 
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
-            state = pagerState
+            state = pagerState,
+            userScrollEnabled = false,
         ) { index ->
             when (index) {
                 DetailTabs.SCREENSHOTS.ordinal -> HorizontalPager(
@@ -174,6 +196,38 @@ private fun DetailContent(
                         contentDescription = null,
                         filterQuality = FilterQuality.Medium,
                     )
+                }
+
+                DetailTabs.TRAILERS.ordinal -> HorizontalPager(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = moviesPagerState,
+                    contentPadding = PaddingValues(horizontal = 8.dp),
+                    pageSpacing = 12.dp,
+                    pageSize = object : PageSize {
+                        override fun Density.calculateMainAxisPageSize(
+                            availableSpace: Int,
+                            pageSpacing: Int
+                        ): Int = (availableSpace * 0.80f).toInt()
+                    },
+                    key = { uiState.moviesData.getOrNull(it)?.id ?: 0 }
+                ) { index ->
+                    val result = uiState.moviesData.getOrNull(index) ?: return@HorizontalPager
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f)
+                            .clip(GVShapes.small)
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = {
+                                    onIntent(DetailReducer.Intent.OnNavigateToDetailVideoPlayer(result.max))
+                                }
+                            ),
+                    ) {
+                        VideoPreviewComposable(result.max)
+                    }
                 }
             }
         }

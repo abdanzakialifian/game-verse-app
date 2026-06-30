@@ -33,6 +33,7 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.gameverse.app.common.Utils
 import com.gameverse.app.presentation.catalogue.CatalogueScreen
 import com.gameverse.app.presentation.detail.DetailScreen
+import com.gameverse.app.presentation.detail.DetailVideoPlayer
 import com.gameverse.app.presentation.favorite.FavoriteScreen
 import com.gameverse.app.presentation.games.list.GameListScreen
 import com.gameverse.app.presentation.games.series.GameSeriesScreen
@@ -59,6 +60,8 @@ fun MainApp() {
                     subclass(MainRoutes.Profile::class, MainRoutes.Profile.serializer())
                     subclass(MainRoutes.GameList::class, MainRoutes.GameList.serializer())
                     subclass(MainRoutes.GameSeries::class, MainRoutes.GameSeries.serializer())
+                    subclass(MainRoutes.Detail::class, MainRoutes.Detail.serializer())
+                    subclass(MainRoutes.DetailVideoPlayer::class, MainRoutes.DetailVideoPlayer.serializer())
                 }
             }
         },
@@ -143,7 +146,21 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.Detail>(metadata = Utils.slideAnimation()) {
-                        DetailScreen(it.gameId)
+                        DetailScreen(
+                            gameId = it.gameId,
+                            onNavigateToDetailVideoPlayer = { url ->
+                                backStack.add(MainRoutes.DetailVideoPlayer(url))
+                            }
+                        )
+                    }
+
+                    entry<MainRoutes.DetailVideoPlayer>(metadata = Utils.slideAnimation()) {
+                        DetailVideoPlayer(
+                            url = it.url,
+                            onBack = {
+                                backStack.removeLastOrNull()
+                            }
+                        )
                     }
                 }
             )

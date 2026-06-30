@@ -20,7 +20,12 @@ class DetailViewModel(
         getGameDetail(gameId)
     }
 
-    override fun sendIntent(intent: DetailReducer.Intent) {}
+    override fun sendIntent(intent: DetailReducer.Intent) {
+        when(intent) {
+            is DetailReducer.Intent.OnGetGamesMovies -> getGamesMovies(intent.id)
+            is DetailReducer.Intent.OnNavigateToDetailVideoPlayer -> sendEffect(DetailReducer.Effect.NavigateToDetailVideoPlayer(intent.url))
+        }
+    }
 
     private fun getGameDetail(gameId: String) {
         viewModelScope.launch {
@@ -38,4 +43,18 @@ class DetailViewModel(
 
     val gamesScreenshotsPaging =
         repository.getGamesScreenshotsPaging(gameId).cachedIn(viewModelScope)
+
+    private fun getGamesMovies(id: String) {
+        viewModelScope.launch {
+            sendEvent(DetailReducer.Event.GetMoviesLoading(true))
+            try {
+                val movies = repository.getMoviesGames(id)
+                sendEvent(DetailReducer.Event.GetMoviesData(movies))
+            } catch (e: Exception) {
+                sendEvent(DetailReducer.Event.GetMoviesError(e))
+            } finally {
+                sendEvent(DetailReducer.Event.GetMoviesLoading(false))
+            }
+        }
+    }
 }
