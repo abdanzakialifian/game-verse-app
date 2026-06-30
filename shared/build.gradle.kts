@@ -62,6 +62,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose)
+            implementation(libs.compose.multiplatform.media.player)
         }
 
         iosMain.dependencies {
