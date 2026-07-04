@@ -10,6 +10,8 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     sealed interface Intent : Reducer.ViewIntent {
         data class OnGetGamesMovies(val id: String) : Intent
         data class OnNavigateToDetailVideoPlayer(val url: String) : Intent
+        data class OnExpandDescription(val isExpandDescription: Boolean) : Intent
+        data class OnTextOverflow(val isTextOverflowing: Boolean) : Intent
     }
 
     @Immutable
@@ -20,6 +22,8 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         data class GetMoviesLoading(val isLoading: Boolean) : Event
         data class GetMoviesData(val data: List<MoviesModel>) : Event
         data class GetMoviesError(val error: Throwable) : Event
+        data class ExpandDescription(val isExpandDescription: Boolean) : Event
+        data class TextOverflow(val isTextOverflowing: Boolean) : Event
     }
 
     @Immutable
@@ -34,7 +38,9 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         val detailError: Throwable? = null,
         val isMoviesLoading: Boolean = false,
         val moviesData: List<MoviesModel> = emptyList(),
-        val moviesError: Throwable? = null
+        val moviesError: Throwable? = null,
+        val isTextOverflowing: Boolean = false,
+        val isExpandDescription: Boolean = false,
     ) : Reducer.ViewState
 
     override fun reduce(
@@ -48,6 +54,14 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
             is Event.GetMoviesLoading -> state.copy(isMoviesLoading = event.isLoading)
             is Event.GetMoviesData -> state.copy(moviesData = event.data)
             is Event.GetMoviesError -> state.copy(moviesError = event.error)
+            is Event.ExpandDescription -> state.copy(isExpandDescription = event.isExpandDescription)
+            is Event.TextOverflow -> {
+                if (state.isTextOverflowing != event.isTextOverflowing) {
+                    state.copy(isTextOverflowing = event.isTextOverflowing)
+                } else {
+                    state
+                }
+            }
         }
     }
 }

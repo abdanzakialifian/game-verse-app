@@ -24,6 +24,8 @@ class DetailViewModel(
         when(intent) {
             is DetailReducer.Intent.OnGetGamesMovies -> getGamesMovies(intent.id)
             is DetailReducer.Intent.OnNavigateToDetailVideoPlayer -> sendEffect(DetailReducer.Effect.NavigateToDetailVideoPlayer(intent.url))
+            is DetailReducer.Intent.OnExpandDescription -> sendEvent(DetailReducer.Event.ExpandDescription(intent.isExpandDescription))
+            is DetailReducer.Intent.OnTextOverflow -> sendEvent(DetailReducer.Event.TextOverflow(intent.isTextOverflowing))
         }
     }
 

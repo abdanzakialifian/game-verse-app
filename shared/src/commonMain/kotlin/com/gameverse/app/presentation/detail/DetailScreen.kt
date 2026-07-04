@@ -1,9 +1,11 @@
 package com.gameverse.app.presentation.detail
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -40,6 +43,8 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -110,6 +115,7 @@ private fun DetailContent(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .navigationBarsPadding()
     ) {
         val scope = rememberCoroutineScope()
 
@@ -264,10 +270,42 @@ private fun DetailContent(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = uiState.detailData?.descriptionRaw?.trimAfterDoubleNewline().orEmpty(),
-                style = GVTypography.bodySmall,
-            )
+            Column(
+                modifier = Modifier.animateContentSize(
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            ) {
+                Text(
+                    text = uiState.detailData?.descriptionRaw?.trimAfterDoubleNewline().orEmpty(),
+                    style = GVTypography.bodySmall,
+                    maxLines = if (uiState.isExpandDescription) Int.MAX_VALUE else 4,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { textLayoutResult ->
+                        onIntent(DetailReducer.Intent.OnTextOverflow(textLayoutResult.hasVisualOverflow))
+                    }
+                )
+
+                if (uiState.isTextOverflowing || uiState.isExpandDescription) {
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        modifier = Modifier.clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = {
+                                onIntent(DetailReducer.Intent.OnExpandDescription(!uiState.isExpandDescription))
+                            }
+                        ),
+                        text = if (uiState.isExpandDescription) "Show less" else "Show more",
+                        style = GVTypography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                        overflow = TextOverflow.Ellipsis,
+                        textDecoration = TextDecoration.Underline,
+                    )
+                }
+            }
         }
     }
 }
