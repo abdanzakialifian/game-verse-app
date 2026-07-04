@@ -1,5 +1,6 @@
 package com.gameverse.app.presentation.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -53,6 +55,7 @@ import com.gameverse.app.data.response.AddedByStatus
 import com.gameverse.app.data.response.EsrbRating
 import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.domain.model.DetailModel
+import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
@@ -170,65 +173,18 @@ private fun DetailContent(
             userScrollEnabled = false,
         ) { index ->
             when (index) {
-                DetailTabs.SCREENSHOTS.ordinal -> HorizontalPager(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = screenshotsPagerState,
-                    contentPadding = PaddingValues(horizontal = 8.dp),
-                    pageSpacing = 12.dp,
-                    pageSize = object : PageSize {
-                        override fun Density.calculateMainAxisPageSize(
-                            availableSpace: Int,
-                            pageSpacing: Int
-                        ): Int = (availableSpace * 0.80f).toInt()
-                    },
-                    key = gamesScreenshotsPaging.itemKey { it.id }
-                ) { index ->
-                    val result = gamesScreenshotsPaging[index] ?: return@HorizontalPager
+                DetailTabs.SCREENSHOTS.ordinal -> ScreenshotsPager(
+                    pagerState = screenshotsPagerState,
+                    gamesScreenshotsPaging = gamesScreenshotsPaging
+                )
 
-                    AsyncImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f)
-                            .clip(GVShapes.small),
-                        model = result.image,
-                        placeholder = ColorPainter(GVColor.outline),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null,
-                        filterQuality = FilterQuality.Medium,
-                    )
-                }
-
-                DetailTabs.TRAILERS.ordinal -> HorizontalPager(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = moviesPagerState,
-                    contentPadding = PaddingValues(horizontal = 8.dp),
-                    pageSpacing = 12.dp,
-                    pageSize = object : PageSize {
-                        override fun Density.calculateMainAxisPageSize(
-                            availableSpace: Int,
-                            pageSpacing: Int
-                        ): Int = (availableSpace * 0.80f).toInt()
-                    },
-                    key = { uiState.moviesData.getOrNull(it)?.id ?: 0 }
-                ) { index ->
-                    val result = uiState.moviesData.getOrNull(index) ?: return@HorizontalPager
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f)
-                            .clip(GVShapes.small)
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() },
-                                onClick = {
-                                    onIntent(DetailReducer.Intent.OnNavigateToDetailVideoPlayer(result.max))
-                                }
-                            ),
-                    ) {
-                        VideoPreviewComposable(result.max)
+                DetailTabs.TRAILERS.ordinal -> TrailersPager(
+                    pagerState = moviesPagerState,
+                    moviesData = uiState.moviesData,
+                    onTrailerClicked = { url ->
+                        onIntent(DetailReducer.Intent.OnNavigateToDetailVideoPlayer(url))
                     }
-                }
+                )
             }
         }
 
@@ -257,6 +213,84 @@ private fun DetailContent(
             Text(
                 text = uiState.detailData?.descriptionRaw?.trimAfterDoubleNewline().orEmpty(),
                 style = GVTypography.bodySmall,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ScreenshotsPager(
+    pagerState: PagerState,
+    gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
+) {
+    HorizontalPager(
+        modifier = Modifier.fillMaxWidth(),
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        pageSpacing = 12.dp,
+        pageSize = object : PageSize {
+            override fun Density.calculateMainAxisPageSize(
+                availableSpace: Int,
+                pageSpacing: Int
+            ): Int = (availableSpace * 0.80f).toInt()
+        },
+        key = gamesScreenshotsPaging.itemKey { it.id }
+    ) { index ->
+        val result = gamesScreenshotsPaging[index] ?: return@HorizontalPager
+
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .clip(GVShapes.small),
+            model = result.image,
+            placeholder = ColorPainter(GVColor.outline),
+            contentScale = ContentScale.Crop,
+            contentDescription = null,
+            filterQuality = FilterQuality.Medium,
+        )
+    }
+}
+
+@Composable
+private fun TrailersPager(
+    pagerState: PagerState,
+    moviesData: List<MoviesModel>,
+    onTrailerClicked: (String) -> Unit,
+) {
+    HorizontalPager(
+        modifier = Modifier.fillMaxWidth(),
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        pageSpacing = 12.dp,
+        pageSize = object : PageSize {
+            override fun Density.calculateMainAxisPageSize(
+                availableSpace: Int,
+                pageSpacing: Int
+            ): Int = (availableSpace * 0.80f).toInt()
+        },
+        key = { moviesData.getOrNull(it)?.id ?: 0 }
+    ) { index ->
+        val result = moviesData.getOrNull(index) ?: return@HorizontalPager
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .background(
+                    color = GVColor.outline,
+                    shape = GVShapes.small
+                )
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = {
+                        onTrailerClicked(result.max)
+                    }
+                ),
+        ) {
+            VideoPreviewComposable(
+                url = result.jsonMember480,
             )
         }
     }
