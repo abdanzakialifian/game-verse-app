@@ -116,6 +116,10 @@ private fun DetailContent(
 
         val moviesPagerState = rememberPagerState { uiState.moviesData.size }
 
+        val isScreenshotsFirstPageLoading = gamesScreenshotsPaging.loadState.refresh is LoadState.Loading
+
+        val isMoviesLoading = uiState.isMoviesLoading
+
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,55 +134,78 @@ private fun DetailContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SecondaryTabRow(
-            modifier = Modifier.fillMaxWidth(),
-            selectedTabIndex = selectedTabIndex,
-            containerColor = Color.Transparent,
-            contentColor = Color.Transparent,
-            indicator = {
-                TabRowDefaults.SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(
-                        selectedTabIndex = selectedTabIndex,
-                        matchContentSize = false
-                    ),
-                    color = GVColor.onSurfaceVariant
-                )
-            }
-        ) {
-            DetailTabs.entries.forEachIndexed { index, currentTab ->
-                Tab(
-                    selected = selectedTabIndex == index,
-                    text = {
-                        Text(
-                            text = currentTab.title,
-                            style = GVTypography.labelMedium.copy(
-                                fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium
-                            )
+        if (isScreenshotsFirstPageLoading || isMoviesLoading) {
+
+        } else {
+            if (gamesScreenshotsPaging.itemCount != 0 && uiState.moviesData.isNotEmpty()) {
+                SecondaryTabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = selectedTabIndex,
+                    containerColor = Color.Transparent,
+                    contentColor = Color.Transparent,
+                    indicator = {
+                        TabRowDefaults.SecondaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(
+                                selectedTabIndex = selectedTabIndex,
+                                matchContentSize = false
+                            ),
+                            color = GVColor.onSurfaceVariant
                         )
-                    },
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                )
+                    }
+                ) {
+                    DetailTabs.entries.forEachIndexed { index, currentTab ->
+                        Tab(
+                            selected = selectedTabIndex == index,
+                            text = {
+                                Text(
+                                    text = currentTab.title,
+                                    style = GVTypography.labelMedium.copy(
+                                        fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium
+                                    )
+                                )
+                            },
+                            onClick = {
+                                scope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                HorizontalPager(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = pagerState,
+                    userScrollEnabled = false,
+                ) { index ->
+                    when (index) {
+                        DetailTabs.SCREENSHOTS.ordinal -> ScreenshotsPager(
+                            pagerState = screenshotsPagerState,
+                            gamesScreenshotsPaging = gamesScreenshotsPaging
+                        )
+
+                        DetailTabs.TRAILERS.ordinal -> TrailersPager(
+                            pagerState = moviesPagerState,
+                            moviesData = uiState.moviesData,
+                            onTrailerClicked = { url ->
+                                onIntent(DetailReducer.Intent.OnNavigateToDetailVideoPlayer(url))
+                            }
+                        )
+                    }
+                }
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        HorizontalPager(
-            modifier = Modifier.fillMaxWidth(),
-            state = pagerState,
-            userScrollEnabled = false,
-        ) { index ->
-            when (index) {
-                DetailTabs.SCREENSHOTS.ordinal -> ScreenshotsPager(
+            if (gamesScreenshotsPaging.itemCount != 0 && uiState.moviesData.isEmpty()) {
+                ScreenshotsPager(
                     pagerState = screenshotsPagerState,
                     gamesScreenshotsPaging = gamesScreenshotsPaging
                 )
+            }
 
-                DetailTabs.TRAILERS.ordinal -> TrailersPager(
+            if (gamesScreenshotsPaging.itemCount == 0 && uiState.moviesData.isNotEmpty()) {
+                TrailersPager(
                     pagerState = moviesPagerState,
                     moviesData = uiState.moviesData,
                     onTrailerClicked = { url ->
