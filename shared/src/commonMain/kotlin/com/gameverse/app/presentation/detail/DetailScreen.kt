@@ -3,15 +3,18 @@ package com.gameverse.app.presentation.detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.PagerState
@@ -29,6 +32,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -51,6 +55,7 @@ import coil3.compose.AsyncImage
 import com.gameverse.app.common.DetailTabs
 import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.trimAfterDoubleNewline
+import com.gameverse.app.component.GVRatingBadge
 import com.gameverse.app.data.response.AddedByStatus
 import com.gameverse.app.data.response.EsrbRating
 import com.gameverse.app.data.response.GameDetailResponse
@@ -119,7 +124,6 @@ private fun DetailContent(
         val isScreenshotsFirstPageLoading = gamesScreenshotsPaging.loadState.refresh is LoadState.Loading
 
         val isMoviesLoading = uiState.isMoviesLoading
-
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
@@ -218,22 +222,45 @@ private fun DetailContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Text(
-                text = uiState.detailData?.name.orEmpty(),
-                style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
-            )
+            Row {
+                Column(
+                    modifier = Modifier.weight(1F),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = uiState.detailData?.name.orEmpty(),
+                        style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    )
 
-            Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = uiState.detailData?.publishers
-                    ?.filter { it.name != null }
-                    ?.joinToString(", ") {
-                        it.name.toString()
-                    }.orEmpty(),
-                style = GVTypography.bodySmall,
-                color = GVColor.onSurfaceVariant
-            )
+                    Text(
+                        text = uiState.detailData?.publishers
+                            ?.filter { it.name != null }
+                            ?.joinToString(", ") {
+                                it.name.toString()
+                            }.orEmpty(),
+                        style = GVTypography.bodySmall,
+                        color = GVColor.onSurfaceVariant
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    GVRatingBadge(uiState.detailData?.rating ?: 0.0)
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "${uiState.detailData?.reviewsCount} Reviews",
+                        style = GVTypography.bodySmall,
+                        color = GVColor.onSurfaceVariant
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
