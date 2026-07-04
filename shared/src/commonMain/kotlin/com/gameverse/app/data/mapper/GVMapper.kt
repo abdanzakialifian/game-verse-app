@@ -1,7 +1,5 @@
 package com.gameverse.app.data.mapper
 
-import com.gameverse.app.data.response.AddedByStatus
-import com.gameverse.app.data.response.EsrbRating
 import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.data.response.GamesMoviesResponse
 import com.gameverse.app.data.response.GamesResponse
@@ -68,57 +66,39 @@ fun GenresResponse.ResultsItem.toDomain(): GenresModel = GenresModel(
 )
 
 fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
-    added = added ?: 0,
-    developers = developers.orEmpty(),
-    nameOriginal = nameOriginal.orEmpty(),
-    rating = rating ?: 0.0,
-    gameSeriesCount = gameSeriesCount ?: 0,
-    playtime = playtime ?: 0,
-    platforms = platforms.orEmpty(),
-    ratingTop = ratingTop ?: 0,
-    reviewsTextCount = reviewsTextCount ?: 0,
-    publishers = publishers.orEmpty(),
-    achievementsCount = achievementsCount ?: 0,
     id = id ?: 0,
-    parentPlatforms = parentPlatforms.orEmpty(),
-    redditName = redditName.orEmpty(),
+    developers = developers?.map {
+        DetailModel.DevelopersItem(
+            id = it.id ?: 0,
+            name = it.name.orEmpty()
+        )
+    }.orEmpty(),
+    rating = rating ?: 0.0,
+    publishers = publishers?.map {
+        DetailModel.PublishersItem(
+            id = it.id ?: 0,
+            name = it.name.orEmpty()
+        )
+    }.orEmpty(),
+    parentPlatforms = parentPlatforms?.map {
+        GamesModel.ParentPlatformsItem(
+            name = it.platform?.name.orEmpty(),
+            id = it.platform?.id ?: 0
+        )
+    }.orEmpty(),
     ratingsCount = ratingsCount ?: 0,
-    slug = slug.orEmpty(),
     released = released.orEmpty(),
-    youtubeCount = youtubeCount ?: 0,
-    moviesCount = moviesCount ?: 0,
-    descriptionRaw = descriptionRaw.orEmpty(),
-    tags = tags.orEmpty(),
-    backgroundImage = backgroundImage.orEmpty(),
-    tba = tba ?: false,
-    dominantColor = dominantColor.orEmpty(),
-    name = name.orEmpty(),
-    redditDescription = redditDescription.orEmpty(),
-    redditLogo = redditLogo.orEmpty(),
     updated = updated.orEmpty(),
+    backgroundImage = backgroundImage.orEmpty(),
+    name = name.orEmpty(),
     reviewsCount = reviewsCount ?: 0,
-    metacritic = metacritic ?: 0,
-    description = description.orEmpty(),
-    metacriticUrl = metacriticUrl.orEmpty(),
-    alternativeNames = alternativeNames.orEmpty(),
-    parentsCount = parentsCount ?: 0,
-    metacriticPlatforms = metacriticPlatforms.orEmpty(),
-    creatorsCount = creatorsCount ?: 0,
-    ratings = ratings.orEmpty(),
-    genres = genres.orEmpty(),
-    saturatedColor = saturatedColor.orEmpty(),
-    addedByStatus = addedByStatus ?: AddedByStatus(),
-    redditUrl = redditUrl.orEmpty(),
-    redditCount = redditCount ?: 0,
-    parentAchievementsCount = parentAchievementsCount ?: 0,
-    website = website.orEmpty(),
-    suggestionsCount = suggestionsCount ?: 0,
-    stores = stores.orEmpty(),
-    additionsCount = additionsCount ?: 0,
-    twitchCount = twitchCount ?: 0,
-    backgroundImageAdditional = backgroundImageAdditional.orEmpty(),
-    esrbRating = esrbRating ?: EsrbRating(),
-    screenshotsCount = screenshotsCount ?: 0,
+    description = descriptionRaw.orEmpty(),
+    genres = genres?.map {
+        GamesModel.GenresItem(
+            name = it.name.orEmpty(),
+            id = it.id ?: 0
+        )
+    }.orEmpty(),
 )
 
 fun GamesScreenshotsResponse.ResultsItem.toDomain(): ScreenshotsModel = ScreenshotsModel(

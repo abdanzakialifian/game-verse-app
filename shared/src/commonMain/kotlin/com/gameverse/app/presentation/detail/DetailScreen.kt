@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -25,6 +27,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
@@ -59,20 +62,26 @@ import chaintech.videoplayer.ui.preview.VideoPreviewComposable
 import coil3.compose.AsyncImage
 import com.gameverse.app.common.DetailTabs
 import com.gameverse.app.common.LaunchEffectOnce
+import com.gameverse.app.common.formatDate
+import com.gameverse.app.common.formatDateTime
+import com.gameverse.app.common.toFormattedNumber
 import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.component.GVRatingBadge
-import com.gameverse.app.data.response.AddedByStatus
-import com.gameverse.app.data.response.EsrbRating
 import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.domain.model.DetailModel
+import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
+import com.gameverse.app.presentation.shared.GamePlatforms
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
+import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.ic_favorite
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -92,8 +101,10 @@ fun DetailScreen(
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
-            when(effect) {
-                is DetailReducer.Effect.NavigateToDetailVideoPlayer -> onNavigateToDetailVideoPlayer(effect.url)
+            when (effect) {
+                is DetailReducer.Effect.NavigateToDetailVideoPlayer -> onNavigateToDetailVideoPlayer(
+                    effect.url
+                )
             }
         }
     }
@@ -127,20 +138,47 @@ private fun DetailContent(
 
         val moviesPagerState = rememberPagerState { uiState.moviesData.size }
 
-        val isScreenshotsFirstPageLoading = gamesScreenshotsPaging.loadState.refresh is LoadState.Loading
+        val isScreenshotsFirstPageLoading =
+            gamesScreenshotsPaging.loadState.refresh is LoadState.Loading
 
         val isMoviesLoading = uiState.isMoviesLoading
-        AsyncImage(
+
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(350.dp)
-                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)),
-            model = uiState.detailData?.backgroundImage,
-            placeholder = ColorPainter(GVColor.outline),
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
-            filterQuality = FilterQuality.Medium,
-        )
+                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+        ) {
+            AsyncImage(
+                modifier = Modifier.fillMaxSize(),
+                model = uiState.detailData?.backgroundImage,
+                placeholder = ColorPainter(GVColor.outline),
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+                filterQuality = FilterQuality.Medium,
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = GVColor.secondaryContainer.copy(alpha = 0.8f))
+            )
+
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                GamePlatforms(uiState.detailData?.parentPlatforms.orEmpty())
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = uiState.detailData?.name.orEmpty(),
+                    style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                )
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -228,24 +266,19 @@ private fun DetailContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Column(
                     modifier = Modifier.weight(1F),
                     horizontalAlignment = Alignment.Start
                 ) {
-                    Text(
-                        text = uiState.detailData?.name.orEmpty(),
-                        style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                    )
+                    GVRatingBadge(uiState.detailData?.rating ?: 0.0)
 
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = uiState.detailData?.publishers
-                            ?.filter { it.name != null }
-                            ?.joinToString(", ") {
-                                it.name.toString()
-                            }.orEmpty(),
+                        text = "${uiState.detailData?.reviewsCount?.toFormattedNumber()} Reviews",
                         style = GVTypography.bodySmall,
                         color = GVColor.onSurfaceVariant
                     )
@@ -253,19 +286,12 @@ private fun DetailContent(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
-                    GVRatingBadge(uiState.detailData?.rating ?: 0.0)
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "${uiState.detailData?.reviewsCount} Reviews",
-                        style = GVTypography.bodySmall,
-                        color = GVColor.onSurfaceVariant
-                    )
-                }
+                Icon(
+                    modifier = Modifier.size(36.dp),
+                    painter = painterResource(Res.drawable.ic_favorite),
+                    tint = GVColor.onBackground,
+                    contentDescription = null
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -279,7 +305,7 @@ private fun DetailContent(
                 )
             ) {
                 Text(
-                    text = uiState.detailData?.descriptionRaw?.trimAfterDoubleNewline().orEmpty(),
+                    text = uiState.detailData?.description?.trimAfterDoubleNewline().orEmpty(),
                     style = GVTypography.bodySmall,
                     maxLines = if (uiState.isExpandDescription) Int.MAX_VALUE else 4,
                     overflow = TextOverflow.Ellipsis,
@@ -304,6 +330,130 @@ private fun DetailContent(
                         overflow = TextOverflow.Ellipsis,
                         textDecoration = TextDecoration.Underline,
                     )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Column(modifier = Modifier.weight(1F)) {
+                        Text(
+                            text = "Platforms",
+                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = GVColor.outline
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = uiState.detailData?.parentPlatforms?.joinToString(", ") {
+                                it.name
+                            }.orEmpty(),
+                            style = GVTypography.labelSmall,
+                            color = GVColor.outlineVariant
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1F)) {
+                        Text(
+                            text = "Genres",
+                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = GVColor.outline
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = uiState.detailData?.genres?.joinToString(", ") {
+                                it.name
+                            }.orEmpty(),
+                            style = GVTypography.labelSmall,
+                            color = GVColor.outlineVariant
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Column(modifier = Modifier.weight(1F)) {
+                        Text(
+                            text = "Released Date",
+                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = GVColor.outline
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = uiState.detailData?.released.formatDate(),
+                            style = GVTypography.labelSmall,
+                            color = GVColor.outlineVariant
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1F)) {
+                        Text(
+                            text = "Last Modified",
+                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = GVColor.outline
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = uiState.detailData?.updated.formatDateTime(),
+                            style = GVTypography.labelSmall,
+                            color = GVColor.outlineVariant
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Column(modifier = Modifier.weight(1F)) {
+                        Text(
+                            text = "Publishers",
+                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = GVColor.outline
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = uiState.detailData?.publishers?.joinToString(", ") {
+                                it.name
+                            }.orEmpty(),
+                            style = GVTypography.labelSmall,
+                            color = GVColor.outlineVariant
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1F)) {
+                        Text(
+                            text = "Developers",
+                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                            color = GVColor.outline
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text =  uiState.detailData?.developers?.joinToString(", ") {
+                                it.name
+                            }.orEmpty(),
+                            style = GVTypography.labelSmall,
+                            color = GVColor.outlineVariant
+                        )
+                    }
                 }
             }
         }
@@ -427,63 +577,85 @@ private fun DetailContentPreview() {
         DetailContent(
             uiState = DetailReducer.State(
                 detailData = DetailModel(
-                    added = 6205,
-                    developers = listOf(),
-                    nameOriginal = "Gabriel Bond",
-                    rating = 4.5,
-                    gameSeriesCount = 1539,
-                    playtime = 6282,
-                    platforms = listOf(),
-                    ratingTop = 1308,
-                    reviewsTextCount = 7616,
-                    publishers = listOf(
-                        GameDetailResponse.PublishersItem(
+                    id = 5599,
+                    developers = listOf(
+                        DetailModel.DevelopersItem(
+                            id = 3524,
+                            name = "Rockstar North"
+                        ),
+                        DetailModel.DevelopersItem(
+                            id = 10,
                             name = "Rockstar Games"
                         )
                     ),
-                    achievementsCount = 4742,
-                    id = 5599,
-                    parentPlatforms = listOf(),
-                    redditName = "Galen Wallace",
+                    rating = 4.5,
+                    publishers = listOf(
+                        DetailModel.PublishersItem(
+                            id = 2155,
+                            name = "Rockstar Games"
+                        )
+                    ),
+                    parentPlatforms = listOf(
+                        GamesModel.ParentPlatformsItem(
+                            id = 1,
+                            name = "Windows"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 2,
+                            name = "PlayStation"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 3,
+                            name = "Xbox"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 4,
+                            name = "Apple"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 5,
+                            name = "Apple Mac"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 6,
+                            name = "Linux"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 7,
+                            name = "Nintendo"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 8,
+                            name = "Android"
+                        ),
+                        GamesModel.ParentPlatformsItem(
+                            id = 9,
+                            name = "Others"
+                        )
+                    ),
                     ratingsCount = 9344,
-                    slug = "dolore",
-                    released = "elementum",
-                    youtubeCount = 2103,
-                    moviesCount = 1526,
-                    descriptionRaw = "Rockstar Games went bigger, since their previous installment of the series. You get the complicated and realistic world-building from Liberty City of GTA4 in the setting of lively and diverse Los Santos, from an old fan favorite GTA San Andreas. 561 different vehicles (including every transport you can operate) and the amount is rising with every update. \\nSimultaneous storytelling from three unique perspectives: \\nFollow Michael, ex-criminal living his life of leisure away from the past, Franklin, a kid that seeks the better future, and Trevor, the exact past Michael is trying to run away from. \\nGTA Online will provide a lot of additional challenge even for the experienced players, coming fresh from the story mode. Now you will have other players around that can help you just as likely as ruin your mission. Every GTA mechanic up to date can be experienced by players through the unique customizable character, and community content paired with the leveling system tends to keep everyone busy and engaged.\\n\\nEspañol\\nRockstar Games se hizo más grande desde su entrega anterior de la serie. Obtienes la construcción del mundo complicada y realista de Liberty City de GTA4 en el escenario de Los Santos, un viejo favorito de los fans, GTA San Andreas. 561 vehículos diferentes (incluidos todos los transportes que puede operar) y la cantidad aumenta con cada actualización.\\nNarración simultánea desde tres perspectivas únicas:\\nSigue a Michael, ex-criminal que vive su vida de ocio lejos del pasado, Franklin, un niño que busca un futuro mejor, y Trevor, el pasado exacto del que Michael está tratando de huir.\\nGTA Online proporcionará muchos desafíos adicionales incluso para los jugadores experimentados, recién llegados del modo historia. Ahora tendrás otros jugadores cerca que pueden ayudarte con la misma probabilidad que arruinar tu misión. Los jugadores pueden experimentar todas las mecánicas de GTA actualizadas a través del personaje personalizable único, y el contenido de la comunidad combinado con el sistema de nivelación tiende a mantener a todos ocupados y comprometidos.",
-                    tags = listOf(),
+                    released = "2013-09-17",
+                    updated = "2026-07-03T12:09:55",
                     backgroundImage = "doctus",
-                    tba = false,
-                    dominantColor = "ipsum",
                     name = "Grand Theft Auto V",
-                    redditDescription = "eripuit",
-                    redditLogo = "pertinacia",
-                    updated = "neque",
                     reviewsCount = 1654,
-                    metacritic = 9521,
-                    description = "taciti",
-                    metacriticUrl = "http://www.bing.com/search?q=constituam",
-                    alternativeNames = listOf(),
-                    parentsCount = 2472,
-                    metacriticPlatforms = listOf(),
-                    creatorsCount = 2756,
-                    ratings = listOf(),
-                    genres = listOf(),
-                    saturatedColor = "dolor",
-                    addedByStatus = AddedByStatus(),
-                    redditUrl = "https://duckduckgo.com/?q=sapien",
-                    redditCount = 8907,
-                    parentAchievementsCount = 7574,
-                    website = "adipiscing",
-                    suggestionsCount = 4795,
-                    stores = listOf(),
-                    additionsCount = 8031,
-                    twitchCount = 8218,
-                    backgroundImageAdditional = "justo",
-                    esrbRating = EsrbRating(),
-                    screenshotsCount = 7463
+                    description = "Rockstar Games went bigger, since their previous installment of the series. You get the complicated and realistic world-building from Liberty City of GTA4 in the setting of lively and diverse Los Santos, from an old fan favorite GTA San Andreas. 561 different vehicles (including every transport you can operate) and the amount is rising with every update. \\nSimultaneous storytelling from three unique perspectives: \\nFollow Michael, ex-criminal living his life of leisure away from the past, Franklin, a kid that seeks the better future, and Trevor, the exact past Michael is trying to run away from. \\nGTA Online will provide a lot of additional challenge even for the experienced players, coming fresh from the story mode. Now you will have other players around that can help you just as likely as ruin your mission. Every GTA mechanic up to date can be experienced by players through the unique customizable character, and community content paired with the leveling system tends to keep everyone busy and engaged.\\n\\nEspañol\\nRockstar Games se hizo más grande desde su entrega anterior de la serie. Obtienes la construcción del mundo complicada y realista de Liberty City de GTA4 en el escenario de Los Santos, un viejo favorito de los fans, GTA San Andreas. 561 vehículos diferentes (incluidos todos los transportes que puede operar) y la cantidad aumenta con cada actualización.\\nNarración simultánea desde tres perspectivas únicas:\\nSigue a Michael, ex-criminal que vive su vida de ocio lejos del pasado, Franklin, un niño que busca un futuro mejor, y Trevor, el pasado exacto del que Michael está tratando de huir.\\nGTA Online proporcionará muchos desafíos adicionales incluso para los jugadores experimentados, recién llegados del modo historia. Ahora tendrás otros jugadores cerca que pueden ayudarte con la misma probabilidad que arruinar tu misión. Los jugadores pueden experimentar todas las mecánicas de GTA actualizadas a través del personaje personalizable único, y el contenido de la comunidad combinado con el sistema de nivelación tiende a mantener a todos ocupados y comprometidos.",
+                    genres = listOf(
+                        GamesModel.GenresItem(
+                            id = 1,
+                            name = "Action"
+                        ),
+                        GamesModel.GenresItem(
+                            id = 2,
+                            name = "RPG"
+                        ),
+                        GamesModel.GenresItem(
+                            id = 3,
+                            name = "Shooter"
+                        ),
+                    ),
 
-                )
+                    )
             ),
             gamesScreenshotsPaging = gamesScreenshotsPaging,
             onIntent = {}
