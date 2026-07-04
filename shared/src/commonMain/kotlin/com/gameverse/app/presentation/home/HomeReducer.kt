@@ -47,7 +47,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
         return when (event) {
             is Event.SearchValueChanged -> state.copy(searchValue = event.value)
             is Event.GetGamesLoading -> state.copy(isGamesLoading = event.isLoading)
-            is Event.GetGamesData -> state.copy(gamesData = event.data)
+            is Event.GetGamesData -> state.copy(gamesData = event.data, gamesError = null)
             is Event.GetGamesError -> state.copy(gamesError = event.error)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {
