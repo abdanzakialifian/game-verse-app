@@ -42,7 +42,8 @@ private val AppColorScheme = darkColorScheme(
     onSurface = OnSurface,
     surfaceVariant = SurfaceVariant,
     onSurfaceVariant = OnSurfaceVariant,
-    outline = Outline
+    outline = Outline,
+    outlineVariant = OutlineVariant
 )
 
 @Composable
