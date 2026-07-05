@@ -1,17 +1,17 @@
 package com.gameverse.app.data.mapper
 
 import com.gameverse.app.data.response.GameDetailResponse
-import com.gameverse.app.data.response.GamesMoviesResponse
-import com.gameverse.app.data.response.GamesResponse
-import com.gameverse.app.data.response.GamesScreenshotsResponse
-import com.gameverse.app.data.response.GenresResponse
+import com.gameverse.app.data.response.GamesItemResponse
+import com.gameverse.app.data.response.GamesMoviesItemResponse
+import com.gameverse.app.data.response.GamesScreenshotsItemResponse
+import com.gameverse.app.data.response.GenresItemResponse
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
 import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 
-fun GamesResponse.toDomain(): List<GamesModel> = results?.map { result ->
+fun List<GamesItemResponse>.toDomain(): List<GamesModel> = this.map { result ->
     GamesModel(
         id = result.id ?: 0,
         name = result.name.orEmpty(),
@@ -30,9 +30,9 @@ fun GamesResponse.toDomain(): List<GamesModel> = results?.map { result ->
             )
         }.orEmpty(),
     )
-}.orEmpty()
+}
 
-fun GamesResponse.ResultsItem.toDomain(): GamesModel = GamesModel(
+fun GamesItemResponse.toDomain(): GamesModel = GamesModel(
     id = id ?: 0,
     name = name.orEmpty(),
     backgroundImage = backgroundImage.orEmpty(),
@@ -51,7 +51,7 @@ fun GamesResponse.ResultsItem.toDomain(): GamesModel = GamesModel(
     }.orEmpty(),
 )
 
-fun GenresResponse.ResultsItem.toDomain(): GenresModel = GenresModel(
+fun GenresItemResponse.toDomain(): GenresModel = GenresModel(
     id = id ?: 0,
     name = name.orEmpty(),
     imageBackground = imageBackground.orEmpty(),
@@ -101,7 +101,7 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
     }.orEmpty(),
 )
 
-fun GamesScreenshotsResponse.ResultsItem.toDomain(): ScreenshotsModel = ScreenshotsModel(
+fun GamesScreenshotsItemResponse.toDomain(): ScreenshotsModel = ScreenshotsModel(
     id = id ?: 0,
     image = image.orEmpty(),
     isDeleted = isDeleted ?: false,
@@ -109,7 +109,7 @@ fun GamesScreenshotsResponse.ResultsItem.toDomain(): ScreenshotsModel = Screensh
     height = height ?: 0
 )
 
-fun GamesMoviesResponse.ResultsItem.toDomain(): MoviesModel = MoviesModel(
+fun GamesMoviesItemResponse.toDomain(): MoviesModel = MoviesModel(
     preview = preview.orEmpty(),
     name = name.orEmpty(),
     id = id ?: 0,

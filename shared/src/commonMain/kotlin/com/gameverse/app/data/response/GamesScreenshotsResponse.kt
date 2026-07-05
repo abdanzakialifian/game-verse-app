@@ -4,34 +4,19 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
-data class GamesScreenshotsResponse(
-    @SerialName("next")
-    val next: String? = null,
+data class GamesScreenshotsItemResponse(
+    @SerialName("image")
+    val image: String? = null,
 
-    @SerialName("previous")
-    val previous: String? = null,
+    @SerialName("is_deleted")
+    val isDeleted: Boolean? = null,
 
-    @SerialName("count")
-    val count: Int? = null,
+    @SerialName("width")
+    val width: Int? = null,
 
-    @SerialName("results")
-    val results: List<ResultsItem>? = null
-) {
-    @Serializable
-    data class ResultsItem(
-        @SerialName("image")
-        val image: String? = null,
+    @SerialName("id")
+    val id: Int? = null,
 
-        @SerialName("is_deleted")
-        val isDeleted: Boolean? = null,
-
-        @SerialName("width")
-        val width: Int? = null,
-
-        @SerialName("id")
-        val id: Int? = null,
-
-        @SerialName("height")
-        val height: Int? = null
-    )
-}
+    @SerialName("height")
+    val height: Int? = null
+)

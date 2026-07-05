@@ -4,42 +4,25 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
-data class GamesMoviesResponse(
-	@SerialName("next")
-	val next: String? = null,
+data class GamesMoviesItemResponse(
+	@SerialName("preview")
+	val preview: String? = null,
 
-	@SerialName("previous")
-	val previous: String? = null,
+	@SerialName("data")
+	val data: Data? = null,
 
-	@SerialName("count")
-	val count: Int? = null,
+	@SerialName("name")
+	val name: String? = null,
 
-	@SerialName("results")
-	val results: List<ResultsItem>? = null
+	@SerialName("id")
+	val id: Int? = null
 ) {
 	@Serializable
-	data class ResultsItem(
-		@SerialName("preview")
-		val preview: String? = null,
+	data class Data(
+		@SerialName("max")
+		val max: String? = null,
 
-		@SerialName("data")
-		val data: Data? = null,
-
-		@SerialName("name")
-		val name: String? = null,
-
-		@SerialName("id")
-		val id: Int? = null
-	) {
-		@Serializable
-		data class Data(
-			@SerialName("max")
-			val max: String? = null,
-
-			@SerialName("480")
-			val jsonMember480: String? = null
-		)
-	}
+		@SerialName("480")
+		val jsonMember480: String? = null
+	)
 }
-
-

@@ -2,11 +2,12 @@ package com.gameverse.app.data.api
 
 import com.gameverse.app.data.resources.Games
 import com.gameverse.app.data.resources.Genres
+import com.gameverse.app.data.response.BaseListResponse
 import com.gameverse.app.data.response.GameDetailResponse
-import com.gameverse.app.data.response.GamesMoviesResponse
-import com.gameverse.app.data.response.GamesResponse
-import com.gameverse.app.data.response.GamesScreenshotsResponse
-import com.gameverse.app.data.response.GenresResponse
+import com.gameverse.app.data.response.GamesItemResponse
+import com.gameverse.app.data.response.GamesMoviesItemResponse
+import com.gameverse.app.data.response.GamesScreenshotsItemResponse
+import com.gameverse.app.data.response.GenresItemResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.resources.get
@@ -19,7 +20,7 @@ class GVService(private val client: HttpClient) {
         genres: String? = null,
         page: Int? = null,
         pageSize: Int? = null,
-    ): GamesResponse {
+    ): BaseListResponse<GamesItemResponse> {
         return client.get(
             Games(
                 search = query,
@@ -27,33 +28,33 @@ class GVService(private val client: HttpClient) {
                 page = page,
                 pageSize = pageSize
             )
-        ).body<GamesResponse>()
+        ).body<BaseListResponse<GamesItemResponse>>()
     }
 
     suspend fun getGamesSeries(
         gamePk: String,
         page: Int,
         pageSize: Int,
-    ): GamesResponse {
+    ): BaseListResponse<GamesItemResponse> {
         return client.get(
             Games.Series(
                 gamePk = gamePk,
                 page = page,
                 pageSize = pageSize
             )
-        ).body<GamesResponse>()
+        ).body<BaseListResponse<GamesItemResponse>>()
     }
 
     suspend fun getGenres(
         page: Int,
         pageSize: Int,
-    ): GenresResponse {
+    ): BaseListResponse<GenresItemResponse> {
         return client.get(
             Genres(
                 page = page,
                 pageSize = pageSize
             )
-        ).body<GenresResponse>()
+        ).body<BaseListResponse<GenresItemResponse>>()
     }
 
     suspend fun getGameDetail(id: String): GameDetailResponse {
@@ -66,17 +67,17 @@ class GVService(private val client: HttpClient) {
         gamePk: String,
         page: Int,
         pageSize: Int,
-    ): GamesScreenshotsResponse {
+    ): BaseListResponse<GamesScreenshotsItemResponse> {
         return client.get(
             Games.Screenshots(
                 gamePk = gamePk,
                 page = page,
                 pageSize = pageSize
             )
-        ).body<GamesScreenshotsResponse>()
+        ).body<BaseListResponse<GamesScreenshotsItemResponse>>()
     }
 
-    suspend fun getGamesMovies(id: String): GamesMoviesResponse {
-        return client.get(Games.Movies(id)).body<GamesMoviesResponse>()
+    suspend fun getGamesMovies(id: String): BaseListResponse<GamesMoviesItemResponse> {
+        return client.get(Games.Movies(id)).body<BaseListResponse<GamesMoviesItemResponse>>()
     }
 }

@@ -30,7 +30,7 @@ class GVRepositoryImpl(
     @param:IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : GVRepository {
     override suspend fun getGames(): List<GamesModel> = withContext(dispatcher) {
-        apiService.getGames().toDomain()
+        apiService.getGames().results?.toDomain().orEmpty()
     }
 
     override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GamesModel>> =
