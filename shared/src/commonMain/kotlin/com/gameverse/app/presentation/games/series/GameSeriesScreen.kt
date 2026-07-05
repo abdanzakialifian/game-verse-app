@@ -48,6 +48,7 @@ fun GameSeriesScreen(
     gamePk: String,
     viewModel: GameSeriesViewModel = koinViewModel { parametersOf(gamePk) },
     onNavigateBack: () -> Unit,
+    onNavigateToDetailGame: (id: Int) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -57,6 +58,7 @@ fun GameSeriesScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 GameSeriesReducer.Effect.NavigateBack -> onNavigateBack()
+                is GameSeriesReducer.Effect.NavigateToDetailGame -> onNavigateToDetailGame(effect.id)
             }
         }
     }
@@ -119,6 +121,9 @@ private fun GameSeriesContent(
                 gamesPaging = gamesSeriesPaging,
                 onExpand = { id ->
                     onIntent(GameSeriesReducer.Intent.OnExpanded(id))
+                },
+                onItemClicked = {
+                    onIntent(GameSeriesReducer.Intent.OnNavigateToDetailGame(it))
                 },
             )
         }

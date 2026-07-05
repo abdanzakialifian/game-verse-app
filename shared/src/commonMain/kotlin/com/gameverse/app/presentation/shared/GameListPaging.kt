@@ -54,8 +54,9 @@ fun GameListPaging(
     expandedIds: Set<Int>,
     gamesPaging: LazyPagingItems<GamesModel>,
     modifier: Modifier = Modifier,
-    onExpand: (id: Int) -> Unit,
     onShowMoreClicked: ((gamePk: String) -> Unit)? = null,
+    onExpand: (id: Int) -> Unit,
+    onItemClicked: (id: Int) -> Unit
 ) {
     when (gamesPaging.loadState.refresh) {
         is LoadState.Loading -> GamePlaceholders()
@@ -74,7 +75,15 @@ fun GameListPaging(
                     val result = gamesPaging[index] ?: return@items
 
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(
+                                indication = null,
+                                interactionSource = remember { MutableInteractionSource() },
+                                onClick = {
+                                    onItemClicked(result.id)
+                                }
+                            ),
                         shape = GVShapes.medium,
                         colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
                     ) {
@@ -282,7 +291,8 @@ private fun GameListPagingPreview() {
             expandedIds = gamesData.map { it.id }.toSet(),
             gamesPaging = gamesPaging,
             onExpand = {},
-            onShowMoreClicked = {}
+            onShowMoreClicked = {},
+            onItemClicked = {}
         )
     }
 }
@@ -306,7 +316,8 @@ private fun GameListPagingInitialLoadingPreview() {
             expandedIds = emptySet(),
             gamesPaging = gamesPaging,
             onExpand = {},
-            onShowMoreClicked = {}
+            onShowMoreClicked = {},
+            onItemClicked = {}
         )
     }
 }
@@ -390,7 +401,8 @@ private fun GameListPagingLoadMoreLoadingPreview() {
             expandedIds = emptySet(),
             gamesPaging = gamesPaging,
             onExpand = {},
-            onShowMoreClicked = {}
+            onShowMoreClicked = {},
+            onItemClicked = {}
         )
     }
 }

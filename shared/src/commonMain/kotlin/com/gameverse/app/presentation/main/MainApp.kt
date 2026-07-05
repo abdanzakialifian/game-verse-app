@@ -128,6 +128,9 @@ fun MainApp() {
                             onNavigateToGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
                             },
+                            onNavigateToDetailGame = { id ->
+                                backStack.add(MainRoutes.Detail(id.toString()))
+                            },
                             onNavigateBack = {
                                 backStack.removeLastOrNull()
                             }
@@ -139,6 +142,9 @@ fun MainApp() {
                             gamePk = it.gamePk,
                             onNavigateBack = {
                                 backStack.removeLastOrNull()
+                            },
+                            onNavigateToDetailGame = { id ->
+                                backStack.add(MainRoutes.Detail(id.toString()))
                             }
                         )
                     }

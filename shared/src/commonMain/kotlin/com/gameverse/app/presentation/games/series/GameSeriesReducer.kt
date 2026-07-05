@@ -7,6 +7,7 @@ class GameSeriesReducer : Reducer<GameSeriesReducer.State, GameSeriesReducer.Eve
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
         data class OnExpanded(val id: Int) : Intent
+        data class OnNavigateToDetailGame(val id: Int) : Intent
         data object OnNavigateBack : Intent
     }
 
@@ -17,6 +18,7 @@ class GameSeriesReducer : Reducer<GameSeriesReducer.State, GameSeriesReducer.Eve
 
     @Immutable
     sealed interface Effect : Reducer.ViewEffect {
+        data class NavigateToDetailGame(val id: Int) : Effect
         data object NavigateBack : Effect
     }
 

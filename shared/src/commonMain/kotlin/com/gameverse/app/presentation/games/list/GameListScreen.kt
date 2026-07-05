@@ -57,6 +57,7 @@ fun GameListScreen(
     genreId: String?,
     viewModel: GameListViewModel = koinViewModel { parametersOf(genreId) },
     onNavigateToGameSeries: (gamePk: String) -> Unit,
+    onNavigateToDetailGame: (id: Int) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
@@ -69,6 +70,7 @@ fun GameListScreen(
         viewModel.effects.collect { effect ->
             when (effect) {
                 is GameListReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
+                is GameListReducer.Effect.NavigateToDetailGame -> onNavigateToDetailGame(effect.id)
                 is GameListReducer.Effect.NavigateBack -> onNavigateBack()
             }
         }
@@ -192,6 +194,9 @@ private fun GameListContent(
                 },
                 onShowMoreClicked = { gamePk ->
                     onIntent(GameListReducer.Intent.OnNavigateToGameSeries(gamePk))
+                },
+                onItemClicked = {
+                    onIntent(GameListReducer.Intent.OnNavigateToDetailGame(it))
                 }
             )
         }

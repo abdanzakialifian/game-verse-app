@@ -10,6 +10,7 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
         data class OnSearchValueChanged(val value: String) : Intent
         data class OnExpanded(val id: Int) : Intent
         data class OnNavigateToGameSeries(val gamePk: String) : Intent
+        data class OnNavigateToDetailGame(val id: Int) : Intent
         data object OnNavigateBack : Intent
     }
 
@@ -23,6 +24,7 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     @Immutable
     sealed interface Effect : Reducer.ViewEffect {
         data class NavigateToGameSeries(val gamePk: String) : Effect
+        data class NavigateToDetailGame(val id: Int) : Effect
         data object NavigateBack : Effect
     }
 
