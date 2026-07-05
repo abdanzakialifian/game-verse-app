@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -56,6 +58,7 @@ import coil3.compose.AsyncImage
 import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.formatDate
 import com.gameverse.app.common.formatDateTime
+import com.gameverse.app.common.shimmer
 import com.gameverse.app.common.toFormattedNumber
 import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.component.GVRatingBadge
@@ -100,6 +103,11 @@ private fun DetailContent(
     gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
     onIntent: (DetailReducer.Intent) -> Unit,
 ) {
+    if (uiState.isDetailLoading) {
+        DetailPlaceholder()
+        return
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -160,7 +168,7 @@ private fun DetailContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (isScreenshotsFirstPageLoading || isMoviesLoading) {
-
+            MediaPlaceholders()
         } else {
             HorizontalPager(
                 modifier = Modifier.fillMaxWidth(),
@@ -415,6 +423,134 @@ private fun DetailContent(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun DetailPlaceholder() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .navigationBarsPadding()
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(350.dp)
+                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+                .shimmer()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MediaPlaceholders()
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column(
+                    modifier = Modifier.weight(1F),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(20.dp)
+                            .shimmer(6.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(20.dp)
+                            .shimmer(6.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Box(
+                    modifier = Modifier
+                        .width(30.dp)
+                        .height(40.dp)
+                        .shimmer(6.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .shimmer(10.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
+                columns = GridCells.Fixed(2),
+                userScrollEnabled = false,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(6) {
+                    Column {
+                        Box(
+                            modifier = Modifier
+                                .width(100.dp)
+                                .height(20.dp)
+                                .shimmer(6.dp)
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(30.dp)
+                                .shimmer(6.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MediaPlaceholders() {
+    val pagerState = rememberPagerState { 10 }
+
+    HorizontalPager(
+        modifier = Modifier.fillMaxWidth(),
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        pageSpacing = 12.dp,
+        beyondViewportPageCount = 1,
+        pageSize = object : PageSize {
+            override fun Density.calculateMainAxisPageSize(
+                availableSpace: Int,
+                pageSpacing: Int
+            ): Int = (availableSpace * 0.80f).toInt()
+        },
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .clip(GVShapes.small)
+                .shimmer(cornerRadius = 12.dp),
+        )
     }
 }
 
