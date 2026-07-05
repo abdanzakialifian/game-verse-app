@@ -22,26 +22,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SecondaryTabRow
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -57,20 +49,18 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
-import chaintech.videoplayer.ui.preview.VideoPreviewComposable
+import chaintech.videoplayer.host.MediaPlayerHost
+import chaintech.videoplayer.model.VideoPlayerConfig
+import chaintech.videoplayer.ui.video.VideoPlayerComposable
 import coil3.compose.AsyncImage
-import com.gameverse.app.common.DetailTabs
 import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.formatDate
 import com.gameverse.app.common.formatDateTime
 import com.gameverse.app.common.toFormattedNumber
 import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.component.GVRatingBadge
-import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
-import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 import com.gameverse.app.presentation.shared.GamePlatforms
 import com.gameverse.app.theme.GVColor
@@ -80,7 +70,6 @@ import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
 import gameverse.shared.generated.resources.ic_favorite
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -89,7 +78,6 @@ import org.koin.core.parameter.parametersOf
 fun DetailScreen(
     gameId: String,
     viewModel: DetailViewModel = koinViewModel { parametersOf(gameId) },
-    onNavigateToDetailVideoPlayer: (String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -97,16 +85,6 @@ fun DetailScreen(
 
     LaunchEffectOnce(Unit) {
         viewModel.sendIntent(DetailReducer.Intent.OnGetGamesMovies(gameId))
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is DetailReducer.Effect.NavigateToDetailVideoPlayer -> onNavigateToDetailVideoPlayer(
-                    effect.url
-                )
-            }
-        }
     }
 
     DetailContent(
@@ -128,20 +106,19 @@ private fun DetailContent(
             .verticalScroll(rememberScrollState())
             .navigationBarsPadding()
     ) {
-        val scope = rememberCoroutineScope()
-
-        val pagerState = rememberPagerState { DetailTabs.entries.size }
-
-        val selectedTabIndex by remember { derivedStateOf { pagerState.currentPage } }
-
-        val screenshotsPagerState = rememberPagerState { gamesScreenshotsPaging.itemCount }
-
-        val moviesPagerState = rememberPagerState { uiState.moviesData.size }
-
-        val isScreenshotsFirstPageLoading =
-            gamesScreenshotsPaging.loadState.refresh is LoadState.Loading
+        val isScreenshotsFirstPageLoading = gamesScreenshotsPaging.loadState.refresh is LoadState.Loading
 
         val isMoviesLoading = uiState.isMoviesLoading
+
+        val hasVideo = uiState.moviesData.isNotEmpty()
+
+        val videoUrl = uiState.moviesData.getOrNull(0)?.max.orEmpty()
+
+        val mediaPlayerHost = remember(videoUrl) { MediaPlayerHost(mediaUrl = videoUrl) }
+
+        val mediaPagerState = rememberPagerState {
+            if (hasVideo) gamesScreenshotsPaging.itemCount + 1  else gamesScreenshotsPaging.itemCount
+        }
 
         Box(
             modifier = Modifier
@@ -185,81 +162,62 @@ private fun DetailContent(
         if (isScreenshotsFirstPageLoading || isMoviesLoading) {
 
         } else {
-            if (gamesScreenshotsPaging.itemCount != 0 && uiState.moviesData.isNotEmpty()) {
-                SecondaryTabRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedTabIndex = selectedTabIndex,
-                    containerColor = Color.Transparent,
-                    contentColor = Color.Transparent,
-                    indicator = {
-                        TabRowDefaults.SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(
-                                selectedTabIndex = selectedTabIndex,
-                                matchContentSize = false
-                            ),
-                            color = GVColor.onSurfaceVariant
-                        )
-                    }
-                ) {
-                    DetailTabs.entries.forEachIndexed { index, currentTab ->
-                        Tab(
-                            selected = selectedTabIndex == index,
-                            text = {
-                                Text(
-                                    text = currentTab.title,
-                                    style = GVTypography.labelMedium.copy(
-                                        fontWeight = if (selectedTabIndex == index) FontWeight.Bold else FontWeight.Medium
-                                    )
-                                )
-                            },
-                            onClick = {
-                                scope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            },
-                        )
+            HorizontalPager(
+                modifier = Modifier.fillMaxWidth(),
+                state = mediaPagerState,
+                contentPadding = PaddingValues(horizontal = 8.dp),
+                pageSpacing = 12.dp,
+                beyondViewportPageCount = 1,
+                pageSize = object : PageSize {
+                    override fun Density.calculateMainAxisPageSize(
+                        availableSpace: Int,
+                        pageSpacing: Int
+                    ): Int = (availableSpace * 0.80f).toInt()
+                },
+                key = { index ->
+                    if (index == 0 && hasVideo) {
+                        index
+                    } else {
+                        val dataIndex = if (hasVideo) index - 1 else index
+                        gamesScreenshotsPaging.peek(dataIndex)?.id ?: dataIndex
                     }
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                HorizontalPager(
-                    modifier = Modifier.fillMaxWidth(),
-                    state = pagerState,
-                    userScrollEnabled = false,
-                ) { index ->
-                    when (index) {
-                        DetailTabs.SCREENSHOTS.ordinal -> ScreenshotsPager(
-                            pagerState = screenshotsPagerState,
-                            gamesScreenshotsPaging = gamesScreenshotsPaging
-                        )
-
-                        DetailTabs.TRAILERS.ordinal -> TrailersPager(
-                            pagerState = moviesPagerState,
-                            moviesData = uiState.moviesData,
-                            onTrailerClicked = { url ->
-                                onIntent(DetailReducer.Intent.OnNavigateToDetailVideoPlayer(url))
-                            }
+            ) { index ->
+                if (index == 0 && hasVideo) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f)
+                            .clip(GVShapes.small)
+                            .background(GVColor.outline),
+                    ) {
+                        VideoPlayerComposable(
+                            playerHost = mediaPlayerHost,
+                            playerConfig = VideoPlayerConfig(
+                                enablePIPControl = false,
+                                isScreenLockEnabled = false,
+                                isScreenResizeEnabled = false,
+                                isFullScreenEnabled = false,
+                            )
                         )
                     }
+                } else {
+                    val dataIndex = if (hasVideo) index - 1 else index
+
+                    val result = gamesScreenshotsPaging[dataIndex]
+
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f)
+                            .clip(GVShapes.small),
+                        model = result?.image,
+                        placeholder = ColorPainter(GVColor.outline),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                        filterQuality = FilterQuality.Medium,
+                    )
                 }
-            }
-
-            if (gamesScreenshotsPaging.itemCount != 0 && uiState.moviesData.isEmpty()) {
-                ScreenshotsPager(
-                    pagerState = screenshotsPagerState,
-                    gamesScreenshotsPaging = gamesScreenshotsPaging
-                )
-            }
-
-            if (gamesScreenshotsPaging.itemCount == 0 && uiState.moviesData.isNotEmpty()) {
-                TrailersPager(
-                    pagerState = moviesPagerState,
-                    moviesData = uiState.moviesData,
-                    onTrailerClicked = { url ->
-                        onIntent(DetailReducer.Intent.OnNavigateToDetailVideoPlayer(url))
-                    }
-                )
             }
         }
 
@@ -456,84 +414,6 @@ private fun DetailContent(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-private fun ScreenshotsPager(
-    pagerState: PagerState,
-    gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
-) {
-    HorizontalPager(
-        modifier = Modifier.fillMaxWidth(),
-        state = pagerState,
-        contentPadding = PaddingValues(horizontal = 8.dp),
-        pageSpacing = 12.dp,
-        pageSize = object : PageSize {
-            override fun Density.calculateMainAxisPageSize(
-                availableSpace: Int,
-                pageSpacing: Int
-            ): Int = (availableSpace * 0.80f).toInt()
-        },
-        key = gamesScreenshotsPaging.itemKey { it.id }
-    ) { index ->
-        val result = gamesScreenshotsPaging[index] ?: return@HorizontalPager
-
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(16f / 9f)
-                .clip(GVShapes.small),
-            model = result.image,
-            placeholder = ColorPainter(GVColor.outline),
-            contentScale = ContentScale.Crop,
-            contentDescription = null,
-            filterQuality = FilterQuality.Medium,
-        )
-    }
-}
-
-@Composable
-private fun TrailersPager(
-    pagerState: PagerState,
-    moviesData: List<MoviesModel>,
-    onTrailerClicked: (String) -> Unit,
-) {
-    HorizontalPager(
-        modifier = Modifier.fillMaxWidth(),
-        state = pagerState,
-        contentPadding = PaddingValues(horizontal = 8.dp),
-        pageSpacing = 12.dp,
-        pageSize = object : PageSize {
-            override fun Density.calculateMainAxisPageSize(
-                availableSpace: Int,
-                pageSpacing: Int
-            ): Int = (availableSpace * 0.80f).toInt()
-        },
-        key = { moviesData.getOrNull(it)?.id ?: 0 }
-    ) { index ->
-        val result = moviesData.getOrNull(index) ?: return@HorizontalPager
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(16f / 9f)
-                .background(
-                    color = GVColor.outline,
-                    shape = GVShapes.small
-                )
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        onTrailerClicked(result.max)
-                    }
-                ),
-        ) {
-            VideoPreviewComposable(
-                url = result.jsonMember480,
-            )
         }
     }
 }

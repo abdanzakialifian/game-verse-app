@@ -25,7 +25,4 @@ sealed interface MainRoutes : NavKey {
 
     @Serializable
     data class Detail(val gameId: String) : MainRoutes
-
-    @Serializable
-    data class DetailVideoPlayer(val url: String) : MainRoutes
 }

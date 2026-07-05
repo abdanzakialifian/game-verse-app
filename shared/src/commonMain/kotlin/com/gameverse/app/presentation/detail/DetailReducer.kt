@@ -9,7 +9,6 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
         data class OnGetGamesMovies(val id: String) : Intent
-        data class OnNavigateToDetailVideoPlayer(val url: String) : Intent
         data class OnExpandDescription(val isExpandDescription: Boolean) : Intent
         data class OnTextOverflow(val isTextOverflowing: Boolean) : Intent
     }
@@ -27,9 +26,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     }
 
     @Immutable
-    sealed interface Effect : Reducer.ViewEffect {
-        data class NavigateToDetailVideoPlayer(val url: String) : Effect
-    }
+    sealed interface Effect : Reducer.ViewEffect
 
     @Immutable
     data class State(
