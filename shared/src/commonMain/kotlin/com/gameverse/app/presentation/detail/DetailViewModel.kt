@@ -18,10 +18,13 @@ class DetailViewModel(
 ) {
     init {
         getGameDetail(gameId)
+        getGamesMovies(gameId)
+        sendEvent(DetailReducer.Event.SetGameId(gameId))
     }
 
     override fun sendIntent(intent: DetailReducer.Intent) {
         when(intent) {
+            is DetailReducer.Intent.OnGetGameDetail -> getGameDetail(intent.id)
             is DetailReducer.Intent.OnGetGamesMovies -> getGamesMovies(intent.id)
             is DetailReducer.Intent.OnExpandDescription -> sendEvent(DetailReducer.Event.ExpandDescription(intent.isExpandDescription))
             is DetailReducer.Intent.OnTextOverflow -> sendEvent(DetailReducer.Event.TextOverflow(intent.isTextOverflowing))

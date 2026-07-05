@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,7 +56,6 @@ import chaintech.videoplayer.host.MediaPlayerHost
 import chaintech.videoplayer.model.VideoPlayerConfig
 import chaintech.videoplayer.ui.video.VideoPlayerComposable
 import coil3.compose.AsyncImage
-import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.formatDate
 import com.gameverse.app.common.formatDateTime
 import com.gameverse.app.common.shimmer
@@ -64,18 +64,22 @@ import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.component.GVRatingBadge
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 import com.gameverse.app.presentation.shared.GamePlatforms
+import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
 import gameverse.shared.generated.resources.ic_favorite
+import gameverse.shared.generated.resources.ic_retry
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.collections.orEmpty
 
 @Composable
 fun DetailScreen(
@@ -85,10 +89,6 @@ fun DetailScreen(
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     val gamesScreenshotsPaging = viewModel.gamesScreenshotsPaging.collectAsLazyPagingItems()
-
-    LaunchEffectOnce(Unit) {
-        viewModel.sendIntent(DetailReducer.Intent.OnGetGamesMovies(gameId))
-    }
 
     DetailContent(
         uiState = uiState,
@@ -108,6 +108,13 @@ private fun DetailContent(
         return
     }
 
+    if (uiState.detailError != null) {
+        GeneralError {
+            onIntent(DetailReducer.Intent.OnGetGameDetail(uiState.gameId))
+        }
+        return
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,310 +125,46 @@ private fun DetailContent(
 
         val isMoviesLoading = uiState.isMoviesLoading
 
-        val hasVideo = uiState.moviesData.isNotEmpty()
+        val isScreenshotsFirstPageError = gamesScreenshotsPaging.loadState.refresh is LoadState.Error
 
-        val videoUrl = uiState.moviesData.getOrNull(0)?.max.orEmpty()
+        val isMoviesError = uiState.moviesError != null
 
-        val mediaPlayerHost = remember(videoUrl) { MediaPlayerHost(mediaUrl = videoUrl) }
-
-        val mediaPagerState = rememberPagerState {
-            if (hasVideo) gamesScreenshotsPaging.itemCount + 1  else gamesScreenshotsPaging.itemCount
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(350.dp)
-                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-        ) {
-            AsyncImage(
-                modifier = Modifier.fillMaxSize(),
-                model = uiState.detailData?.backgroundImage,
-                placeholder = ColorPainter(GVColor.outline),
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
-                filterQuality = FilterQuality.Medium,
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = GVColor.secondaryContainer.copy(alpha = 0.8f))
-            )
-
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                GamePlatforms(uiState.detailData?.parentPlatforms.orEmpty())
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = uiState.detailData?.name.orEmpty(),
-                    style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                )
-            }
-        }
+        DetailHeaderInformation(uiState.detailData)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (isScreenshotsFirstPageLoading || isMoviesLoading) {
-            MediaPlaceholders()
-        } else {
-            HorizontalPager(
-                modifier = Modifier.fillMaxWidth(),
-                state = mediaPagerState,
-                contentPadding = PaddingValues(horizontal = 8.dp),
-                pageSpacing = 12.dp,
-                beyondViewportPageCount = 1,
-                pageSize = object : PageSize {
-                    override fun Density.calculateMainAxisPageSize(
-                        availableSpace: Int,
-                        pageSpacing: Int
-                    ): Int = (availableSpace * 0.80f).toInt()
-                },
-                key = { index ->
-                    if (index == 0 && hasVideo) {
-                        index
-                    } else {
-                        val dataIndex = if (hasVideo) index - 1 else index
-                        gamesScreenshotsPaging.peek(dataIndex)?.id ?: dataIndex
-                    }
-                }
-            ) { index ->
-                if (index == 0 && hasVideo) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f)
-                            .clip(GVShapes.small)
-                            .background(GVColor.outline),
-                    ) {
-                        VideoPlayerComposable(
-                            playerHost = mediaPlayerHost,
-                            playerConfig = VideoPlayerConfig(
-                                enablePIPControl = false,
-                                isScreenLockEnabled = false,
-                                isScreenResizeEnabled = false,
-                                isFullScreenEnabled = false,
-                            )
-                        )
-                    }
-                } else {
-                    val dataIndex = if (hasVideo) index - 1 else index
-
-                    val result = gamesScreenshotsPaging[dataIndex]
-
-                    AsyncImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16f / 9f)
-                            .clip(GVShapes.small),
-                        model = result?.image,
-                        placeholder = ColorPainter(GVColor.outline),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null,
-                        filterQuality = FilterQuality.Medium,
-                    )
-                }
+        when {
+            isScreenshotsFirstPageLoading || isMoviesLoading -> MediaPlaceholders()
+            isScreenshotsFirstPageError && isMoviesError -> MediaErrors {
+                gamesScreenshotsPaging.retry()
+                onIntent(DetailReducer.Intent.OnGetGamesMovies(uiState.gameId))
             }
+            else -> MediaPager(
+                gamesScreenshotsPaging = gamesScreenshotsPaging,
+                moviesData = uiState.moviesData
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Row(
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Column(
-                    modifier = Modifier.weight(1F),
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    GVRatingBadge(uiState.detailData?.rating ?: 0.0)
-
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        text = "${uiState.detailData?.reviewsCount?.toFormattedNumber()} Reviews",
-                        style = GVTypography.bodySmall,
-                        color = GVColor.onSurfaceVariant
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Icon(
-                    modifier = Modifier.size(36.dp),
-                    painter = painterResource(Res.drawable.ic_favorite),
-                    tint = GVColor.onBackground,
-                    contentDescription = null
-                )
-            }
+            DetailRatingWithFavorite(uiState.detailData)
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier.animateContentSize(
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
-                    )
-                )
-            ) {
-                Text(
-                    text = uiState.detailData?.description?.trimAfterDoubleNewline().orEmpty(),
-                    style = GVTypography.bodySmall,
-                    maxLines = if (uiState.isExpandDescription) Int.MAX_VALUE else 4,
-                    overflow = TextOverflow.Ellipsis,
-                    onTextLayout = { textLayoutResult ->
-                        onIntent(DetailReducer.Intent.OnTextOverflow(textLayoutResult.hasVisualOverflow))
-                    }
-                )
-
-                if (uiState.isTextOverflowing || uiState.isExpandDescription) {
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Text(
-                        modifier = Modifier.clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = {
-                                onIntent(DetailReducer.Intent.OnExpandDescription(!uiState.isExpandDescription))
-                            }
-                        ),
-                        text = if (uiState.isExpandDescription) "Show less" else "Show more",
-                        style = GVTypography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                        overflow = TextOverflow.Ellipsis,
-                        textDecoration = TextDecoration.Underline,
-                    )
+            DetailAboutInformation(
+                uiState = uiState,
+                onTextLayout = { textLayoutResult ->
+                    onIntent(DetailReducer.Intent.OnTextOverflow(textLayoutResult.hasVisualOverflow))
+                },
+                onTextExpandClicked = {
+                    onIntent(DetailReducer.Intent.OnExpandDescription(!uiState.isExpandDescription))
                 }
-            }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Column(modifier = Modifier.weight(1F)) {
-                        Text(
-                            text = "Platforms",
-                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = GVColor.outline
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = uiState.detailData?.parentPlatforms?.joinToString(", ") {
-                                it.name
-                            }.orEmpty(),
-                            style = GVTypography.labelSmall,
-                            color = GVColor.outlineVariant
-                        )
-                    }
-
-                    Column(modifier = Modifier.weight(1F)) {
-                        Text(
-                            text = "Genres",
-                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = GVColor.outline
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = uiState.detailData?.genres?.joinToString(", ") {
-                                it.name
-                            }.orEmpty(),
-                            style = GVTypography.labelSmall,
-                            color = GVColor.outlineVariant
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Column(modifier = Modifier.weight(1F)) {
-                        Text(
-                            text = "Released Date",
-                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = GVColor.outline
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = uiState.detailData?.released.formatDate(),
-                            style = GVTypography.labelSmall,
-                            color = GVColor.outlineVariant
-                        )
-                    }
-
-                    Column(modifier = Modifier.weight(1F)) {
-                        Text(
-                            text = "Last Modified",
-                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = GVColor.outline
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = uiState.detailData?.updated.formatDateTime(),
-                            style = GVTypography.labelSmall,
-                            color = GVColor.outlineVariant
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Column(modifier = Modifier.weight(1F)) {
-                        Text(
-                            text = "Publishers",
-                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = GVColor.outline
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text = uiState.detailData?.publishers?.joinToString(", ") {
-                                it.name
-                            }.orEmpty(),
-                            style = GVTypography.labelSmall,
-                            color = GVColor.outlineVariant
-                        )
-                    }
-
-                    Column(modifier = Modifier.weight(1F)) {
-                        Text(
-                            text = "Developers",
-                            style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = GVColor.outline
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Text(
-                            text =  uiState.detailData?.developers?.joinToString(", ") {
-                                it.name
-                            }.orEmpty(),
-                            style = GVTypography.labelSmall,
-                            color = GVColor.outlineVariant
-                        )
-                    }
-                }
-            }
+            DetailMoreInformation(uiState.detailData)
         }
     }
 }
@@ -528,8 +271,319 @@ private fun DetailPlaceholder() {
 }
 
 @Composable
+private fun DetailHeaderInformation(detailData: DetailModel?) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(350.dp)
+            .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+    ) {
+        AsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            model = detailData?.backgroundImage,
+            placeholder = ColorPainter(GVColor.outline),
+            contentScale = ContentScale.Crop,
+            contentDescription = null,
+            filterQuality = FilterQuality.Medium,
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = GVColor.secondaryContainer.copy(alpha = 0.8f))
+        )
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            GamePlatforms(detailData?.parentPlatforms.orEmpty())
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = detailData?.name.orEmpty(),
+                style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
+            )
+        }
+    }
+}
+
+@Composable
+private fun DetailRatingWithFavorite(detailData: DetailModel?) {
+    Row(
+        horizontalArrangement = Arrangement.Center
+    ) {
+        Column(
+            modifier = Modifier.weight(1F),
+            horizontalAlignment = Alignment.Start
+        ) {
+            GVRatingBadge(detailData?.rating ?: 0.0)
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "${detailData?.reviewsCount?.toFormattedNumber()} Reviews",
+                style = GVTypography.bodySmall,
+                color = GVColor.onSurfaceVariant
+            )
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Icon(
+            modifier = Modifier.size(36.dp),
+            painter = painterResource(Res.drawable.ic_favorite),
+            tint = GVColor.onBackground,
+            contentDescription = null
+        )
+    }
+
+}
+
+@Composable
+private fun DetailAboutInformation(
+    uiState: DetailReducer.State,
+    onTextLayout: (TextLayoutResult) -> Unit,
+    onTextExpandClicked: () -> Unit,
+) {
+    Column(
+        modifier = Modifier.animateContentSize(
+            animationSpec = tween(
+                durationMillis = 300,
+                easing = FastOutSlowInEasing
+            )
+        )
+    ) {
+        Text(
+            text = uiState.detailData?.description?.trimAfterDoubleNewline().orEmpty(),
+            style = GVTypography.bodySmall,
+            maxLines = if (uiState.isExpandDescription) Int.MAX_VALUE else 4,
+            overflow = TextOverflow.Ellipsis,
+            onTextLayout = onTextLayout
+        )
+
+        if (uiState.isTextOverflowing || uiState.isExpandDescription) {
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                modifier = Modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onTextExpandClicked
+                ),
+                text = if (uiState.isExpandDescription) "Show less" else "Show more",
+                style = GVTypography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                overflow = TextOverflow.Ellipsis,
+                textDecoration = TextDecoration.Underline,
+            )
+        }
+    }
+}
+
+@Composable
+private fun DetailMoreInformation(detailData: DetailModel?) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Column(modifier = Modifier.weight(1F)) {
+                Text(
+                    text = "Platforms",
+                    style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = GVColor.outline
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = detailData?.parentPlatforms?.joinToString(", ") {
+                        it.name
+                    }.orEmpty(),
+                    style = GVTypography.labelSmall,
+                    color = GVColor.outlineVariant
+                )
+            }
+
+            Column(modifier = Modifier.weight(1F)) {
+                Text(
+                    text = "Genres",
+                    style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = GVColor.outline
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = detailData?.genres?.joinToString(", ") {
+                        it.name
+                    }.orEmpty(),
+                    style = GVTypography.labelSmall,
+                    color = GVColor.outlineVariant
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Column(modifier = Modifier.weight(1F)) {
+                Text(
+                    text = "Released Date",
+                    style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = GVColor.outline
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = detailData?.released.formatDate(),
+                    style = GVTypography.labelSmall,
+                    color = GVColor.outlineVariant
+                )
+            }
+
+            Column(modifier = Modifier.weight(1F)) {
+                Text(
+                    text = "Last Modified",
+                    style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = GVColor.outline
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = detailData?.updated.formatDateTime(),
+                    style = GVTypography.labelSmall,
+                    color = GVColor.outlineVariant
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Column(modifier = Modifier.weight(1F)) {
+                Text(
+                    text = "Publishers",
+                    style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = GVColor.outline
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = detailData?.publishers?.joinToString(", ") {
+                        it.name
+                    }.orEmpty(),
+                    style = GVTypography.labelSmall,
+                    color = GVColor.outlineVariant
+                )
+            }
+
+            Column(modifier = Modifier.weight(1F)) {
+                Text(
+                    text = "Developers",
+                    style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
+                    color = GVColor.outline
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text =  detailData?.developers?.joinToString(", ") {
+                        it.name
+                    }.orEmpty(),
+                    style = GVTypography.labelSmall,
+                    color = GVColor.outlineVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MediaPager(
+     gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
+     moviesData: List<MoviesModel>,
+) {
+    val hasVideo = moviesData.isNotEmpty()
+
+    val videoUrl = moviesData.getOrNull(0)?.max.orEmpty()
+
+    val mediaPlayerHost = remember(videoUrl) { MediaPlayerHost(mediaUrl = videoUrl) }
+
+    val mediaPagerState = rememberPagerState {
+        if (hasVideo) gamesScreenshotsPaging.itemCount + 1  else gamesScreenshotsPaging.itemCount
+    }
+
+    HorizontalPager(
+        modifier = Modifier.fillMaxWidth(),
+        state = mediaPagerState,
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        pageSpacing = 12.dp,
+        beyondViewportPageCount = 1,
+        pageSize = object : PageSize {
+            override fun Density.calculateMainAxisPageSize(
+                availableSpace: Int,
+                pageSpacing: Int
+            ): Int = (availableSpace * 0.80f).toInt()
+        },
+        key = { index ->
+            if (index == 0 && hasVideo) {
+                index
+            } else {
+                val dataIndex = if (hasVideo) index - 1 else index
+                gamesScreenshotsPaging.peek(dataIndex)?.id ?: dataIndex
+            }
+        }
+    ) { index ->
+        if (index == 0 && hasVideo) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .clip(GVShapes.small)
+                    .background(GVColor.outline),
+            ) {
+                VideoPlayerComposable(
+                    playerHost = mediaPlayerHost,
+                    playerConfig = VideoPlayerConfig(
+                        enablePIPControl = false,
+                        isScreenLockEnabled = false,
+                        isScreenResizeEnabled = false,
+                        isFullScreenEnabled = false,
+                    )
+                )
+            }
+        } else {
+            val dataIndex = if (hasVideo) index - 1 else index
+
+            val result = gamesScreenshotsPaging[dataIndex]
+
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .clip(GVShapes.small),
+                model = result?.image,
+                placeholder = ColorPainter(GVColor.outline),
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+                filterQuality = FilterQuality.Medium,
+            )
+        }
+    }
+}
+
+@Composable
 private fun MediaPlaceholders() {
-    val pagerState = rememberPagerState { 10 }
+    val pagerState = rememberPagerState { 5 }
 
     HorizontalPager(
         modifier = Modifier.fillMaxWidth(),
@@ -551,6 +605,46 @@ private fun MediaPlaceholders() {
                 .clip(GVShapes.small)
                 .shimmer(cornerRadius = 12.dp),
         )
+    }
+}
+
+@Composable
+private fun MediaErrors(onRetry: () -> Unit) {
+    val pagerState = rememberPagerState { 5 }
+
+    HorizontalPager(
+        modifier = Modifier.fillMaxWidth(),
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 8.dp),
+        pageSpacing = 12.dp,
+        beyondViewportPageCount = 1,
+        pageSize = object : PageSize {
+            override fun Density.calculateMainAxisPageSize(
+                availableSpace: Int,
+                pageSpacing: Int
+            ): Int = (availableSpace * 0.80f).toInt()
+        },
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16f / 9f)
+                .clip(GVShapes.small)
+                .background(GVColor.outline)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onRetry
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                modifier = Modifier.size(36.dp),
+                painter = painterResource(Res.drawable.ic_retry),
+                contentDescription = null,
+                tint = GVColor.onSurfaceVariant
+            )
+        }
     }
 }
 

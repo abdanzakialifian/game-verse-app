@@ -8,6 +8,7 @@ import com.gameverse.app.mvi.Reducer
 class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
+        data class OnGetGameDetail(val id: String) : Intent
         data class OnGetGamesMovies(val id: String) : Intent
         data class OnExpandDescription(val isExpandDescription: Boolean) : Intent
         data class OnTextOverflow(val isTextOverflowing: Boolean) : Intent
@@ -15,6 +16,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
 
     @Immutable
     sealed interface Event : Reducer.ViewEvent {
+        data class SetGameId(val id: String) : Event
         data class GetGameDetailLoading(val isLoading: Boolean) : Event
         data class GetGameDetailData(val data: DetailModel) : Event
         data class GetGameDetailError(val error: Throwable) : Event
@@ -30,6 +32,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
 
     @Immutable
     data class State(
+        val gameId: String = "",
         val isDetailLoading: Boolean = false,
         val detailData: DetailModel? = null,
         val detailError: Throwable? = null,
@@ -59,6 +62,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
                     state
                 }
             }
+            is Event.SetGameId -> state.copy(gameId = event.id)
         }
     }
 }
