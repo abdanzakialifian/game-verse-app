@@ -4,18 +4,18 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlatformsItem(
+data class PlatformsItemResponse(
     @SerialName("requirements")
-    val requirements: Requirements? = null,
+    val requirements: RequirementsResponse? = null,
 
     @SerialName("released_at")
     val releasedAt: String? = null,
 
     @SerialName("platform")
-    val platform: ParentPlatformsItem.Platform? = null
+    val platform: ParentPlatformsItemResponse.PlatformResponse? = null
 ) {
     @Serializable
-    data class Requirements(
+    data class RequirementsResponse(
         @SerialName("minimum")
         val minimum: String? = null,
 

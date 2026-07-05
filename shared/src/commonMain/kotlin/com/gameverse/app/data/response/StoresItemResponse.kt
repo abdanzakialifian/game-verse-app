@@ -4,23 +4,24 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ParentPlatformsItem(
-    @SerialName("platform")
-    val platform: Platform? = null
+data class StoresItemResponse(
+    @SerialName("id")
+    val id: Int? = null,
+
+    @SerialName("store")
+    val store: StoreResponse? = null,
+
+    @SerialName("url")
+    val url: String? = null
 ) {
     @Serializable
-    data class Platform(
-        @SerialName("image")
-        val image: String? = null,
+    data class StoreResponse(
 
         @SerialName("games_count")
         val gamesCount: Int? = null,
 
-        @SerialName("year_end")
-        val yearEnd: Int? = null,
-
-        @SerialName("year_start")
-        val yearStart: Int? = null,
+        @SerialName("domain")
+        val domain: String? = null,
 
         @SerialName("name")
         val name: String? = null,

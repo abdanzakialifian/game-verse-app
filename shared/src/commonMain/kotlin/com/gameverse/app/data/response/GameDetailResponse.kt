@@ -9,7 +9,7 @@ data class GameDetailResponse(
 	val added: Int? = null,
 
 	@SerialName("developers")
-	val developers: List<DevelopersItem>? = null,
+	val developers: List<DevelopersItemResponse>? = null,
 
 	@SerialName("name_original")
 	val nameOriginal: String? = null,
@@ -24,7 +24,7 @@ data class GameDetailResponse(
 	val playtime: Int? = null,
 
 	@SerialName("platforms")
-	val platforms: List<PlatformsItem>? = null,
+	val platforms: List<PlatformsItemResponse>? = null,
 
 	@SerialName("rating_top")
 	val ratingTop: Int? = null,
@@ -33,7 +33,7 @@ data class GameDetailResponse(
 	val reviewsTextCount: Int? = null,
 
 	@SerialName("publishers")
-	val publishers: List<PublishersItem>? = null,
+	val publishers: List<PublishersItemResponse>? = null,
 
 	@SerialName("achievements_count")
 	val achievementsCount: Int? = null,
@@ -42,7 +42,7 @@ data class GameDetailResponse(
 	val id: Int? = null,
 
 	@SerialName("parent_platforms")
-	val parentPlatforms: List<ParentPlatformsItem>? = null,
+	val parentPlatforms: List<ParentPlatformsItemResponse>? = null,
 
 	@SerialName("reddit_name")
 	val redditName: String? = null,
@@ -66,7 +66,7 @@ data class GameDetailResponse(
 	val descriptionRaw: String? = null,
 
 	@SerialName("tags")
-	val tags: List<TagsItem>? = null,
+	val tags: List<TagsItemResponse>? = null,
 
 	@SerialName("background_image")
 	val backgroundImage: String? = null,
@@ -108,22 +108,22 @@ data class GameDetailResponse(
 	val parentsCount: Int? = null,
 
 	@SerialName("metacritic_platforms")
-	val metacriticPlatforms: List<MetacriticPlatformsItem>? = null,
+	val metacriticPlatforms: List<MetacriticPlatformsItemResponse>? = null,
 
 	@SerialName("creators_count")
 	val creatorsCount: Int? = null,
 
 	@SerialName("ratings")
-	val ratings: List<RatingsItem>? = null,
+	val ratings: List<RatingsItemResponse>? = null,
 
 	@SerialName("genres")
-	val genres: List<GenresItem>? = null,
+	val genres: List<GenresItemResponse>? = null,
 
 	@SerialName("saturated_color")
 	val saturatedColor: String? = null,
 
 	@SerialName("added_by_status")
-	val addedByStatus: AddedByStatus? = null,
+	val addedByStatus: AddedByStatusResponse? = null,
 
 	@SerialName("reddit_url")
 	val redditUrl: String? = null,
@@ -141,7 +141,7 @@ data class GameDetailResponse(
 	val suggestionsCount: Int? = null,
 
 	@SerialName("stores")
-	val stores: List<StoresItem>? = null,
+	val stores: List<StoresItemResponse>? = null,
 
 	@SerialName("additions_count")
 	val additionsCount: Int? = null,
@@ -153,13 +153,13 @@ data class GameDetailResponse(
 	val backgroundImageAdditional: String? = null,
 
 	@SerialName("esrb_rating")
-	val esrbRating: EsrbRating? = null,
+	val esrbRating: EsrbRatingResponse? = null,
 
 	@SerialName("screenshots_count")
 	val screenshotsCount: Int? = null,
 ) {
 	@Serializable
-	data class MetacriticPlatformsItem(
+	data class MetacriticPlatformsItemResponse(
 		@SerialName("metascore")
 		val metascore: Int? = null,
 
@@ -167,11 +167,11 @@ data class GameDetailResponse(
 		val url: String? = null,
 
 		@SerialName("platform")
-		val platform: ParentPlatformsItem.Platform? = null
+		val platform: ParentPlatformsItemResponse.PlatformResponse? = null
 	)
 
 	@Serializable
-	data class DevelopersItem(
+	data class DevelopersItemResponse(
 		@SerialName("games_count")
 		val gamesCount: Int? = null,
 
@@ -189,7 +189,7 @@ data class GameDetailResponse(
 	)
 
 	@Serializable
-	data class PublishersItem(
+	data class PublishersItemResponse(
 		@SerialName("games_count")
 		val gamesCount: Int? = null,
 

@@ -18,10 +18,10 @@ data class GamesItemResponse(
 	val playtime: Int? = null,
 
 	@SerialName("short_screenshots")
-	val shortScreenshots: List<ShortScreenshotsItem>? = null,
+	val shortScreenshots: List<ShortScreenshotsItemResponse>? = null,
 
 	@SerialName("platforms")
-	val platforms: List<PlatformsItem>? = null,
+	val platforms: List<PlatformsItemResponse>? = null,
 
 	@SerialName("user_game")
 	val userGame: String? = null,
@@ -33,10 +33,10 @@ data class GamesItemResponse(
 	val reviewsTextCount: Int? = null,
 
 	@SerialName("ratings")
-	val ratings: List<RatingsItem>? = null,
+	val ratings: List<RatingsItemResponse>? = null,
 
 	@SerialName("genres")
-	val genres: List<GenresItem>? = null,
+	val genres: List<GenresItemResponse>? = null,
 
 	@SerialName("saturated_color")
 	val saturatedColor: String? = null,
@@ -45,10 +45,10 @@ data class GamesItemResponse(
 	val id: Int? = null,
 
 	@SerialName("added_by_status")
-	val addedByStatus: AddedByStatus? = null,
+	val addedByStatus: AddedByStatusResponse? = null,
 
 	@SerialName("parent_platforms")
-	val parentPlatforms: List<ParentPlatformsItem>? = null,
+	val parentPlatforms: List<ParentPlatformsItemResponse>? = null,
 
 	@SerialName("ratings_count")
 	val ratingsCount: Int? = null,
@@ -63,10 +63,10 @@ data class GamesItemResponse(
 	val suggestionsCount: Int? = null,
 
 	@SerialName("stores")
-	val stores: List<StoresItem>? = null,
+	val stores: List<StoresItemResponse>? = null,
 
 	@SerialName("tags")
-	val tags: List<TagsItem>? = null,
+	val tags: List<TagsItemResponse>? = null,
 
 	@SerialName("background_image")
 	val backgroundImage: String? = null,
@@ -78,7 +78,7 @@ data class GamesItemResponse(
 	val dominantColor: String? = null,
 
 	@SerialName("esrb_rating")
-	val esrbRating: EsrbRating? = null,
+	val esrbRating: EsrbRatingResponse? = null,
 
 	@SerialName("name")
 	val name: String? = null,
@@ -93,7 +93,7 @@ data class GamesItemResponse(
 	val reviewsCount: Int? = null
 ) {
 	@Serializable
-	data class ShortScreenshotsItem(
+	data class ShortScreenshotsItemResponse(
 		@SerialName("image")
 		val image: String? = null,
 

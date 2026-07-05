@@ -9,7 +9,7 @@ data class GamesMoviesItemResponse(
 	val preview: String? = null,
 
 	@SerialName("data")
-	val data: Data? = null,
+	val data: DataResponse? = null,
 
 	@SerialName("name")
 	val name: String? = null,
@@ -18,7 +18,7 @@ data class GamesMoviesItemResponse(
 	val id: Int? = null
 ) {
 	@Serializable
-	data class Data(
+	data class DataResponse(
 		@SerialName("max")
 		val max: String? = null,
 

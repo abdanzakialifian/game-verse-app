@@ -12,7 +12,7 @@ data class GenresItemResponse(
     val name: String? = null,
 
     @SerialName("games")
-    val games: List<GamesItem>? = null,
+    val games: List<GamesItemResponse>? = null,
 
     @SerialName("id")
     val id: Int? = null,
@@ -22,19 +22,4 @@ data class GenresItemResponse(
 
     @SerialName("slug")
     val slug: String? = null
-) {
-    @Serializable
-    data class GamesItem(
-        @SerialName("added")
-        val added: Int? = null,
-
-        @SerialName("name")
-        val name: String? = null,
-
-        @SerialName("id")
-        val id: Int? = null,
-
-        @SerialName("slug")
-        val slug: String? = null
-    )
-}
+)
