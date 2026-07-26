@@ -40,6 +40,7 @@ import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.presentation.shared.GameInformation
 import com.gameverse.app.presentation.shared.GamePlaceholders
 import com.gameverse.app.presentation.shared.GamePlatforms
+import com.gameverse.app.presentation.shared.GeneralEmpty
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
@@ -179,6 +180,11 @@ private fun Games(
     onExpand: (id: Int) -> Unit,
     onShowMoreClicked: (gamePk: String) -> Unit,
 ) {
+    if (games.isEmpty()) {
+        GeneralEmpty()
+        return
+    }
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(vertical = 16.dp)

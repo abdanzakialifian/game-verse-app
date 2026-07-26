@@ -34,7 +34,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     @Immutable
     data class State(
         val searchValue: String = "",
-        val isGamesLoading: Boolean = false,
+        val isGamesLoading: Boolean = true,
         val gamesData: List<GamesModel> = emptyList(),
         val gamesError: Throwable? = null,
         val expandedIds: Set<Int> = emptySet(),
