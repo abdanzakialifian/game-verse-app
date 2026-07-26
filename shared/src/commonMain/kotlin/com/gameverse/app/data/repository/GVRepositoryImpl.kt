@@ -6,6 +6,8 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.gameverse.app.common.Constants
 import com.gameverse.app.data.api.GVService
+import com.gameverse.app.data.dao.GVFavoriteDao
+import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.data.mapper.toDomain
 import com.gameverse.app.data.paging.GamesPagingSource
 import com.gameverse.app.data.paging.GamesScreenshotsPagingSource
@@ -27,6 +29,7 @@ import org.koin.core.annotation.Singleton
 @Singleton(binds = [GVRepository::class])
 class GVRepositoryImpl(
     private val apiService: GVService,
+    private val favoriteDao: GVFavoriteDao,
     @param:IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : GVRepository {
     override suspend fun getGames(): List<GamesModel> = withContext(dispatcher) {
@@ -117,4 +120,16 @@ class GVRepositoryImpl(
             it.toDomain()
         }.orEmpty()
     }
+
+    override suspend fun saveFavorite(favoriteEntity: FavoriteEntity) {
+        favoriteDao.insert(favoriteEntity)
+    }
+
+    override suspend fun deleteFavoriteById(id: Int) {
+        favoriteDao.deleteById(id)
+    }
+
+    override fun getFavorites(): Flow<List<FavoriteEntity>> = favoriteDao.getFavorites()
+
+    override fun getFavoriteStatus(id: Int): Flow<Boolean> = favoriteDao.getFavoriteStatus(id)
 }

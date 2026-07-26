@@ -1,6 +1,7 @@
 package com.gameverse.app.domain.repository
 
 import androidx.paging.PagingData
+import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
@@ -16,4 +17,8 @@ interface GVRepository {
     suspend fun getGameDetail(id: String): DetailModel
     fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotsModel>>
     suspend fun getMoviesGames(id: String): List<MoviesModel>
+    suspend fun saveFavorite(favoriteEntity: FavoriteEntity)
+    suspend fun deleteFavoriteById(id: Int)
+    fun getFavorites(): Flow<List<FavoriteEntity>>
+    fun getFavoriteStatus(id: Int): Flow<Boolean>
 }
