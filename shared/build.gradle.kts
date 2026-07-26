@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.sonarqube)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 kotlin {
@@ -24,6 +26,8 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "shared"
             isStatic = true
+            // Required when using NativeSQLiteDriver
+            linkerOpts.add("-lsqlite3")
         }
     }
 
@@ -31,6 +35,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.room.sqlite.wrapper)
         }
 
         commonMain.dependencies {
@@ -63,6 +68,8 @@ kotlin {
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose)
             implementation(libs.compose.multiplatform.media.player)
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
         }
 
         iosMain.dependencies {
@@ -73,6 +80,16 @@ kotlin {
     koinCompiler {
         userLogs = true
     }
+}
+
+dependencies {
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {

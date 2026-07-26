@@ -1,9 +1,16 @@
 package com.gameverse.app
 
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.gameverse.app.data.config.defaultConfig
+import com.gameverse.app.data.database.AppDatabase
+import com.gameverse.app.data.database.DATABASE_NAME
+import com.gameverse.app.data.database.getRoomDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 
@@ -37,5 +44,19 @@ actual class HttpClientFactory {
     }
 }
 
+fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppDatabase> {
+    val appContext = context.applicationContext
+    val dbFile = appContext.getDatabasePath(DATABASE_NAME)
+    return Room.databaseBuilder<AppDatabase>(
+        context = appContext,
+        name = dbFile.absolutePath
+    )
+}
+
 @Composable
-fun MainView() = App()
+fun MainView() {
+    val context = LocalContext.current
+    val builder = getDatabaseBuilder(context)
+    val database = getRoomDatabase(builder)
+    App(database)
+}
