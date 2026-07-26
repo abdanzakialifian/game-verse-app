@@ -2,6 +2,8 @@ package com.gameverse.app.presentation.detail
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.gameverse.app.data.entity.FavoriteEntity
+import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.repository.GVRepository
 import com.gameverse.app.mvi.BaseViewModel
 import kotlinx.coroutines.launch
@@ -19,6 +21,7 @@ class DetailViewModel(
     init {
         getGameDetail(gameId)
         getGamesMovies(gameId)
+        getFavoriteStatus(gameId.toInt())
         sendEvent(DetailReducer.Event.SetGameId(gameId))
     }
 
@@ -28,6 +31,13 @@ class DetailViewModel(
             is DetailReducer.Intent.OnGetGamesMovies -> getGamesMovies(intent.id)
             is DetailReducer.Intent.OnExpandDescription -> sendEvent(DetailReducer.Event.ExpandDescription(intent.isExpandDescription))
             is DetailReducer.Intent.OnTextOverflow -> sendEvent(DetailReducer.Event.TextOverflow(intent.isTextOverflowing))
+            is DetailReducer.Intent.OnFavoriteClicked -> {
+                if (intent.isFavorite) {
+                    deleteFavorite(intent.detailModel.id)
+                } else {
+                    saveFavorite(intent.detailModel)
+                }
+            }
         }
     }
 
@@ -59,6 +69,32 @@ class DetailViewModel(
             } finally {
                 sendEvent(DetailReducer.Event.GetMoviesLoading(false))
             }
+        }
+    }
+
+    private fun getFavoriteStatus(id: Int) {
+        viewModelScope.launch {
+            repository.getFavoriteStatus(id).collect { isFavorite ->
+                sendEvent(DetailReducer.Event.SetFavoriteStatus(isFavorite))
+            }
+        }
+    }
+
+    private fun saveFavorite(detailModel: DetailModel) {
+        viewModelScope.launch {
+            val favorite = FavoriteEntity(
+                id = detailModel.id,
+                name = detailModel.name,
+                backgroundImage = detailModel.backgroundImage,
+                released = detailModel.released
+            )
+            repository.saveFavorite(favorite)
+        }
+    }
+
+    private fun deleteFavorite(id: Int) {
+        viewModelScope.launch {
+            repository.deleteFavoriteById(id)
         }
     }
 }

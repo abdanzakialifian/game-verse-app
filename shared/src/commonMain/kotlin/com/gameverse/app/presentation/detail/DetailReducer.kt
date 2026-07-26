@@ -12,6 +12,10 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         data class OnGetGamesMovies(val id: String) : Intent
         data class OnExpandDescription(val isExpandDescription: Boolean) : Intent
         data class OnTextOverflow(val isTextOverflowing: Boolean) : Intent
+        data class OnFavoriteClicked(
+            val isFavorite: Boolean,
+            val detailModel: DetailModel
+        ) : Intent
     }
 
     @Immutable
@@ -25,6 +29,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         data class GetMoviesError(val error: Throwable) : Event
         data class ExpandDescription(val isExpandDescription: Boolean) : Event
         data class TextOverflow(val isTextOverflowing: Boolean) : Event
+        data class SetFavoriteStatus(val isFavorite: Boolean) : Event
     }
 
     @Immutable
@@ -41,6 +46,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         val moviesError: Throwable? = null,
         val isTextOverflowing: Boolean = false,
         val isExpandDescription: Boolean = false,
+        val isFavorite: Boolean = false,
     ) : Reducer.ViewState
 
     override fun reduce(
@@ -63,6 +69,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
                 }
             }
             is Event.SetGameId -> state.copy(gameId = event.id)
+            is Event.SetFavoriteStatus -> state.copy(isFavorite = event.isFavorite)
         }
     }
 }

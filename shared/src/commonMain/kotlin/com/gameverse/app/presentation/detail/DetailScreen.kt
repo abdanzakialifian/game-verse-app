@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
@@ -108,7 +109,7 @@ private fun DetailContent(
         return
     }
 
-    if (uiState.detailError != null) {
+    if (uiState.detailError != null || uiState.detailData == null) {
         GeneralError {
             onIntent(DetailReducer.Intent.OnGetGameDetail(uiState.gameId))
         }
@@ -148,7 +149,18 @@ private fun DetailContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            DetailRatingWithFavorite(uiState.detailData)
+            DetailRatingWithFavorite(
+                detailData = uiState.detailData,
+                isFavorite = uiState.isFavorite,
+                onFavoriteClicked = {
+                    onIntent(
+                        DetailReducer.Intent.OnFavoriteClicked(
+                            isFavorite = uiState.isFavorite,
+                            detailModel = uiState.detailData
+                        )
+                    )
+                }
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -311,7 +323,11 @@ private fun DetailHeaderInformation(detailData: DetailModel?) {
 }
 
 @Composable
-private fun DetailRatingWithFavorite(detailData: DetailModel?) {
+private fun DetailRatingWithFavorite(
+    detailData: DetailModel?,
+    isFavorite: Boolean,
+    onFavoriteClicked: () -> Unit,
+) {
     Row(
         horizontalArrangement = Arrangement.Center
     ) {
@@ -333,9 +349,15 @@ private fun DetailRatingWithFavorite(detailData: DetailModel?) {
         Spacer(modifier = Modifier.width(16.dp))
 
         Icon(
-            modifier = Modifier.size(36.dp),
+            modifier = Modifier
+                .size(36.dp)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onFavoriteClicked
+                ),
             painter = painterResource(Res.drawable.ic_favorite),
-            tint = GVColor.onBackground,
+            tint = if (isFavorite) Color.Red else GVColor.onBackground,
             contentDescription = null
         )
     }
