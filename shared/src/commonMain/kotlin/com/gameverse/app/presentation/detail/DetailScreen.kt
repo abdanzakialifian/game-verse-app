@@ -80,7 +80,6 @@ import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import kotlin.collections.orEmpty
 
 @Composable
 fun DetailScreen(
@@ -152,11 +151,11 @@ private fun DetailContent(
             DetailRatingWithFavorite(
                 detailData = uiState.detailData,
                 isFavorite = uiState.isFavorite,
-                onFavoriteClicked = {
+                onFavoriteClicked = { detailModel, isFavorite ->
                     onIntent(
                         DetailReducer.Intent.OnFavoriteClicked(
-                            isFavorite = uiState.isFavorite,
-                            detailModel = uiState.detailData
+                            isFavorite = isFavorite,
+                            detailModel = detailModel
                         )
                     )
                 }
@@ -283,7 +282,7 @@ private fun DetailPlaceholder() {
 }
 
 @Composable
-private fun DetailHeaderInformation(detailData: DetailModel?) {
+private fun DetailHeaderInformation(detailData: DetailModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -292,7 +291,7 @@ private fun DetailHeaderInformation(detailData: DetailModel?) {
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxSize(),
-            model = detailData?.backgroundImage,
+            model = detailData.backgroundImage,
             placeholder = ColorPainter(GVColor.outline),
             contentScale = ContentScale.Crop,
             contentDescription = null,
@@ -310,12 +309,12 @@ private fun DetailHeaderInformation(detailData: DetailModel?) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GamePlatforms(detailData?.parentPlatforms.orEmpty())
+            GamePlatforms(detailData.parentPlatforms)
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = detailData?.name.orEmpty(),
+                text = detailData.name,
                 style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
         }
@@ -324,9 +323,9 @@ private fun DetailHeaderInformation(detailData: DetailModel?) {
 
 @Composable
 private fun DetailRatingWithFavorite(
-    detailData: DetailModel?,
+    detailData: DetailModel,
     isFavorite: Boolean,
-    onFavoriteClicked: () -> Unit,
+    onFavoriteClicked: (detailModel: DetailModel, isFavorite: Boolean) -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.Center
@@ -335,12 +334,12 @@ private fun DetailRatingWithFavorite(
             modifier = Modifier.weight(1F),
             horizontalAlignment = Alignment.Start
         ) {
-            GVRatingBadge(detailData?.rating ?: 0.0)
+            GVRatingBadge(detailData.rating)
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "${detailData?.reviewsCount?.toFormattedNumber()} Reviews",
+                text = "${detailData.reviewsCount.toFormattedNumber()} Reviews",
                 style = GVTypography.bodySmall,
                 color = GVColor.onSurfaceVariant
             )
@@ -354,7 +353,9 @@ private fun DetailRatingWithFavorite(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = onFavoriteClicked
+                    onClick = {
+                        onFavoriteClicked(detailData, isFavorite)
+                    }
                 ),
             painter = painterResource(Res.drawable.ic_favorite),
             tint = if (isFavorite) Color.Red else GVColor.onBackground,
@@ -405,7 +406,7 @@ private fun DetailAboutInformation(
 }
 
 @Composable
-private fun DetailMoreInformation(detailData: DetailModel?) {
+private fun DetailMoreInformation(detailData: DetailModel) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -420,9 +421,9 @@ private fun DetailMoreInformation(detailData: DetailModel?) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData?.parentPlatforms?.joinToString(", ") {
+                    text = detailData.parentPlatforms.joinToString(", ") {
                         it.name
-                    }.orEmpty(),
+                    },
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -438,9 +439,9 @@ private fun DetailMoreInformation(detailData: DetailModel?) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData?.genres?.joinToString(", ") {
+                    text = detailData.genres.joinToString(", ") {
                         it.name
-                    }.orEmpty(),
+                    },
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -462,7 +463,7 @@ private fun DetailMoreInformation(detailData: DetailModel?) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData?.released.formatDate(),
+                    text = detailData.released.formatDate(),
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -478,7 +479,7 @@ private fun DetailMoreInformation(detailData: DetailModel?) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData?.updated.formatDateTime(),
+                    text = detailData.updated.formatDateTime(),
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -500,9 +501,9 @@ private fun DetailMoreInformation(detailData: DetailModel?) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData?.publishers?.joinToString(", ") {
+                    text = detailData.publishers.joinToString(", ") {
                         it.name
-                    }.orEmpty(),
+                    },
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -518,9 +519,9 @@ private fun DetailMoreInformation(detailData: DetailModel?) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text =  detailData?.developers?.joinToString(", ") {
+                    text = detailData.developers.joinToString(", ") {
                         it.name
-                    }.orEmpty(),
+                    },
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
