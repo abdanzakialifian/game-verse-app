@@ -129,7 +129,13 @@ class GVRepositoryImpl(
         favoriteDao.deleteById(id)
     }
 
-    override fun getFavorites(): Flow<List<FavoriteEntity>> = favoriteDao.getFavorites()
+    override fun getFavorites(): Flow<List<GamesModel>> {
+        return favoriteDao.getFavorites().map { favoriteEntities ->
+            favoriteEntities.map { entity ->
+                entity.toDomain()
+            }
+        }
+    }
 
     override fun getFavoriteStatus(id: Int): Flow<Boolean> = favoriteDao.getFavoriteStatus(id)
 }

@@ -19,6 +19,6 @@ interface GVRepository {
     suspend fun getMoviesGames(id: String): List<MoviesModel>
     suspend fun saveFavorite(favoriteEntity: FavoriteEntity)
     suspend fun deleteFavoriteById(id: Int)
-    fun getFavorites(): Flow<List<FavoriteEntity>>
+    fun getFavorites(): Flow<List<GamesModel>>
     fun getFavoriteStatus(id: Int): Flow<Boolean>
 }

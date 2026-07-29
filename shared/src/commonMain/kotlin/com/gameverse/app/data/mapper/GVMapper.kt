@@ -1,5 +1,6 @@
 package com.gameverse.app.data.mapper
 
+import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.data.response.GamesItemResponse
 import com.gameverse.app.data.response.GamesMoviesItemResponse
@@ -97,4 +98,13 @@ fun GamesMoviesItemResponse.toDomain(): MoviesModel = MoviesModel(
     id = id ?: 0,
     max = data?.max.orEmpty(),
     jsonMember480 = data?.jsonMember480.orEmpty(),
+)
+
+fun FavoriteEntity.toDomain(): GamesModel = GamesModel(
+    id = id,
+    name = name,
+    backgroundImage = backgroundImage,
+    released = released,
+    genres = genres,
+    parentPlatforms = platforms
 )
