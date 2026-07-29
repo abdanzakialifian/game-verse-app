@@ -5,16 +5,6 @@ data class GamesModel(
     val name: String,
     val backgroundImage: String,
     val released: String,
-    val genres: List<GenresItem>,
-    val parentPlatforms: List<ParentPlatformsItem>,
-) {
-    data class GenresItem(
-        val name: String,
-        val id: Int,
-    )
-
-    data class ParentPlatformsItem(
-        val name: String,
-        val id: Int,
-    )
-}
+    val genres: List<String>,
+    val parentPlatforms: List<Int>,
+)

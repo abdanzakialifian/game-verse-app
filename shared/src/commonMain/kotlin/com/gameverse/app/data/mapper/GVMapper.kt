@@ -18,16 +18,10 @@ fun List<GamesItemResponse>.toDomain(): List<GamesModel> = this.map { result ->
         backgroundImage = result.backgroundImage.orEmpty(),
         released = result.released.orEmpty(),
         genres = result.genres?.map { genre ->
-            GamesModel.GenresItem(
-                id = genre.id ?: 0,
-                name = genre.name.orEmpty(),
-            )
+            genre.name.orEmpty()
         }.orEmpty(),
         parentPlatforms = result.parentPlatforms?.map { parentPlatform ->
-            GamesModel.ParentPlatformsItem(
-                id = parentPlatform.platform?.id ?: 0,
-                name = parentPlatform.platform?.name.orEmpty(),
-            )
+            parentPlatform.platform?.id ?: 0
         }.orEmpty(),
     )
 }
@@ -38,16 +32,10 @@ fun GamesItemResponse.toDomain(): GamesModel = GamesModel(
     backgroundImage = backgroundImage.orEmpty(),
     released = released.orEmpty(),
     genres = genres?.map { genre ->
-        GamesModel.GenresItem(
-            id = genre.id ?: 0,
-            name = genre.name.orEmpty(),
-        )
+        genre.name.orEmpty()
     }.orEmpty(),
     parentPlatforms = parentPlatforms?.map { parentPlatform ->
-        GamesModel.ParentPlatformsItem(
-            id = parentPlatform.platform?.id ?: 0,
-            name = parentPlatform.platform?.name.orEmpty(),
-        )
+        parentPlatform.platform?.id ?: 0
     }.orEmpty(),
 )
 
@@ -81,10 +69,7 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
         )
     }.orEmpty(),
     parentPlatforms = parentPlatforms?.map {
-        GamesModel.ParentPlatformsItem(
-            name = it.platform?.name.orEmpty(),
-            id = it.platform?.id ?: 0
-        )
+        it.platform?.id ?: 0
     }.orEmpty(),
     ratingsCount = ratingsCount ?: 0,
     released = released.orEmpty(),
@@ -94,10 +79,7 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
     reviewsCount = reviewsCount ?: 0,
     description = descriptionRaw.orEmpty(),
     genres = genres?.map {
-        GamesModel.GenresItem(
-            name = it.name.orEmpty(),
-            id = it.id ?: 0
-        )
+        it.name.orEmpty()
     }.orEmpty(),
 )
 
