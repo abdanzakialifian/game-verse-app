@@ -115,7 +115,15 @@ fun MainApp() {
                     }
 
                     entry<MainRoutes.Favorite> {
-                        FavoriteScreen()
+                        FavoriteScreen(
+                            paddingValues = innerPadding,
+                            onNavigateToGameSeries = { gamePk ->
+                                backStack.add(MainRoutes.GameSeries(gamePk))
+                            },
+                            onNavigateToDetail = { gamePk ->
+                                backStack.add(MainRoutes.Detail(gamePk))
+                            }
+                        )
                     }
 
                     entry<MainRoutes.Profile> {
