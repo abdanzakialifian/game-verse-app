@@ -19,11 +19,13 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
+import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 
 @Composable
@@ -103,5 +105,26 @@ fun GameItem(
 
             Spacer(modifier = Modifier.height(8.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun GameItemPreview() {
+    GVTheme {
+        GameItem(
+            game = GamesModel(
+                id = 1,
+                name = "Grand Theft Auto V",
+                backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                released = "2013-09-17",
+                genres = listOf("Action", "RPG", "Shooter"),
+                parentPlatforms = (1..10).toList(),
+            ),
+            expandedIds = setOf(1),
+            onShowMoreClicked = {},
+            onExpand = {},
+            onItemClicked = {}
+        )
     }
 }

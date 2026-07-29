@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,26 +21,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.gameverse.app.common.Greeting
 import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.Utils
 import com.gameverse.app.domain.model.GamesModel
-import com.gameverse.app.presentation.shared.GeneralError
-import com.gameverse.app.presentation.shared.GameInformation
+import com.gameverse.app.presentation.shared.GameItem
 import com.gameverse.app.presentation.shared.GamePlaceholders
-import com.gameverse.app.presentation.shared.GamePlatforms
 import com.gameverse.app.presentation.shared.GeneralEmpty
+import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVColor
-import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
@@ -158,8 +149,8 @@ private fun HomeContent(
             else -> Games(
                 expandedIds = uiState.expandedIds,
                 games = uiState.gamesData,
-                onGameClicked = { gamePk ->
-                    onIntent(HomeReducer.Intent.OnNavigateToDetail(gamePk))
+                onGameClicked = { id ->
+                    onIntent(HomeReducer.Intent.OnNavigateToDetail(id.toString()))
                 },
                 onExpand = { id ->
                     onIntent(HomeReducer.Intent.OnExpanded(id))
@@ -176,7 +167,7 @@ private fun HomeContent(
 private fun Games(
     expandedIds: Set<Int>,
     games: List<GamesModel>,
-    onGameClicked: (gamePk: String) -> Unit,
+    onGameClicked: (id: Int) -> Unit,
     onExpand: (id: Int) -> Unit,
     onShowMoreClicked: (gamePk: String) -> Unit,
 ) {
@@ -190,75 +181,13 @@ private fun Games(
         contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         items(games, key = { it.id }) { result ->
-            val isExpanded = result.id in expandedIds
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = {
-                            onGameClicked(result.id.toString())
-                        }
-                    ),
-                shape = GVShapes.medium,
-                colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
-            ) {
-                Column {
-                    AsyncImage(
-                        modifier = Modifier.fillMaxWidth().height(200.dp),
-                        model = result.backgroundImage,
-                        placeholder = ColorPainter(GVColor.outline),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null,
-                        filterQuality = FilterQuality.Medium,
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    GamePlatforms(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        platforms = result.parentPlatforms
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        text = result.name,
-                        style = GVTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                    )
-
-                    GameInformation(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        released = result.released,
-                        genres = result.genres,
-                        isExpanded = isExpanded,
-                        onButtonClicked = {
-                            onShowMoreClicked(result.id.toString())
-                        }
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() },
-                                onClick = {
-                                    onExpand(result.id)
-                                }
-                            ),
-                        text = if (isExpanded) "View less" else "View more",
-                        style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
+            GameItem(
+                game = result,
+                expandedIds = expandedIds,
+                onShowMoreClicked = onShowMoreClicked,
+                onExpand = onExpand,
+                onItemClicked = onGameClicked,
+            )
         }
     }
 }
