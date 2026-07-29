@@ -86,7 +86,9 @@ class DetailViewModel(
                 id = detailModel.id,
                 name = detailModel.name,
                 backgroundImage = detailModel.backgroundImage,
-                released = detailModel.released
+                released = detailModel.released,
+                genres = detailModel.genres,
+                platforms = detailModel.parentPlatforms
             )
             repository.saveFavorite(favorite)
         }
