@@ -146,48 +146,33 @@ private fun HomeContent(
                     onIntent(HomeReducer.Intent.OnGetGames)
                 }
             )
-            else -> Games(
-                expandedIds = uiState.expandedIds,
-                games = uiState.gamesData,
-                onGameClicked = { id ->
-                    onIntent(HomeReducer.Intent.OnNavigateToDetail(id.toString()))
-                },
-                onExpand = { id ->
-                    onIntent(HomeReducer.Intent.OnExpanded(id))
-                },
-                onShowMoreClicked = { gamePk ->
-                    onIntent(HomeReducer.Intent.OnNavigateToGameSeries(gamePk))
+            else -> {
+                if (uiState.gamesData.isEmpty()) {
+                    GeneralEmpty()
+                    return
                 }
-            )
-        }
-    }
-}
 
-@Composable
-private fun Games(
-    expandedIds: Set<Int>,
-    games: List<GamesModel>,
-    onGameClicked: (id: Int) -> Unit,
-    onExpand: (id: Int) -> Unit,
-    onShowMoreClicked: (gamePk: String) -> Unit,
-) {
-    if (games.isEmpty()) {
-        GeneralEmpty()
-        return
-    }
-
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(vertical = 16.dp)
-    ) {
-        items(games, key = { it.id }) { result ->
-            GameItem(
-                game = result,
-                expandedIds = expandedIds,
-                onShowMoreClicked = onShowMoreClicked,
-                onExpand = onExpand,
-                onItemClicked = onGameClicked,
-            )
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                ) {
+                    items(uiState.gamesData, key = { it.id }) { result ->
+                        GameItem(
+                            game = result,
+                            expandedIds = uiState.expandedIds,
+                            onShowMoreClicked = { gamePk ->
+                                onIntent(HomeReducer.Intent.OnNavigateToGameSeries(gamePk))
+                            },
+                            onExpand = { id ->
+                                onIntent(HomeReducer.Intent.OnExpanded(id))
+                            },
+                            onItemClicked = { id ->
+                                onIntent(HomeReducer.Intent.OnNavigateToDetail(id.toString()))
+                            },
+                        )
+                    }
+                }
+            }
         }
     }
 }
