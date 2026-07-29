@@ -309,7 +309,7 @@ private fun DetailHeaderInformation(detailData: DetailModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GamePlatforms(detailData.parentPlatforms)
+            GamePlatforms(detailData.parentPlatforms.map { it.id })
 
             Spacer(modifier = Modifier.height(16.dp))
 
