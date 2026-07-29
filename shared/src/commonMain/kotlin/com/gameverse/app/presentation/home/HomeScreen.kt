@@ -219,7 +219,7 @@ private fun Games(
 
                     GamePlatforms(
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        platforms = result.parentPlatforms
+                        platforms = result.parentPlatforms.map { it.id }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))

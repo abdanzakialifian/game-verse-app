@@ -10,21 +10,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gameverse.app.common.Platform
-import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.theme.GVTheme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun GamePlatforms(
-    platforms: List<GamesModel.ParentPlatformsItem>,
+    platforms: List<Int>,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        val platformIds = platforms.map { it.id }
-        val platformIcons = Platform.iconFromIds(platformIds)
+        val platformIcons = Platform.iconFromIds(platforms)
         platformIcons.forEach { iconDrawable ->
             Icon(
                 modifier = Modifier.size(16.dp),
@@ -41,44 +39,7 @@ fun GamePlatforms(
 private fun GamePlatformsPreview() {
     GVTheme {
         GamePlatforms(
-            platforms = listOf(
-                GamesModel.ParentPlatformsItem(
-                    id = 1,
-                    name = "Windows"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 2,
-                    name = "PlayStation"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 3,
-                    name = "Xbox"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 4,
-                    name = "Apple"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 5,
-                    name = "Apple Mac"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 6,
-                    name = "Linux"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 7,
-                    name = "Nintendo"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 8,
-                    name = "Android"
-                ),
-                GamesModel.ParentPlatformsItem(
-                    id = 9,
-                    name = "Others"
-                )
-            )
+            platforms = (1..10).toList()
         )
     }
 }
