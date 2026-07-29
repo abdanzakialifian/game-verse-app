@@ -6,14 +6,14 @@ data class DetailModel(
     val rating: Double,
     val reviewsCount: Int,
     val publishers: List<PublishersItem>,
-    val parentPlatforms: List<GamesModel.ParentPlatformsItem>,
+    val parentPlatforms: List<Int>,
     val ratingsCount: Int,
     val released: String,
     val updated: String,
     val backgroundImage: String,
     val name: String,
     val description: String,
-    val genres: List<GamesModel.GenresItem>,
+    val genres: List<String>,
 ) {
     data class DevelopersItem(
         val name: String,

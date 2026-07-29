@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gameverse.app.common.formatDate
-import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
@@ -27,7 +26,7 @@ import com.gameverse.app.theme.GVTypography
 @Composable
 fun GameInformation(
     released: String,
-    genres: List<GamesModel.GenresItem>,
+    genres: List<String>,
     isExpanded: Boolean,
     modifier: Modifier = Modifier,
     onButtonClicked: (() -> Unit)? = null,
@@ -72,7 +71,7 @@ fun GameInformation(
                 Spacer(modifier = Modifier.width(6.dp))
 
                 Text(
-                    text = genres.joinToString(", ") { it.name },
+                    text = genres.joinToString(", "),
                     style = GVTypography.labelSmall
                 )
             }
@@ -102,20 +101,7 @@ private fun GameInformationPreview() {
     GVTheme {
         GameInformation(
             released = "2013-09-17",
-            genres = listOf(
-                GamesModel.GenresItem(
-                    id = 1,
-                    name = "Action"
-                ),
-                GamesModel.GenresItem(
-                    id = 2,
-                    name = "RPG"
-                ),
-                GamesModel.GenresItem(
-                    id = 3,
-                    name = "Shooter"
-                ),
-            ),
+            genres = listOf("Action", "RPG", "Shooter"),
             isExpanded = true,
             onButtonClicked = {}
         )
