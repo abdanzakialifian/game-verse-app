@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StoresItemResponse(
+data class StoreItemResponse(
     @SerialName("id")
     val id: Int? = null,
 

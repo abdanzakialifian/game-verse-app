@@ -12,7 +12,7 @@ data class PlatformsItemResponse(
     val releasedAt: String? = null,
 
     @SerialName("platform")
-    val platform: ParentPlatformsItemResponse.PlatformResponse? = null
+    val platform: ParentPlatformItemResponse.PlatformResponse? = null
 ) {
     @Serializable
     data class RequirementsResponse(

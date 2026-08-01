@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
-data class GamesScreenshotsItemResponse(
+data class ScreenshotsItemResponse(
     @SerialName("image")
     val image: String? = null,
 

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
-data class GamesMoviesItemResponse(
+data class MovieItemResponse(
 	@SerialName("preview")
 	val preview: String? = null,
 

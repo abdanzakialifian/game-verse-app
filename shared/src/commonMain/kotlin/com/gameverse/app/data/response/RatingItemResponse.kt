@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RatingsItemResponse(
+data class RatingItemResponse(
     @SerialName("count")
     val count: Int? = null,
 

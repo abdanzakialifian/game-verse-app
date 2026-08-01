@@ -3,14 +3,14 @@ package com.gameverse.app.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.gameverse.app.data.api.GVService
-import com.gameverse.app.data.response.GamesItemResponse
+import com.gameverse.app.data.response.GameItemResponse
 
 class GamesPagingSource(
     private val apiService: GVService,
     private val query: String?,
     private val genres: String?,
-) : PagingSource<Int, GamesItemResponse>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GamesItemResponse> =
+) : PagingSource<Int, GameItemResponse>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GameItemResponse> =
         try {
             val nextPageNumber = params.key ?: 1
             val response = apiService.getGames(
@@ -28,7 +28,7 @@ class GamesPagingSource(
             LoadResult.Error(e)
         }
 
-    override fun getRefreshKey(state: PagingState<Int, GamesItemResponse>): Int? =
+    override fun getRefreshKey(state: PagingState<Int, GameItemResponse>): Int? =
         state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)

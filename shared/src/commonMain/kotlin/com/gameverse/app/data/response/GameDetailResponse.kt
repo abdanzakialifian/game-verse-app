@@ -42,7 +42,7 @@ data class GameDetailResponse(
 	val id: Int? = null,
 
 	@SerialName("parent_platforms")
-	val parentPlatforms: List<ParentPlatformsItemResponse>? = null,
+	val parentPlatforms: List<ParentPlatformItemResponse>? = null,
 
 	@SerialName("reddit_name")
 	val redditName: String? = null,
@@ -66,7 +66,7 @@ data class GameDetailResponse(
 	val descriptionRaw: String? = null,
 
 	@SerialName("tags")
-	val tags: List<TagsItemResponse>? = null,
+	val tags: List<TagItemResponse>? = null,
 
 	@SerialName("background_image")
 	val backgroundImage: String? = null,
@@ -114,10 +114,10 @@ data class GameDetailResponse(
 	val creatorsCount: Int? = null,
 
 	@SerialName("ratings")
-	val ratings: List<RatingsItemResponse>? = null,
+	val ratings: List<RatingItemResponse>? = null,
 
 	@SerialName("genres")
-	val genres: List<GenresItemResponse>? = null,
+	val genres: List<GenreItemResponse>? = null,
 
 	@SerialName("saturated_color")
 	val saturatedColor: String? = null,
@@ -141,7 +141,7 @@ data class GameDetailResponse(
 	val suggestionsCount: Int? = null,
 
 	@SerialName("stores")
-	val stores: List<StoresItemResponse>? = null,
+	val stores: List<StoreItemResponse>? = null,
 
 	@SerialName("additions_count")
 	val additionsCount: Int? = null,
@@ -167,7 +167,7 @@ data class GameDetailResponse(
 		val url: String? = null,
 
 		@SerialName("platform")
-		val platform: ParentPlatformsItemResponse.PlatformResponse? = null
+		val platform: ParentPlatformItemResponse.PlatformResponse? = null
 	)
 
 	@Serializable

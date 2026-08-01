@@ -2,15 +2,15 @@ package com.gameverse.app.data.mapper
 
 import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.data.response.GameDetailResponse
-import com.gameverse.app.data.response.GamesItemResponse
-import com.gameverse.app.data.response.GamesScreenshotsItemResponse
-import com.gameverse.app.data.response.GenresItemResponse
+import com.gameverse.app.data.response.GameItemResponse
+import com.gameverse.app.data.response.ScreenshotsItemResponse
+import com.gameverse.app.data.response.GenreItemResponse
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 
-fun List<GamesItemResponse>.toDomain(): List<GamesModel> = this.map { result ->
+fun List<GameItemResponse>.toDomain(): List<GamesModel> = this.map { result ->
     GamesModel(
         id = result.id ?: 0,
         name = result.name.orEmpty(),
@@ -25,7 +25,7 @@ fun List<GamesItemResponse>.toDomain(): List<GamesModel> = this.map { result ->
     )
 }
 
-fun GamesItemResponse.toDomain(): GamesModel = GamesModel(
+fun GameItemResponse.toDomain(): GamesModel = GamesModel(
     id = id ?: 0,
     name = name.orEmpty(),
     backgroundImage = backgroundImage.orEmpty(),
@@ -38,7 +38,7 @@ fun GamesItemResponse.toDomain(): GamesModel = GamesModel(
     }.orEmpty(),
 )
 
-fun GenresItemResponse.toDomain(): GenresModel = GenresModel(
+fun GenreItemResponse.toDomain(): GenresModel = GenresModel(
     id = id ?: 0,
     name = name.orEmpty(),
     imageBackground = imageBackground.orEmpty(),
@@ -76,7 +76,7 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
     }.orEmpty(),
 )
 
-fun GamesScreenshotsItemResponse.toDomain(): ScreenshotsModel = ScreenshotsModel(
+fun ScreenshotsItemResponse.toDomain(): ScreenshotsModel = ScreenshotsModel(
     id = id ?: 0,
     image = image.orEmpty()
 )

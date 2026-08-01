@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
 
 @Serializable
-data class GamesItemResponse(
+data class GameItemResponse(
 	@SerialName("added")
 	val added: Int? = null,
 
@@ -33,10 +33,10 @@ data class GamesItemResponse(
 	val reviewsTextCount: Int? = null,
 
 	@SerialName("ratings")
-	val ratings: List<RatingsItemResponse>? = null,
+	val ratings: List<RatingItemResponse>? = null,
 
 	@SerialName("genres")
-	val genres: List<GenresItemResponse>? = null,
+	val genres: List<GenreItemResponse>? = null,
 
 	@SerialName("saturated_color")
 	val saturatedColor: String? = null,
@@ -48,7 +48,7 @@ data class GamesItemResponse(
 	val addedByStatus: AddedByStatusResponse? = null,
 
 	@SerialName("parent_platforms")
-	val parentPlatforms: List<ParentPlatformsItemResponse>? = null,
+	val parentPlatforms: List<ParentPlatformItemResponse>? = null,
 
 	@SerialName("ratings_count")
 	val ratingsCount: Int? = null,
@@ -63,10 +63,10 @@ data class GamesItemResponse(
 	val suggestionsCount: Int? = null,
 
 	@SerialName("stores")
-	val stores: List<StoresItemResponse>? = null,
+	val stores: List<StoreItemResponse>? = null,
 
 	@SerialName("tags")
-	val tags: List<TagsItemResponse>? = null,
+	val tags: List<TagItemResponse>? = null,
 
 	@SerialName("background_image")
 	val backgroundImage: String? = null,

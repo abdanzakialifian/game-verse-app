@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ParentPlatformsItemResponse(
+data class ParentPlatformItemResponse(
     @SerialName("platform")
     val platform: PlatformResponse? = null
 ) {
