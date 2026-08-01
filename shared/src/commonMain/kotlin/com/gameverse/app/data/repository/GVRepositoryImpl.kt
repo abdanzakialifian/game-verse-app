@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.gameverse.app.common.Constants
 import com.gameverse.app.data.api.GVService
 import com.gameverse.app.data.dao.GVFavoriteDao
 import com.gameverse.app.data.entity.FavoriteEntity
@@ -39,10 +38,10 @@ class GVRepositoryImpl(
     override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GamesModel>> =
         Pager(
             config = PagingConfig(
-                pageSize = Constants.PAGE_SIZE,
+                pageSize = PAGE_SIZE,
                 enablePlaceholders = true,
-                initialLoadSize = Constants.PAGE_SIZE,
-                prefetchDistance = Constants.PREFETCH_DISTANCE
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PREFETCH_DISTANCE
             ),
             pagingSourceFactory = {
                 GamesPagingSource(
@@ -59,10 +58,10 @@ class GVRepositoryImpl(
 
     override fun getGamesSeriesPaging(gamePk: String): Flow<PagingData<GamesModel>> = Pager(
         config = PagingConfig(
-            pageSize = Constants.PAGE_SIZE,
+            pageSize = PAGE_SIZE,
             enablePlaceholders = true,
-            initialLoadSize = Constants.PAGE_SIZE,
-            prefetchDistance = Constants.PREFETCH_DISTANCE
+            initialLoadSize = PAGE_SIZE,
+            prefetchDistance = PREFETCH_DISTANCE
         ),
         pagingSourceFactory = {
             GamesSeriesPagingSource(
@@ -78,10 +77,10 @@ class GVRepositoryImpl(
 
     override fun getGenresPaging(): Flow<PagingData<GenresModel>> = Pager(
         config = PagingConfig(
-            pageSize = Constants.PAGE_SIZE,
+            pageSize = PAGE_SIZE,
             enablePlaceholders = true,
-            initialLoadSize = Constants.PAGE_SIZE,
-            prefetchDistance = Constants.PREFETCH_DISTANCE
+            initialLoadSize = PAGE_SIZE,
+            prefetchDistance = PREFETCH_DISTANCE
         ),
         pagingSourceFactory = {
             GenresPagingSource(apiService)
@@ -98,10 +97,10 @@ class GVRepositoryImpl(
 
     override fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotsModel>> = Pager(
         config = PagingConfig(
-            pageSize = Constants.PAGE_SIZE,
+            pageSize = PAGE_SIZE,
             enablePlaceholders = true,
-            initialLoadSize = Constants.PAGE_SIZE,
-            prefetchDistance = Constants.PREFETCH_DISTANCE
+            initialLoadSize = PAGE_SIZE,
+            prefetchDistance = PREFETCH_DISTANCE
         ),
         pagingSourceFactory = {
             GamesScreenshotsPagingSource(
@@ -138,4 +137,9 @@ class GVRepositoryImpl(
     }
 
     override fun getFavoriteStatus(id: Int): Flow<Boolean> = favoriteDao.getFavoriteStatus(id)
+
+    companion object {
+        private const val PAGE_SIZE = 10
+        private const val PREFETCH_DISTANCE = 3
+    }
 }
