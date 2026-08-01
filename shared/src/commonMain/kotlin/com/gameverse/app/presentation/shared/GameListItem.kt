@@ -1,12 +1,20 @@
 package com.gameverse.app.presentation.shared
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -22,6 +30,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.gameverse.app.common.formatDate
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
@@ -75,7 +84,7 @@ fun GameListItem(
                 style = GVTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
             )
 
-            GameInformation(
+            GameMetadata(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 released = game.released,
                 genres = game.genres,
@@ -104,6 +113,78 @@ fun GameListItem(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+@Composable
+private fun GameMetadata(
+    released: String,
+    genres: List<String>,
+    isExpanded: Boolean,
+    modifier: Modifier = Modifier,
+    onButtonClicked: (() -> Unit)? = null,
+) {
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = isExpanded,
+        enter = expandVertically(),
+        exit = shrinkVertically()
+    ) {
+        Column {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Release date:",
+                    style = GVTypography.labelSmall
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = released.formatDate(),
+                    style = GVTypography.labelSmall
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Genres:",
+                    style = GVTypography.labelSmall
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = genres.joinToString(", "),
+                    style = GVTypography.labelSmall
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            if (onButtonClicked != null) {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = GVShapes.small,
+                    colors = ButtonDefaults.buttonColors(containerColor = GVColor.outline),
+                    onClick = onButtonClicked
+                ) {
+                    Text(
+                        text = "Show more like this",
+                        style = GVTypography.labelSmall
+                    )
+                }
+            }
         }
     }
 }
