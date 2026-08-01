@@ -13,6 +13,10 @@ class HomeViewModel(
     initialState = HomeReducer.State(),
     reducer = HomeReducer()
 ) {
+    init {
+        getGames()
+    }
+
     override fun sendIntent(intent: HomeReducer.Intent) {
         when (intent) {
             is HomeReducer.Intent.OnSearchValueChanged -> sendEvent(

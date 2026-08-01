@@ -26,7 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gameverse.app.common.Greeting
-import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.Utils
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.presentation.shared.GameListItem
@@ -50,10 +49,6 @@ fun HomeScreen(
     onNavigateToDetail: (gamePk: String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
-
-    LaunchEffectOnce(Unit) {
-        viewModel.sendIntent(HomeReducer.Intent.OnGetGames)
-    }
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
