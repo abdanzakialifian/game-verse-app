@@ -6,12 +6,12 @@ import com.gameverse.app.data.response.GameItemResponse
 import com.gameverse.app.data.response.ScreenshotsItemResponse
 import com.gameverse.app.data.response.GenreItemResponse
 import com.gameverse.app.domain.model.DetailModel
-import com.gameverse.app.domain.model.GamesModel
-import com.gameverse.app.domain.model.GenresModel
-import com.gameverse.app.domain.model.ScreenshotsModel
+import com.gameverse.app.domain.model.GameModel
+import com.gameverse.app.domain.model.GenreModel
+import com.gameverse.app.domain.model.ScreenshotModel
 
-fun List<GameItemResponse>.toDomain(): List<GamesModel> = this.map { result ->
-    GamesModel(
+fun List<GameItemResponse>.toDomain(): List<GameModel> = this.map { result ->
+    GameModel(
         id = result.id ?: 0,
         name = result.name.orEmpty(),
         backgroundImage = result.backgroundImage.orEmpty(),
@@ -25,7 +25,7 @@ fun List<GameItemResponse>.toDomain(): List<GamesModel> = this.map { result ->
     )
 }
 
-fun GameItemResponse.toDomain(): GamesModel = GamesModel(
+fun GameItemResponse.toDomain(): GameModel = GameModel(
     id = id ?: 0,
     name = name.orEmpty(),
     backgroundImage = backgroundImage.orEmpty(),
@@ -38,13 +38,13 @@ fun GameItemResponse.toDomain(): GamesModel = GamesModel(
     }.orEmpty(),
 )
 
-fun GenreItemResponse.toDomain(): GenresModel = GenresModel(
+fun GenreItemResponse.toDomain(): GenreModel = GenreModel(
     id = id ?: 0,
     name = name.orEmpty(),
     imageBackground = imageBackground.orEmpty(),
     gamesCount = gamesCount ?: 0,
     games = games?.map {
-        GenresModel.GamesItem(
+        GenreModel.GamesItem(
             id = it.id ?: 0,
             name = it.name.orEmpty(),
             added = it.added ?: 0,
@@ -76,12 +76,12 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
     }.orEmpty(),
 )
 
-fun ScreenshotsItemResponse.toDomain(): ScreenshotsModel = ScreenshotsModel(
+fun ScreenshotsItemResponse.toDomain(): ScreenshotModel = ScreenshotModel(
     id = id ?: 0,
     image = image.orEmpty()
 )
 
-fun FavoriteEntity.toDomain(): GamesModel = GamesModel(
+fun FavoriteEntity.toDomain(): GameModel = GameModel(
     id = id,
     name = name,
     backgroundImage = backgroundImage,

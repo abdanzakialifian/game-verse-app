@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.gameverse.app.common.formatDate
-import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GameModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
@@ -39,7 +39,7 @@ import com.gameverse.app.theme.GVTypography
 
 @Composable
 fun GameListItem(
-    game: GamesModel,
+    game: GameModel,
     expandedIds: Set<Int>,
     modifier: Modifier = Modifier,
     onShowMoreClicked: ((gamePk: String) -> Unit)? = null,
@@ -194,7 +194,7 @@ private fun GameMetadata(
 private fun GameListItemPreview() {
     GVTheme {
         GameListItem(
-            game = GamesModel(
+            game = GameModel(
                 id = 1,
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",

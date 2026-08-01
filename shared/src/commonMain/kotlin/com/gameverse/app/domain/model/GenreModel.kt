@@ -1,6 +1,6 @@
 package com.gameverse.app.domain.model
 
-data class GenresModel(
+data class GenreModel(
     val id: Int,
     val name: String,
     val imageBackground: String,

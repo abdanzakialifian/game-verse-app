@@ -30,7 +30,7 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GameModel
 import com.gameverse.app.presentation.shared.GamePagingList
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
@@ -72,7 +72,7 @@ fun GameSeriesScreen(
 @Composable
 private fun GameSeriesContent(
     uiState: GameSeriesReducer.State,
-    gamesSeriesPaging: LazyPagingItems<GamesModel>,
+    gamesSeriesPaging: LazyPagingItems<GameModel>,
     onIntent: (GameSeriesReducer.Intent) -> Unit,
 ) {
     Scaffold(
@@ -134,7 +134,7 @@ private fun GameSeriesContent(
 private fun GameSeriesContentPreview() {
     GVTheme {
         val gamesData = List(5) {
-            GamesModel(
+            GameModel(
                 id = it,
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",

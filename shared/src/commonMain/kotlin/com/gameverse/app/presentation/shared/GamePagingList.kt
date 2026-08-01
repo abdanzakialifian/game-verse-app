@@ -29,7 +29,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GameModel
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
@@ -43,7 +43,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Composable
 fun GamePagingList(
     expandedIds: Set<Int>,
-    gamesPaging: LazyPagingItems<GamesModel>,
+    gamesPaging: LazyPagingItems<GameModel>,
     modifier: Modifier = Modifier,
     onShowMoreClicked: ((gamePk: String) -> Unit)? = null,
     onExpand: (id: Int) -> Unit,
@@ -152,7 +152,7 @@ fun GamePagingList(
 private fun GamePagingListPreview() {
     GVTheme {
         val gamesData = List(5) {
-            GamesModel(
+            GameModel(
                 id = it,
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
@@ -193,7 +193,7 @@ private fun GamePagingListInitialLoadPreview() {
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.NotLoading(endOfPaginationReached = true)
                 ),
-                data = emptyList<GamesModel>()
+                data = emptyList<GameModel>()
             )
         ).collectAsLazyPagingItems()
 
@@ -212,7 +212,7 @@ private fun GamePagingListInitialLoadPreview() {
 private fun GamePagingListLoadMorePreview() {
     GVTheme {
         val gamesData = List(2) {
-            GamesModel(
+            GameModel(
                 id = it,
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
@@ -247,7 +247,7 @@ private fun GamePagingListLoadMorePreview() {
 private fun GamePagingListErrorPreview() {
     GVTheme {
         val gamesData = List(2) {
-            GamesModel(
+            GameModel(
                 id = it,
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",

@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gameverse.app.common.DayPeriod
 import com.gameverse.app.common.Utils
-import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GameModel
 import com.gameverse.app.presentation.shared.GameListItem
 import com.gameverse.app.presentation.shared.GeneralEmpty
 import com.gameverse.app.presentation.shared.GeneralError
@@ -177,7 +177,7 @@ private fun HomeContent(
 private fun HomeContentPreview() {
     GVTheme {
         val gamesData = List(5) {
-            GamesModel(
+            GameModel(
                 id = it,
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",

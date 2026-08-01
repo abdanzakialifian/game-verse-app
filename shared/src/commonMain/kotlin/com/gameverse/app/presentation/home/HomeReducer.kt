@@ -1,7 +1,7 @@
 package com.gameverse.app.presentation.home
 
 import androidx.compose.runtime.Immutable
-import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GameModel
 import com.gameverse.app.mvi.Reducer
 
 class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
@@ -19,7 +19,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     sealed interface Event : Reducer.ViewEvent {
         data class SearchValueChanged(val value: String) : Event
         data class GetGamesLoading(val isLoading: Boolean) : Event
-        data class GetGamesData(val data: List<GamesModel>) : Event
+        data class GetGamesData(val data: List<GameModel>) : Event
         data class GetGamesError(val error: Throwable) : Event
         data class Expanded(val id: Int) : Event
     }
@@ -35,7 +35,7 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     data class State(
         val searchValue: String = "",
         val isGamesLoading: Boolean = true,
-        val gamesData: List<GamesModel> = emptyList(),
+        val gamesData: List<GameModel> = emptyList(),
         val gamesError: Throwable? = null,
         val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState

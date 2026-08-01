@@ -14,9 +14,9 @@ import com.gameverse.app.data.paging.SeriesPagingSource
 import com.gameverse.app.data.paging.GenresPagingSource
 import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.DetailModel
-import com.gameverse.app.domain.model.GamesModel
-import com.gameverse.app.domain.model.GenresModel
-import com.gameverse.app.domain.model.ScreenshotsModel
+import com.gameverse.app.domain.model.GameModel
+import com.gameverse.app.domain.model.GenreModel
+import com.gameverse.app.domain.model.ScreenshotModel
 import com.gameverse.app.domain.repository.GVRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -30,11 +30,11 @@ class GVRepositoryImpl(
     private val favoriteDao: GVFavoriteDao,
     @param:IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) : GVRepository {
-    override suspend fun getGames(): List<GamesModel> = withContext(dispatcher) {
+    override suspend fun getGames(): List<GameModel> = withContext(dispatcher) {
         apiService.getGames().results?.toDomain().orEmpty()
     }
 
-    override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GamesModel>> =
+    override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GameModel>> =
         Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
@@ -55,7 +55,7 @@ class GVRepositoryImpl(
             }
         }
 
-    override fun getGamesSeriesPaging(gamePk: String): Flow<PagingData<GamesModel>> = Pager(
+    override fun getGamesSeriesPaging(gamePk: String): Flow<PagingData<GameModel>> = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
             enablePlaceholders = true,
@@ -74,7 +74,7 @@ class GVRepositoryImpl(
         }
     }
 
-    override fun getGenresPaging(): Flow<PagingData<GenresModel>> = Pager(
+    override fun getGenresPaging(): Flow<PagingData<GenreModel>> = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
             enablePlaceholders = true,
@@ -94,7 +94,7 @@ class GVRepositoryImpl(
         apiService.getDetail(id).toDomain()
     }
 
-    override fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotsModel>> = Pager(
+    override fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotModel>> = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
             enablePlaceholders = true,
@@ -127,7 +127,7 @@ class GVRepositoryImpl(
         favoriteDao.deleteById(id)
     }
 
-    override fun getFavorites(): Flow<List<GamesModel>> {
+    override fun getFavorites(): Flow<List<GameModel>> {
         return favoriteDao.getFavorites().map { favoriteEntities ->
             favoriteEntities.map { entity ->
                 entity.toDomain()

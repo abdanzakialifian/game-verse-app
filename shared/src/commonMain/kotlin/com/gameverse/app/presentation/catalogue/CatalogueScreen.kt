@@ -44,7 +44,7 @@ import androidx.paging.compose.itemKey
 import coil3.compose.AsyncImage
 import com.gameverse.app.common.shimmer
 import com.gameverse.app.common.toFormattedNumber
-import com.gameverse.app.domain.model.GenresModel
+import com.gameverse.app.domain.model.GenreModel
 import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
@@ -84,7 +84,7 @@ fun CatalogueScreen(
 @Composable
 private fun CatalogueContent(
     paddingValues: PaddingValues,
-    genresPaging: LazyPagingItems<GenresModel>,
+    genresPaging: LazyPagingItems<GenreModel>,
     onIntent: (CatalogueReducer.Intent) -> Unit,
 ) {
     when (genresPaging.loadState.refresh) {
@@ -379,23 +379,23 @@ private fun GenresPlaceholder(paddingValues: PaddingValues) {
 private fun CatalogueContentPreview() {
     GVTheme {
         val genresData = List(5) {
-            GenresModel(
+            GenreModel(
                 id = it,
                 name = "Action",
                 imageBackground = "https://media.rawg.io/media/games/7fa/7fa0b586293c5861ee32490e953a4996.jpg",
                 gamesCount = 191772,
                 games = listOf(
-                    GenresModel.GamesItem(
+                    GenreModel.GamesItem(
                         id = 1,
                         name = "Grand Theft Auto V",
                         added = 22619
                     ),
-                    GenresModel.GamesItem(
+                    GenreModel.GamesItem(
                         id = 2,
                         name = "The Witcher 3: Wild Hunt",
                         added = 22266
                     ),
-                    GenresModel.GamesItem(
+                    GenreModel.GamesItem(
                         id = 3,
                         name = "Tomb Raider",
                         added = 17838

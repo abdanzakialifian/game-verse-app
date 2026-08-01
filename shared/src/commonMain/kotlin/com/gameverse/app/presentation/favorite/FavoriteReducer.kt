@@ -1,6 +1,6 @@
 package com.gameverse.app.presentation.favorite
 
-import com.gameverse.app.domain.model.GamesModel
+import com.gameverse.app.domain.model.GameModel
 import com.gameverse.app.mvi.Reducer
 
 class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
@@ -12,7 +12,7 @@ class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
     }
 
     sealed interface Event : Reducer.ViewEvent {
-        data class GetFavoritesData(val data: List<GamesModel>) : Event
+        data class GetFavoritesData(val data: List<GameModel>) : Event
         data class GetFavoritesError(val error: Throwable) : Event
         data class Expanded(val id: Int) : Event
     }
@@ -23,7 +23,7 @@ class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
     }
 
     data class State(
-        val gameList: List<GamesModel> = emptyList(),
+        val gameList: List<GameModel> = emptyList(),
         val error: Throwable? = null,
         val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState

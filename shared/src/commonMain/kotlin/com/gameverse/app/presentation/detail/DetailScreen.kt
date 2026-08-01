@@ -64,7 +64,7 @@ import com.gameverse.app.common.toFormattedNumber
 import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.component.GVRatingBadge
 import com.gameverse.app.domain.model.DetailModel
-import com.gameverse.app.domain.model.ScreenshotsModel
+import com.gameverse.app.domain.model.ScreenshotModel
 import com.gameverse.app.presentation.shared.Platforms
 import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVColor
@@ -98,7 +98,7 @@ fun DetailScreen(
 @Composable
 private fun DetailContent(
     uiState: DetailReducer.State,
-    gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
+    gamesScreenshotsPaging: LazyPagingItems<ScreenshotModel>,
     onIntent: (DetailReducer.Intent) -> Unit,
 ) {
     if (uiState.isDetailLoading) {
@@ -522,7 +522,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
 
 @Composable
 private fun MediaPager(
-    gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
+    gamesScreenshotsPaging: LazyPagingItems<ScreenshotModel>,
     moviesData: List<String>,
 ) {
     val hasVideo = moviesData.isNotEmpty()
@@ -673,15 +673,15 @@ private fun DetailContentPreview() {
                     append = LoadState.Loading
                 ),
                 data = listOf(
-                    ScreenshotsModel(
+                    ScreenshotModel(
                         id = 3976829,
                         image = "https://media.rawg.io/media/screenshots/047/047e0080a20b6987730cccd1d5ac6ea6.jpg",
                     ),
-                    ScreenshotsModel(
+                    ScreenshotModel(
                         id = 3976830,
                         image = "https://media.rawg.io/media/screenshots/591/591262be38465590587b788fca960e22.jpg",
                     ),
-                    ScreenshotsModel(
+                    ScreenshotModel(
                         id = 3976831,
                         image = "https://media.rawg.io/media/screenshots/6d5/6d56714c25251e6f87384e41f211f745.jpg",
                     )

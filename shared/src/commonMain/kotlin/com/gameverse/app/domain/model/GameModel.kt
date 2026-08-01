@@ -1,6 +1,6 @@
 package com.gameverse.app.domain.model
 
-data class GamesModel(
+data class GameModel(
     val id: Int,
     val name: String,
     val backgroundImage: String,
