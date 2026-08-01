@@ -12,7 +12,7 @@ class SeriesPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GamesItemResponse> =
         try {
             val nextPageNumber = params.key ?: 1
-            val response = apiService.getGamesSeries(
+            val response = apiService.getSeries(
                 gamePk = gamePk,
                 page = nextPageNumber,
                 pageSize = params.loadSize

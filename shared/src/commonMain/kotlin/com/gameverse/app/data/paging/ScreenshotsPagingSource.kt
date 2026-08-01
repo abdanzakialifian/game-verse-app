@@ -12,7 +12,7 @@ class ScreenshotsPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GamesScreenshotsItemResponse> =
         try {
             val nextPageNumber = params.key ?: 1
-            val response = apiService.getGamesScreenshots(
+            val response = apiService.getScreenshots(
                 gamePk = gamePk,
                 page = nextPageNumber,
                 pageSize = params.loadSize

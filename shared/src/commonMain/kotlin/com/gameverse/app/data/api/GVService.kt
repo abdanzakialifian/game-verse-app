@@ -31,7 +31,7 @@ class GVService(private val client: HttpClient) {
         ).body<BaseListResponse<GamesItemResponse>>()
     }
 
-    suspend fun getGamesSeries(
+    suspend fun getSeries(
         gamePk: String,
         page: Int,
         pageSize: Int,
@@ -57,13 +57,13 @@ class GVService(private val client: HttpClient) {
         ).body<BaseListResponse<GenresItemResponse>>()
     }
 
-    suspend fun getGameDetail(id: String): GameDetailResponse {
+    suspend fun getDetail(id: String): GameDetailResponse {
         return client.get(
             Games.Detail(id = id)
         ).body<GameDetailResponse>()
     }
 
-    suspend fun getGamesScreenshots(
+    suspend fun getScreenshots(
         gamePk: String,
         page: Int,
         pageSize: Int,
@@ -77,7 +77,7 @@ class GVService(private val client: HttpClient) {
         ).body<BaseListResponse<GamesScreenshotsItemResponse>>()
     }
 
-    suspend fun getGamesMovies(id: String): BaseListResponse<GamesMoviesItemResponse> {
+    suspend fun getMovies(id: String): BaseListResponse<GamesMoviesItemResponse> {
         return client.get(Games.Movies(id)).body<BaseListResponse<GamesMoviesItemResponse>>()
     }
 }

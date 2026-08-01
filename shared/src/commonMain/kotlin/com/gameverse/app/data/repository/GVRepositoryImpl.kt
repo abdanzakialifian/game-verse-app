@@ -91,7 +91,7 @@ class GVRepositoryImpl(
     }
 
     override suspend fun getGameDetail(id: String): DetailModel = withContext(dispatcher) {
-        apiService.getGameDetail(id).toDomain()
+        apiService.getDetail(id).toDomain()
     }
 
     override fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotsModel>> = Pager(
@@ -114,7 +114,7 @@ class GVRepositoryImpl(
     }
 
     override suspend fun getMoviesGames(id: String): List<String> = withContext(dispatcher) {
-        apiService.getGamesMovies(id).results?.map {
+        apiService.getMovies(id).results?.map {
             it.name.orEmpty()
         }.orEmpty()
     }
