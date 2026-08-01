@@ -20,13 +20,13 @@ class FavoriteViewModel(
 
     override fun sendIntent(intent: FavoriteReducer.Intent) {
         when (intent) {
-            FavoriteReducer.Intent.OnGetFavorites -> getFavorites()
-            is FavoriteReducer.Intent.OnExpanded -> sendEvent(FavoriteReducer.Event.Expanded(intent.id))
-            is FavoriteReducer.Intent.OnNavigateToDetail -> sendEffect(
+            FavoriteReducer.Intent.LoadFavorites -> getFavorites()
+            is FavoriteReducer.Intent.Expand -> sendEvent(FavoriteReducer.Event.Expanded(intent.id))
+            is FavoriteReducer.Intent.NavigateToDetail -> sendEffect(
                 FavoriteReducer.Effect.NavigateToDetail(intent.gamePk)
             )
 
-            is FavoriteReducer.Intent.OnNavigateToGameSeries -> sendEffect(
+            is FavoriteReducer.Intent.NavigateToGameSeries -> sendEffect(
                 FavoriteReducer.Effect.NavigateToGameSeries(intent.gamePk)
             )
         }

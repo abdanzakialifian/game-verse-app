@@ -108,7 +108,7 @@ private fun DetailContent(
 
     if (uiState.detailError != null || uiState.detailData == null) {
         GeneralError {
-            onIntent(DetailReducer.Intent.OnGetGameDetail(uiState.gameId))
+            onIntent(DetailReducer.Intent.LoadGameDetail(uiState.gameId))
         }
         return
     }
@@ -135,7 +135,7 @@ private fun DetailContent(
             isScreenshotsFirstPageLoading || isMoviesLoading -> MediaPlaceholders()
             isScreenshotsFirstPageError && isMoviesError -> MediaErrors {
                 gamesScreenshotsPaging.retry()
-                onIntent(DetailReducer.Intent.OnGetGamesMovies(uiState.gameId))
+                onIntent(DetailReducer.Intent.LoadMovies(uiState.gameId))
             }
             else -> MediaPager(
                 gamesScreenshotsPaging = gamesScreenshotsPaging,
@@ -151,7 +151,7 @@ private fun DetailContent(
                 isFavorite = uiState.isFavorite,
                 onFavoriteClicked = { detailModel, isFavorite ->
                     onIntent(
-                        DetailReducer.Intent.OnFavoriteClicked(
+                        DetailReducer.Intent.Favorite(
                             isFavorite = isFavorite,
                             detailModel = detailModel
                         )
@@ -164,10 +164,10 @@ private fun DetailContent(
             DetailAboutInformation(
                 uiState = uiState,
                 onTextLayout = { textLayoutResult ->
-                    onIntent(DetailReducer.Intent.OnTextOverflow(textLayoutResult.hasVisualOverflow))
+                    onIntent(DetailReducer.Intent.TextOverflow(textLayoutResult.hasVisualOverflow))
                 },
                 onTextExpandClicked = {
-                    onIntent(DetailReducer.Intent.OnExpandDescription(!uiState.isExpandDescription))
+                    onIntent(DetailReducer.Intent.ExpandDescription(!uiState.isExpandDescription))
                 }
             )
 

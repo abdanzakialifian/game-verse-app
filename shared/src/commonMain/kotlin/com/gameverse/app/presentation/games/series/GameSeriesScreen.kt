@@ -91,7 +91,7 @@ private fun GameSeriesContent(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = {
-                            onIntent(GameSeriesReducer.Intent.OnNavigateBack)
+                            onIntent(GameSeriesReducer.Intent.NavigateBack)
                         }
                     ),
                     painter = painterResource(Res.drawable.ic_back),
@@ -119,10 +119,10 @@ private fun GameSeriesContent(
                 expandedIds = uiState.expandedIds,
                 gamesPaging = gamesSeriesPaging,
                 onExpand = { id ->
-                    onIntent(GameSeriesReducer.Intent.OnExpanded(id))
+                    onIntent(GameSeriesReducer.Intent.Expand(id))
                 },
                 onItemClicked = {
-                    onIntent(GameSeriesReducer.Intent.OnNavigateToDetailGame(it))
+                    onIntent(GameSeriesReducer.Intent.NavigateToDetail(it))
                 },
             )
         }

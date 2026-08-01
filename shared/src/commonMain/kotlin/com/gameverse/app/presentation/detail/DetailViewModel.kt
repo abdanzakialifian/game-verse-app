@@ -27,11 +27,11 @@ class DetailViewModel(
 
     override fun sendIntent(intent: DetailReducer.Intent) {
         when(intent) {
-            is DetailReducer.Intent.OnGetGameDetail -> getGameDetail(intent.id)
-            is DetailReducer.Intent.OnGetGamesMovies -> getGamesMovies(intent.id)
-            is DetailReducer.Intent.OnExpandDescription -> sendEvent(DetailReducer.Event.ExpandDescription(intent.isExpandDescription))
-            is DetailReducer.Intent.OnTextOverflow -> sendEvent(DetailReducer.Event.TextOverflow(intent.isTextOverflowing))
-            is DetailReducer.Intent.OnFavoriteClicked -> {
+            is DetailReducer.Intent.LoadGameDetail -> getGameDetail(intent.id)
+            is DetailReducer.Intent.LoadMovies -> getGamesMovies(intent.id)
+            is DetailReducer.Intent.ExpandDescription -> sendEvent(DetailReducer.Event.ExpandDescription(intent.isExpandDescription))
+            is DetailReducer.Intent.TextOverflow -> sendEvent(DetailReducer.Event.TextOverflow(intent.isTextOverflowing))
+            is DetailReducer.Intent.Favorite -> {
                 if (intent.isFavorite) {
                     deleteFavorite(intent.detailModel.id)
                 } else {

@@ -53,7 +53,7 @@ private fun FavoriteContent(
         GeneralError(
             modifier = Modifier.padding(paddingValues),
             onButtonClicked = {
-                onIntent(FavoriteReducer.Intent.OnGetFavorites)
+                onIntent(FavoriteReducer.Intent.LoadFavorites)
             }
         )
         return
@@ -73,13 +73,13 @@ private fun FavoriteContent(
                 game = result,
                 expandedIds = uiState.expandedIds,
                 onShowMoreClicked = {
-                    onIntent(FavoriteReducer.Intent.OnNavigateToGameSeries(it))
+                    onIntent(FavoriteReducer.Intent.NavigateToGameSeries(it))
                 },
                 onExpand = {
-                    onIntent(FavoriteReducer.Intent.OnExpanded(it))
+                    onIntent(FavoriteReducer.Intent.Expand(it))
                 },
                 onItemClicked = {
-                    onIntent(FavoriteReducer.Intent.OnNavigateToDetail(it.toString()))
+                    onIntent(FavoriteReducer.Intent.NavigateToDetail(it.toString()))
                 }
             )
         }

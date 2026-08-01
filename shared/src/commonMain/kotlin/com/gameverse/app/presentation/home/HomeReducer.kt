@@ -7,12 +7,12 @@ import com.gameverse.app.mvi.Reducer
 class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
-        data class OnSearchValueChanged(val value: String) : Intent
-        data object OnGetGames : Intent
-        data class OnExpanded(val id: Int) : Intent
-        data object OnNavigateToGameList : Intent
-        data class OnNavigateToGameSeries(val gamePk: String) : Intent
-        data class OnNavigateToDetail(val gamePk: String) : Intent
+        data class Search(val value: String) : Intent
+        data object LoadGames : Intent
+        data class Expand(val id: Int) : Intent
+        data object NavigateToGameList : Intent
+        data class NavigateToGameSeries(val gamePk: String) : Intent
+        data class NavigateToDetail(val gamePk: String) : Intent
     }
 
     @Immutable

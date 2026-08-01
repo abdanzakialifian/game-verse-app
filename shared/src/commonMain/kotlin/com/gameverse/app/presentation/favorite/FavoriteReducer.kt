@@ -5,10 +5,10 @@ import com.gameverse.app.mvi.Reducer
 
 class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
     sealed interface Intent : Reducer.ViewIntent {
-        data object OnGetFavorites : Intent
-        data class OnExpanded(val id: Int) : Intent
-        data class OnNavigateToGameSeries(val gamePk: String) : Intent
-        data class OnNavigateToDetail(val gamePk: String) : Intent
+        data object LoadFavorites : Intent
+        data class Expand(val id: Int) : Intent
+        data class NavigateToGameSeries(val gamePk: String) : Intent
+        data class NavigateToDetail(val gamePk: String) : Intent
     }
 
     sealed interface Event : Reducer.ViewEvent {

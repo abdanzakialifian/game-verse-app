@@ -111,7 +111,7 @@ private fun CatalogueContent(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() },
                             onClick = {
-                                onIntent(CatalogueReducer.Intent.OnCategoryClicked(result.id.toString()))
+                                onIntent(CatalogueReducer.Intent.SelectCategory(result.id.toString()))
                             }
                         ),
                     shape = GVShapes.medium,

@@ -7,11 +7,11 @@ import com.gameverse.app.mvi.Reducer
 class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
-        data class OnGetGameDetail(val id: String) : Intent
-        data class OnGetGamesMovies(val id: String) : Intent
-        data class OnExpandDescription(val isExpandDescription: Boolean) : Intent
-        data class OnTextOverflow(val isTextOverflowing: Boolean) : Intent
-        data class OnFavoriteClicked(
+        data class LoadGameDetail(val id: String) : Intent
+        data class LoadMovies(val id: String) : Intent
+        data class ExpandDescription(val isExpandDescription: Boolean) : Intent
+        data class TextOverflow(val isTextOverflowing: Boolean) : Intent
+        data class Favorite(
             val isFavorite: Boolean,
             val detailModel: DetailModel
         ) : Intent

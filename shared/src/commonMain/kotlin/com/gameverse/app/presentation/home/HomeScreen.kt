@@ -126,7 +126,7 @@ private fun HomeContent(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = {
-                        onIntent(HomeReducer.Intent.OnNavigateToGameList)
+                        onIntent(HomeReducer.Intent.NavigateToGameList)
                     }
                 ),
                 text = "See all",
@@ -138,7 +138,7 @@ private fun HomeContent(
             uiState.isGamesLoading -> LoadingPlaceholders()
             uiState.gamesError != null -> GeneralError(
                 onButtonClicked = {
-                    onIntent(HomeReducer.Intent.OnGetGames)
+                    onIntent(HomeReducer.Intent.LoadGames)
                 }
             )
             else -> {
@@ -156,13 +156,13 @@ private fun HomeContent(
                             game = result,
                             expandedIds = uiState.expandedIds,
                             onShowMoreClicked = { gamePk ->
-                                onIntent(HomeReducer.Intent.OnNavigateToGameSeries(gamePk))
+                                onIntent(HomeReducer.Intent.NavigateToGameSeries(gamePk))
                             },
                             onExpand = { id ->
-                                onIntent(HomeReducer.Intent.OnExpanded(id))
+                                onIntent(HomeReducer.Intent.Expand(id))
                             },
                             onItemClicked = { id ->
-                                onIntent(HomeReducer.Intent.OnNavigateToDetail(id.toString()))
+                                onIntent(HomeReducer.Intent.NavigateToDetail(id.toString()))
                             },
                         )
                     }

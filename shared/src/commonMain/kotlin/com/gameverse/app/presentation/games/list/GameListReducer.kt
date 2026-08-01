@@ -6,12 +6,12 @@ import com.gameverse.app.mvi.Reducer
 class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
-        data class OnSearchVisibility(val isSearchVisible: Boolean) : Intent
-        data class OnSearchValueChanged(val value: String) : Intent
-        data class OnExpanded(val id: Int) : Intent
-        data class OnNavigateToGameSeries(val gamePk: String) : Intent
-        data class OnNavigateToDetailGame(val id: Int) : Intent
-        data object OnNavigateBack : Intent
+        data class ToggleSearch(val isSearchVisible: Boolean) : Intent
+        data class Search(val value: String) : Intent
+        data class Expand(val id: Int) : Intent
+        data class NavigateToGameSeries(val gamePk: String) : Intent
+        data class NavigateToDetail(val id: Int) : Intent
+        data object NavigateBack : Intent
     }
 
     @Immutable

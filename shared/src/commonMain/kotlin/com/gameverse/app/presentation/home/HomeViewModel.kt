@@ -19,20 +19,20 @@ class HomeViewModel(
 
     override fun sendIntent(intent: HomeReducer.Intent) {
         when (intent) {
-            is HomeReducer.Intent.OnSearchValueChanged -> sendEvent(
+            is HomeReducer.Intent.Search -> sendEvent(
                 HomeReducer.Event.SearchValueChanged(intent.value)
             )
 
-            HomeReducer.Intent.OnGetGames -> getGames()
-            is HomeReducer.Intent.OnExpanded -> sendEvent(
+            HomeReducer.Intent.LoadGames -> getGames()
+            is HomeReducer.Intent.Expand -> sendEvent(
                 HomeReducer.Event.Expanded(intent.id)
             )
 
-            HomeReducer.Intent.OnNavigateToGameList -> sendEffect(HomeReducer.Effect.NavigateToGameList)
+            HomeReducer.Intent.NavigateToGameList -> sendEffect(HomeReducer.Effect.NavigateToGameList)
 
-            is HomeReducer.Intent.OnNavigateToGameSeries -> sendEffect(HomeReducer.Effect.NavigateToGameSeries(intent.gamePk))
+            is HomeReducer.Intent.NavigateToGameSeries -> sendEffect(HomeReducer.Effect.NavigateToGameSeries(intent.gamePk))
 
-            is HomeReducer.Intent.OnNavigateToDetail -> sendEffect(HomeReducer.Effect.NavigateToDetail(intent.gamePk))
+            is HomeReducer.Intent.NavigateToDetail -> sendEffect(HomeReducer.Effect.NavigateToDetail(intent.gamePk))
         }
     }
 

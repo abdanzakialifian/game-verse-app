@@ -21,27 +21,27 @@ class GameListViewModel(
 ) {
     override fun sendIntent(intent: GameListReducer.Intent) {
         when (intent) {
-            is GameListReducer.Intent.OnSearchVisibility -> sendEvent(
+            is GameListReducer.Intent.ToggleSearch -> sendEvent(
                 GameListReducer.Event.SearchVisibility(intent.isSearchVisible)
             )
 
-            is GameListReducer.Intent.OnSearchValueChanged -> sendEvent(
+            is GameListReducer.Intent.Search -> sendEvent(
                 GameListReducer.Event.SearchValueChanged(intent.value)
             )
 
-            is GameListReducer.Intent.OnExpanded -> sendEvent(
+            is GameListReducer.Intent.Expand -> sendEvent(
                 GameListReducer.Event.Expanded(intent.id)
             )
 
-            is GameListReducer.Intent.OnNavigateToGameSeries -> sendEffect(
+            is GameListReducer.Intent.NavigateToGameSeries -> sendEffect(
                 GameListReducer.Effect.NavigateToGameSeries(intent.gamePk)
             )
 
-            is GameListReducer.Intent.OnNavigateToDetailGame -> sendEffect(
+            is GameListReducer.Intent.NavigateToDetail -> sendEffect(
                 GameListReducer.Effect.NavigateToDetailGame(intent.id)
             )
 
-            GameListReducer.Intent.OnNavigateBack -> sendEffect(
+            GameListReducer.Intent.NavigateBack -> sendEffect(
                 GameListReducer.Effect.NavigateBack
             )
         }

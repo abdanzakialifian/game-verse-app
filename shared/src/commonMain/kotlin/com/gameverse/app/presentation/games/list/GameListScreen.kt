@@ -158,10 +158,10 @@ private fun GameListContent(
                         hint = "Search games....",
                         value = uiState.searchValue,
                         onClear = {
-                            onIntent(GameListReducer.Intent.OnSearchValueChanged(""))
+                            onIntent(GameListReducer.Intent.Search(""))
                         },
                         onValueChange = { value ->
-                            onIntent(GameListReducer.Intent.OnSearchValueChanged(value))
+                            onIntent(GameListReducer.Intent.Search(value))
                         }
                     )
                 }
@@ -171,7 +171,7 @@ private fun GameListContent(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = {
-                            onIntent(GameListReducer.Intent.OnSearchVisibility(true))
+                            onIntent(GameListReducer.Intent.ToggleSearch(true))
                         }
                     ),
                     painter = painterResource(Res.drawable.ic_search),
@@ -190,13 +190,13 @@ private fun GameListContent(
                 expandedIds = uiState.expandedIds,
                 gamesPaging = gamesPaging,
                 onExpand = { id ->
-                    onIntent(GameListReducer.Intent.OnExpanded(id))
+                    onIntent(GameListReducer.Intent.Expand(id))
                 },
                 onShowMoreClicked = { gamePk ->
-                    onIntent(GameListReducer.Intent.OnNavigateToGameSeries(gamePk))
+                    onIntent(GameListReducer.Intent.NavigateToGameSeries(gamePk))
                 },
                 onItemClicked = {
-                    onIntent(GameListReducer.Intent.OnNavigateToDetailGame(it))
+                    onIntent(GameListReducer.Intent.NavigateToDetail(it))
                 }
             )
         }
@@ -208,9 +208,9 @@ private fun handleBackPressed(
     onIntent: (GameListReducer.Intent) -> Unit
 ) {
     if (isSearchVisible) {
-        onIntent(GameListReducer.Intent.OnSearchVisibility(false))
+        onIntent(GameListReducer.Intent.ToggleSearch(false))
     } else {
-        onIntent(GameListReducer.Intent.OnNavigateBack)
+        onIntent(GameListReducer.Intent.NavigateBack)
     }
 }
 

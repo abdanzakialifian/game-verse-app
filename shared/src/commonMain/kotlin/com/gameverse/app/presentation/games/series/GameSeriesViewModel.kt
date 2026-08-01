@@ -17,15 +17,15 @@ class GameSeriesViewModel(
 ) {
     override fun sendIntent(intent: GameSeriesReducer.Intent) {
         when (intent) {
-            is GameSeriesReducer.Intent.OnExpanded -> sendEvent(
+            is GameSeriesReducer.Intent.Expand -> sendEvent(
                 GameSeriesReducer.Event.Expanded(intent.id)
             )
 
-            is GameSeriesReducer.Intent.OnNavigateToDetailGame -> sendEffect(
+            is GameSeriesReducer.Intent.NavigateToDetail -> sendEffect(
                 GameSeriesReducer.Effect.NavigateToDetailGame(intent.id)
             )
 
-            GameSeriesReducer.Intent.OnNavigateBack -> sendEffect(
+            GameSeriesReducer.Intent.NavigateBack -> sendEffect(
                 GameSeriesReducer.Effect.NavigateBack
             )
         }

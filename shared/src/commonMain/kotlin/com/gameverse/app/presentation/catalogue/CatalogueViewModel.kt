@@ -15,7 +15,7 @@ class CatalogueViewModel(
 ) {
     override fun sendIntent(intent: CatalogueReducer.Intent) {
         when (intent) {
-            is CatalogueReducer.Intent.OnCategoryClicked -> sendEffect(
+            is CatalogueReducer.Intent.SelectCategory -> sendEffect(
                 CatalogueReducer.Effect.NavigateToGameList(
                     intent.id
                 )

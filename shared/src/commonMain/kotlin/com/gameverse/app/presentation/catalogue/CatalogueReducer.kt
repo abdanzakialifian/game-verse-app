@@ -6,7 +6,7 @@ import com.gameverse.app.mvi.Reducer
 class CatalogueReducer : Reducer<CatalogueReducer.State, CatalogueReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
-        data class OnCategoryClicked(val id: String) : Intent
+        data class SelectCategory(val id: String) : Intent
     }
 
     @Immutable

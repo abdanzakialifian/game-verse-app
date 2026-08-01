@@ -6,9 +6,9 @@ import com.gameverse.app.mvi.Reducer
 class GameSeriesReducer : Reducer<GameSeriesReducer.State, GameSeriesReducer.Event> {
     @Immutable
     sealed interface Intent : Reducer.ViewIntent {
-        data class OnExpanded(val id: Int) : Intent
-        data class OnNavigateToDetailGame(val id: Int) : Intent
-        data object OnNavigateBack : Intent
+        data class Expand(val id: Int) : Intent
+        data class NavigateToDetail(val id: Int) : Intent
+        data object NavigateBack : Intent
     }
 
     @Immutable
