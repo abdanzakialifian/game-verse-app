@@ -115,6 +115,7 @@ fun GamePagingList(
                         is LoadState.Error -> {
                             Column(
                                 modifier = Modifier
+                                    .fillMaxWidth()
                                     .padding(vertical = 12.dp)
                                     .clickable(
                                         indication = null,
@@ -226,6 +227,41 @@ private fun GamePagingListLoadMorePreview() {
                     refresh = LoadState.NotLoading(endOfPaginationReached = true),
                     prepend = LoadState.NotLoading(endOfPaginationReached = true),
                     append = LoadState.Loading
+                ),
+                data = gamesData
+            )
+        ).collectAsLazyPagingItems()
+
+        GamePagingList(
+            expandedIds = emptySet(),
+            gamesPaging = gamesPaging,
+            onExpand = {},
+            onShowMoreClicked = {},
+            onItemClicked = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun GamePagingListErrorPreview() {
+    GVTheme {
+        val gamesData = List(2) {
+            GamesModel(
+                id = it,
+                name = "Grand Theft Auto V",
+                backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                released = "2013-09-17",
+                genres = listOf("Action", "RPG", "Shooter"),
+                parentPlatforms = (1..10).toList(),
+            )
+        }
+        val gamesPaging = flowOf(
+            PagingData.from(
+                sourceLoadStates = LoadStates(
+                    refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                    append = LoadState.Error(Throwable())
                 ),
                 data = gamesData
             )
