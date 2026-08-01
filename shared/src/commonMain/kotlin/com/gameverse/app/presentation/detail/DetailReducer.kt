@@ -55,10 +55,10 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     ): State {
         return when (event) {
             is Event.GetGameDetailLoading -> state.copy(isDetailLoading = event.isLoading)
-            is Event.GetGameDetailData -> state.copy(detailData = event.data)
+            is Event.GetGameDetailData -> state.copy(detailData = event.data, detailError = null)
             is Event.GetGameDetailError -> state.copy(detailError = event.error)
             is Event.GetMoviesLoading -> state.copy(isMoviesLoading = event.isLoading)
-            is Event.GetMoviesData -> state.copy(moviesData = event.data)
+            is Event.GetMoviesData -> state.copy(moviesData = event.data, moviesError = null)
             is Event.GetMoviesError -> state.copy(moviesError = event.error)
             is Event.ExpandDescription -> state.copy(isExpandDescription = event.isExpandDescription)
             is Event.TextOverflow -> {
