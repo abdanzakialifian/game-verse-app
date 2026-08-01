@@ -1,7 +1,6 @@
 package com.gameverse.app.data.api
 
 import com.gameverse.app.data.resources.Games
-import com.gameverse.app.data.resources.Genres
 import com.gameverse.app.data.response.BaseListResponse
 import com.gameverse.app.data.response.GameDetailResponse
 import com.gameverse.app.data.response.GamesItemResponse
@@ -50,7 +49,7 @@ class GVService(private val client: HttpClient) {
         pageSize: Int,
     ): BaseListResponse<GenresItemResponse> {
         return client.get(
-            Genres(
+            Games.Genres(
                 page = page,
                 pageSize = pageSize
             )

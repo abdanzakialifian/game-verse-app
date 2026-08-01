@@ -58,4 +58,14 @@ class Games(
         @SerialName("id")
         val id: String
     )
+
+    @Serializable
+    @Resource("genres")
+    class Genres(
+        @SerialName("page")
+        val page: Int? = null,
+
+        @SerialName("page_size")
+        val pageSize: Int? = null,
+    )
 }
