@@ -9,8 +9,8 @@ import com.gameverse.app.data.dao.GVFavoriteDao
 import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.data.mapper.toDomain
 import com.gameverse.app.data.paging.GamesPagingSource
-import com.gameverse.app.data.paging.GamesScreenshotsPagingSource
-import com.gameverse.app.data.paging.GamesSeriesPagingSource
+import com.gameverse.app.data.paging.ScreenshotsPagingSource
+import com.gameverse.app.data.paging.SeriesPagingSource
 import com.gameverse.app.data.paging.GenresPagingSource
 import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.DetailModel
@@ -63,7 +63,7 @@ class GVRepositoryImpl(
             prefetchDistance = PREFETCH_DISTANCE
         ),
         pagingSourceFactory = {
-            GamesSeriesPagingSource(
+            SeriesPagingSource(
                 gamePk = gamePk,
                 apiService = apiService
             )
@@ -102,7 +102,7 @@ class GVRepositoryImpl(
             prefetchDistance = PREFETCH_DISTANCE
         ),
         pagingSourceFactory = {
-            GamesScreenshotsPagingSource(
+            ScreenshotsPagingSource(
                 apiService = apiService,
                 gamePk = gamePK
             )
