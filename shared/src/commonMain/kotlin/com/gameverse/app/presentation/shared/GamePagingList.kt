@@ -41,7 +41,7 @@ import org.jetbrains.compose.resources.painterResource
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun GameListPaging(
+fun GamePagingList(
     expandedIds: Set<Int>,
     gamesPaging: LazyPagingItems<GamesModel>,
     modifier: Modifier = Modifier,
@@ -148,7 +148,7 @@ fun GameListPaging(
 
 @Preview
 @Composable
-private fun GameListPagingPreview() {
+private fun GamePagingListPreview() {
     GVTheme {
         val gamesData = List(5) {
             GamesModel(
@@ -171,7 +171,7 @@ private fun GameListPagingPreview() {
             )
         ).collectAsLazyPagingItems()
 
-        GameListPaging(
+        GamePagingList(
             expandedIds = gamesData.map { it.id }.toSet(),
             gamesPaging = gamesPaging,
             onExpand = {},
@@ -183,7 +183,7 @@ private fun GameListPagingPreview() {
 
 @Preview
 @Composable
-private fun GameListPagingInitialLoadingPreview() {
+private fun GamePagingListInitialLoadPreview() {
     GVTheme {
         val gamesPaging = flowOf(
             PagingData.from(
@@ -196,7 +196,7 @@ private fun GameListPagingInitialLoadingPreview() {
             )
         ).collectAsLazyPagingItems()
 
-        GameListPaging(
+        GamePagingList(
             expandedIds = emptySet(),
             gamesPaging = gamesPaging,
             onExpand = {},
@@ -208,7 +208,7 @@ private fun GameListPagingInitialLoadingPreview() {
 
 @Preview
 @Composable
-private fun GameListPagingLoadMoreLoadingPreview() {
+private fun GamePagingListLoadMorePreview() {
     GVTheme {
         val gamesData = List(2) {
             GamesModel(
@@ -231,7 +231,7 @@ private fun GameListPagingLoadMoreLoadingPreview() {
             )
         ).collectAsLazyPagingItems()
 
-        GameListPaging(
+        GamePagingList(
             expandedIds = emptySet(),
             gamesPaging = gamesPaging,
             onExpand = {},

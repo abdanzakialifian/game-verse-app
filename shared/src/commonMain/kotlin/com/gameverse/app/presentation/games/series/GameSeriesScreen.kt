@@ -31,7 +31,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.gameverse.app.domain.model.GamesModel
-import com.gameverse.app.presentation.shared.GameListPaging
+import com.gameverse.app.presentation.shared.GamePagingList
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
@@ -115,7 +115,7 @@ private fun GameSeriesContent(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            GameListPaging(
+            GamePagingList(
                 expandedIds = uiState.expandedIds,
                 gamesPaging = gamesSeriesPaging,
                 onExpand = { id ->
