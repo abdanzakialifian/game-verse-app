@@ -70,7 +70,7 @@ fun GamePagingList(
                 items(gamesPaging.itemCount, key = gamesPaging.itemKey { it.id }) { index ->
                     val result = gamesPaging[index] ?: return@items
 
-                    GameItem(
+                    GameListItem(
                         game = result,
                         expandedIds = expandedIds,
                         onShowMoreClicked = onShowMoreClicked,

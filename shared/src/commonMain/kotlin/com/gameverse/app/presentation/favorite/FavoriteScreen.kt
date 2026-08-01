@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gameverse.app.presentation.shared.GameItem
+import com.gameverse.app.presentation.shared.GameListItem
 import com.gameverse.app.presentation.shared.GeneralEmpty
 import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVTheme
@@ -69,7 +69,7 @@ private fun FavoriteContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(uiState.gameList, key = { it.id }) { result ->
-            GameItem(
+            GameListItem(
                 game = result,
                 expandedIds = uiState.expandedIds,
                 onShowMoreClicked = {

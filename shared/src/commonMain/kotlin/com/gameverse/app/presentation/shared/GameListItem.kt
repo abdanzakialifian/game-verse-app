@@ -29,7 +29,7 @@ import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 
 @Composable
-fun GameItem(
+fun GameListItem(
     game: GamesModel,
     expandedIds: Set<Int>,
     modifier: Modifier = Modifier,
@@ -110,9 +110,9 @@ fun GameItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun GameItemPreview() {
+private fun GameListItemPreview() {
     GVTheme {
-        GameItem(
+        GameListItem(
             game = GamesModel(
                 id = 1,
                 name = "Grand Theft Auto V",

@@ -29,7 +29,7 @@ import com.gameverse.app.common.Greeting
 import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.Utils
 import com.gameverse.app.domain.model.GamesModel
-import com.gameverse.app.presentation.shared.GameItem
+import com.gameverse.app.presentation.shared.GameListItem
 import com.gameverse.app.presentation.shared.GeneralEmpty
 import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.presentation.shared.LoadingPlaceholders
@@ -157,7 +157,7 @@ private fun HomeContent(
                     contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
                     items(uiState.gamesData, key = { it.id }) { result ->
-                        GameItem(
+                        GameListItem(
                             game = result,
                             expandedIds = uiState.expandedIds,
                             onShowMoreClicked = { gamePk ->
