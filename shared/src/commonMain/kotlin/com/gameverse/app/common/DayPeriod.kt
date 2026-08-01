@@ -1,6 +1,6 @@
 package com.gameverse.app.common
 
-enum class Greeting {
+enum class DayPeriod  {
     MORNING,
     AFTERNOON,
     EVENING,

@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.gameverse.app.common.Greeting
+import com.gameverse.app.common.DayPeriod
 import com.gameverse.app.common.Utils
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.presentation.shared.GameListItem
@@ -93,11 +93,11 @@ private fun HomeContent(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
-                    text = when (Utils.getGreeting()) {
-                        Greeting.MORNING -> "Good morning,"
-                        Greeting.AFTERNOON -> "Good afternoon,"
-                        Greeting.EVENING -> "Good evening,"
-                        Greeting.NIGHT -> "Good night,"
+                    text = when (Utils.getDayPeriod()) {
+                        DayPeriod.MORNING -> "Good morning,"
+                        DayPeriod.AFTERNOON -> "Good afternoon,"
+                        DayPeriod.EVENING -> "Good evening,"
+                        DayPeriod.NIGHT -> "Good night,"
                     },
                     style = GVTypography.titleSmall
                 )

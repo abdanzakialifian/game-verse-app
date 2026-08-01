@@ -10,16 +10,16 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
 
 object Utils {
-    fun getGreeting(): Greeting {
+    fun getDayPeriod(): DayPeriod {
         val hour = Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
             .hour
 
         return when (hour) {
-            in 5..11 -> Greeting.MORNING
-            in 12..16 -> Greeting.AFTERNOON
-            in 17..20 -> Greeting.EVENING
-            else -> Greeting.NIGHT
+            in 5..11 -> DayPeriod.MORNING
+            in 12..16 -> DayPeriod.AFTERNOON
+            in 17..20 -> DayPeriod.EVENING
+            else -> DayPeriod.NIGHT
         }
     }
 
