@@ -62,7 +62,7 @@ fun GameItem(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            GamePlatforms(
+            Platforms(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 platforms = game.parentPlatforms
             )

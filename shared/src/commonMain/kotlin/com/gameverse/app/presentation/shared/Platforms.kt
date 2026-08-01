@@ -14,7 +14,7 @@ import com.gameverse.app.theme.GVTheme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun GamePlatforms(
+fun Platforms(
     platforms: List<Int>,
     modifier: Modifier = Modifier,
 ) {
@@ -36,9 +36,9 @@ fun GamePlatforms(
 
 @Preview
 @Composable
-private fun GamePlatformsPreview() {
+private fun PlatformsPreview() {
     GVTheme {
-        GamePlatforms(
+        Platforms(
             platforms = (1..10).toList()
         )
     }

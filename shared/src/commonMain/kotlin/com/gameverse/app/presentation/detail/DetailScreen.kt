@@ -66,7 +66,7 @@ import com.gameverse.app.component.GVRatingBadge
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
-import com.gameverse.app.presentation.shared.GamePlatforms
+import com.gameverse.app.presentation.shared.Platforms
 import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
@@ -308,7 +308,7 @@ private fun DetailHeaderInformation(detailData: DetailModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            GamePlatforms(detailData.parentPlatforms)
+            Platforms(detailData.parentPlatforms)
 
             Spacer(modifier = Modifier.height(16.dp))
 
