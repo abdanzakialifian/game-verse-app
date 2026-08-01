@@ -50,7 +50,7 @@ fun GameListPaging(
     onItemClicked: (id: Int) -> Unit
 ) {
     when (gamesPaging.loadState.refresh) {
-        is LoadState.Loading -> GamePlaceholders()
+        is LoadState.Loading -> LoadingPlaceholders()
         is LoadState.Error -> GeneralError(
             onButtonClicked = {
                 gamesPaging.retry()

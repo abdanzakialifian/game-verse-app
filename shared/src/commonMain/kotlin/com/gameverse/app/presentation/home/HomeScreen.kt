@@ -30,9 +30,9 @@ import com.gameverse.app.common.LaunchEffectOnce
 import com.gameverse.app.common.Utils
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.presentation.shared.GameItem
-import com.gameverse.app.presentation.shared.GamePlaceholders
 import com.gameverse.app.presentation.shared.GeneralEmpty
 import com.gameverse.app.presentation.shared.GeneralError
+import com.gameverse.app.presentation.shared.LoadingPlaceholders
 import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
@@ -140,7 +140,7 @@ private fun HomeContent(
         }
 
         when {
-            uiState.isGamesLoading -> GamePlaceholders()
+            uiState.isGamesLoading -> LoadingPlaceholders()
             uiState.gamesError != null -> GeneralError(
                 onButtonClicked = {
                     onIntent(HomeReducer.Intent.OnGetGames)

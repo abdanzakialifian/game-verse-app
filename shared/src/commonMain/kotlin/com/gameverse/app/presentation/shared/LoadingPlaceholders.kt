@@ -23,7 +23,7 @@ import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 
 @Composable
-fun GamePlaceholders(modifier: Modifier = Modifier) {
+fun LoadingPlaceholders(modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -82,8 +82,8 @@ fun GamePlaceholders(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-private fun GamePlaceholdersPreview() {
+private fun LoadingPlaceholdersPreview() {
     GVTheme {
-        GamePlaceholders()
+        LoadingPlaceholders()
     }
 }
