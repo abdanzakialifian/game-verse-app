@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gameverse.app.common.Platform
+import com.gameverse.app.common.PlatformType
 import com.gameverse.app.theme.GVTheme
 import org.jetbrains.compose.resources.painterResource
 
@@ -22,8 +22,8 @@ fun Platforms(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        val platformIcons = Platform.iconFromIds(platforms)
-        platformIcons.forEach { iconDrawable ->
+        val platformTypeIcons = PlatformType.iconFromIds(platforms)
+        platformTypeIcons.forEach { iconDrawable ->
             Icon(
                 modifier = Modifier.size(16.dp),
                 painter = painterResource(iconDrawable),

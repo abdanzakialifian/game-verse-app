@@ -11,7 +11,7 @@ import gameverse.shared.generated.resources.ic_windows
 import gameverse.shared.generated.resources.ic_xbox
 import org.jetbrains.compose.resources.DrawableResource
 
-enum class Platform(val icon: DrawableResource, val id: Int? = null) {
+enum class PlatformType(val icon: DrawableResource, val id: Int? = null) {
     WINDOWS(Res.drawable.ic_windows, 1),
     PLAYSTATION(Res.drawable.ic_playstation, 2),
     XBOX(Res.drawable.ic_xbox, 3),
