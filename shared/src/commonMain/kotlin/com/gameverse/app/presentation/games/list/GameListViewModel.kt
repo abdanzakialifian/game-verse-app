@@ -52,7 +52,7 @@ class GameListViewModel(
         .debounce(500L)
         .distinctUntilChanged()
         .flatMapLatest { value ->
-            repository.getGamesPaging(query = value, genres = genreId)
+            repository.getGameListPaging(query = value, genres = genreId)
         }
         .cachedIn(viewModelScope)
 }

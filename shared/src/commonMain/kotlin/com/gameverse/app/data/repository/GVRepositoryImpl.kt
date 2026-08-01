@@ -34,7 +34,7 @@ class GVRepositoryImpl(
         apiService.getGames().results?.toDomain().orEmpty()
     }
 
-    override fun getGamesPaging(query: String?, genres: String?): Flow<PagingData<GameModel>> =
+    override fun getGameListPaging(query: String?, genres: String?): Flow<PagingData<GameModel>> =
         Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
@@ -55,7 +55,7 @@ class GVRepositoryImpl(
             }
         }
 
-    override fun getGamesSeriesPaging(gamePk: String): Flow<PagingData<GameModel>> = Pager(
+    override fun getSeriesPaging(gamePk: String): Flow<PagingData<GameModel>> = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
             enablePlaceholders = true,
@@ -94,7 +94,7 @@ class GVRepositoryImpl(
         apiService.getDetail(id).toDomain()
     }
 
-    override fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotModel>> = Pager(
+    override fun getScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotModel>> = Pager(
         config = PagingConfig(
             pageSize = PAGE_SIZE,
             enablePlaceholders = true,
@@ -113,7 +113,7 @@ class GVRepositoryImpl(
         }
     }
 
-    override suspend fun getMoviesGames(id: String): List<String> = withContext(dispatcher) {
+    override suspend fun getMovies(id: String): List<String> = withContext(dispatcher) {
         apiService.getMovies(id).results?.map {
             it.name.orEmpty()
         }.orEmpty()

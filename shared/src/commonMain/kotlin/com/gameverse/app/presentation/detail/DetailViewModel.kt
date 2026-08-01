@@ -55,14 +55,13 @@ class DetailViewModel(
         }
     }
 
-    val gamesScreenshotsPaging =
-        repository.getGamesScreenshotsPaging(gameId).cachedIn(viewModelScope)
+    val gamesScreenshotsPaging = repository.getScreenshotsPaging(gameId).cachedIn(viewModelScope)
 
     private fun getGamesMovies(id: String) {
         viewModelScope.launch {
             sendEvent(DetailReducer.Event.GetMoviesLoading(true))
             try {
-                val movies = repository.getMoviesGames(id)
+                val movies = repository.getMovies(id)
                 sendEvent(DetailReducer.Event.GetMoviesData(movies))
             } catch (e: Exception) {
                 sendEvent(DetailReducer.Event.GetMoviesError(e))

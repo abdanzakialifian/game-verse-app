@@ -31,5 +31,5 @@ class GameSeriesViewModel(
         }
     }
 
-    val getGamesSeriesPaging = repository.getGamesSeriesPaging(gamePk).cachedIn(viewModelScope)
+    val getGamesSeriesPaging = repository.getSeriesPaging(gamePk).cachedIn(viewModelScope)
 }
