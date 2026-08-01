@@ -8,14 +8,14 @@ import androidx.room.PrimaryKey
 data class FavoriteEntity(
     @PrimaryKey
     val id: Int,
-    @ColumnInfo("name") 
+    @ColumnInfo("name")
     val name: String,
     @ColumnInfo("background_image")
     val backgroundImage: String,
     @ColumnInfo("released")
     val released: String,
-    @ColumnInfo("genres")
-    val genres: List<String>,
-    @ColumnInfo("platforms")
-    val platforms: List<Int>,
+    @ColumnInfo("genre_name")
+    val genreNames: List<String>,
+    @ColumnInfo("platform_id")
+    val platformIds: List<Int>,
 )

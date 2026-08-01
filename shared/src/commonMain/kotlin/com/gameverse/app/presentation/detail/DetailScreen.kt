@@ -64,7 +64,6 @@ import com.gameverse.app.common.toFormattedNumber
 import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.component.GVRatingBadge
 import com.gameverse.app.domain.model.DetailModel
-import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 import com.gameverse.app.presentation.shared.Platforms
 import com.gameverse.app.presentation.shared.GeneralError
@@ -308,7 +307,7 @@ private fun DetailHeaderInformation(detailData: DetailModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Platforms(detailData.parentPlatforms)
+            Platforms(detailData.platformIds)
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -420,7 +419,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData.parentPlatforms.joinToString(", "),
+                    text = detailData.platformIds.joinToString(", "),
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -436,7 +435,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData.genres.joinToString(", "),
+                    text = detailData.genreNames.joinToString(", "),
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -496,9 +495,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData.publishers.joinToString(", ") {
-                        it.name
-                    },
+                    text = detailData.publisherNames.joinToString(", "),
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -514,9 +511,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData.developers.joinToString(", ") {
-                        it.name
-                    },
+                    text = detailData.developerNames.joinToString(", "),
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -527,12 +522,12 @@ private fun DetailMoreInformation(detailData: DetailModel) {
 
 @Composable
 private fun MediaPager(
-     gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
-     moviesData: List<MoviesModel>,
+    gamesScreenshotsPaging: LazyPagingItems<ScreenshotsModel>,
+    moviesData: List<String>,
 ) {
     val hasVideo = moviesData.isNotEmpty()
 
-    val videoUrl = moviesData.getOrNull(0)?.max.orEmpty()
+    val videoUrl = moviesData.getOrNull(0).orEmpty()
 
     val mediaPlayerHost = remember(videoUrl) { MediaPlayerHost(mediaUrl = videoUrl) }
 
@@ -681,23 +676,14 @@ private fun DetailContentPreview() {
                     ScreenshotsModel(
                         id = 3976829,
                         image = "https://media.rawg.io/media/screenshots/047/047e0080a20b6987730cccd1d5ac6ea6.jpg",
-                        isDeleted = false,
-                        width = 1280,
-                        height = 720
                     ),
                     ScreenshotsModel(
                         id = 3976830,
                         image = "https://media.rawg.io/media/screenshots/591/591262be38465590587b788fca960e22.jpg",
-                        isDeleted = false,
-                        width = 1280,
-                        height = 720
                     ),
                     ScreenshotsModel(
                         id = 3976831,
                         image = "https://media.rawg.io/media/screenshots/6d5/6d56714c25251e6f87384e41f211f745.jpg",
-                        isDeleted = false,
-                        width = 1280,
-                        height = 720
                     )
                 )
             )
@@ -706,24 +692,10 @@ private fun DetailContentPreview() {
             uiState = DetailReducer.State(
                 detailData = DetailModel(
                     id = 5599,
-                    developers = listOf(
-                        DetailModel.DevelopersItem(
-                            id = 3524,
-                            name = "Rockstar North"
-                        ),
-                        DetailModel.DevelopersItem(
-                            id = 10,
-                            name = "Rockstar Games"
-                        )
-                    ),
+                    developerNames = listOf("Rockstar North", "Rockstar Games"),
                     rating = 4.5,
-                    publishers = listOf(
-                        DetailModel.PublishersItem(
-                            id = 2155,
-                            name = "Rockstar Games"
-                        )
-                    ),
-                    parentPlatforms = (1..10).toList(),
+                    publisherNames = listOf("Rockstar Games"),
+                    platformIds = (1..10).toList(),
                     ratingsCount = 9344,
                     released = "2013-09-17",
                     updated = "2026-07-03T12:09:55",
@@ -731,7 +703,7 @@ private fun DetailContentPreview() {
                     name = "Grand Theft Auto V",
                     reviewsCount = 1654,
                     description = "Rockstar Games went bigger, since their previous installment of the series. You get the complicated and realistic world-building from Liberty City of GTA4 in the setting of lively and diverse Los Santos, from an old fan favorite GTA San Andreas. 561 different vehicles (including every transport you can operate) and the amount is rising with every update. \\nSimultaneous storytelling from three unique perspectives: \\nFollow Michael, ex-criminal living his life of leisure away from the past, Franklin, a kid that seeks the better future, and Trevor, the exact past Michael is trying to run away from. \\nGTA Online will provide a lot of additional challenge even for the experienced players, coming fresh from the story mode. Now you will have other players around that can help you just as likely as ruin your mission. Every GTA mechanic up to date can be experienced by players through the unique customizable character, and community content paired with the leveling system tends to keep everyone busy and engaged.\\n\\nEspañol\\nRockstar Games se hizo más grande desde su entrega anterior de la serie. Obtienes la construcción del mundo complicada y realista de Liberty City de GTA4 en el escenario de Los Santos, un viejo favorito de los fans, GTA San Andreas. 561 vehículos diferentes (incluidos todos los transportes que puede operar) y la cantidad aumenta con cada actualización.\\nNarración simultánea desde tres perspectivas únicas:\\nSigue a Michael, ex-criminal que vive su vida de ocio lejos del pasado, Franklin, un niño que busca un futuro mejor, y Trevor, el pasado exacto del que Michael está tratando de huir.\\nGTA Online proporcionará muchos desafíos adicionales incluso para los jugadores experimentados, recién llegados del modo historia. Ahora tendrás otros jugadores cerca que pueden ayudarte con la misma probabilidad que arruinar tu misión. Los jugadores pueden experimentar todas las mecánicas de GTA actualizadas a través del personaje personalizable único, y el contenido de la comunidad combinado con el sistema de nivelación tiende a mantener a todos ocupados y comprometidos.",
-                    genres = listOf("Action", "RPG", "Shooter"),
+                    genreNames = listOf("Action", "RPG", "Shooter"),
                     )
             ),
             gamesScreenshotsPaging = gamesScreenshotsPaging,

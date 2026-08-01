@@ -157,8 +157,8 @@ private fun GamePagingListPreview() {
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
                 released = "2013-09-17",
-                genres = listOf("Action", "RPG", "Shooter"),
-                parentPlatforms = (1..10).toList(),
+                genreNames = listOf("Action", "RPG", "Shooter"),
+                platformIds = (1..10).toList(),
             )
         }
         val gamesPaging = flowOf(
@@ -217,8 +217,8 @@ private fun GamePagingListLoadMorePreview() {
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
                 released = "2013-09-17",
-                genres = listOf("Action", "RPG", "Shooter"),
-                parentPlatforms = (1..10).toList(),
+                genreNames = listOf("Action", "RPG", "Shooter"),
+                platformIds = (1..10).toList(),
             )
         }
         val gamesPaging = flowOf(
@@ -252,8 +252,8 @@ private fun GamePagingListErrorPreview() {
                 name = "Grand Theft Auto V",
                 backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
                 released = "2013-09-17",
-                genres = listOf("Action", "RPG", "Shooter"),
-                parentPlatforms = (1..10).toList(),
+                genreNames = listOf("Action", "RPG", "Shooter"),
+                platformIds = (1..10).toList(),
             )
         }
         val gamesPaging = flowOf(

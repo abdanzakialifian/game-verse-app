@@ -5,7 +5,6 @@ import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GamesModel
 import com.gameverse.app.domain.model.GenresModel
-import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.domain.model.ScreenshotsModel
 import kotlinx.coroutines.flow.Flow
 
@@ -16,7 +15,7 @@ interface GVRepository {
     fun getGenresPaging(): Flow<PagingData<GenresModel>>
     suspend fun getGameDetail(id: String): DetailModel
     fun getGamesScreenshotsPaging(gamePK: String): Flow<PagingData<ScreenshotsModel>>
-    suspend fun getMoviesGames(id: String): List<MoviesModel>
+    suspend fun getMoviesGames(id: String): List<String>
     suspend fun saveFavorite(favoriteEntity: FavoriteEntity)
     suspend fun deleteFavoriteById(id: Int)
     fun getFavorites(): Flow<List<GamesModel>>

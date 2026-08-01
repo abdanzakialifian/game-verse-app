@@ -2,7 +2,6 @@ package com.gameverse.app.presentation.detail
 
 import androidx.compose.runtime.Immutable
 import com.gameverse.app.domain.model.DetailModel
-import com.gameverse.app.domain.model.MoviesModel
 import com.gameverse.app.mvi.Reducer
 
 class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
@@ -25,7 +24,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         data class GetGameDetailData(val data: DetailModel) : Event
         data class GetGameDetailError(val error: Throwable) : Event
         data class GetMoviesLoading(val isLoading: Boolean) : Event
-        data class GetMoviesData(val data: List<MoviesModel>) : Event
+        data class GetMoviesData(val data: List<String>) : Event
         data class GetMoviesError(val error: Throwable) : Event
         data class ExpandDescription(val isExpandDescription: Boolean) : Event
         data class TextOverflow(val isTextOverflowing: Boolean) : Event
@@ -42,7 +41,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         val detailData: DetailModel? = null,
         val detailError: Throwable? = null,
         val isMoviesLoading: Boolean = false,
-        val moviesData: List<MoviesModel> = emptyList(),
+        val moviesData: List<String> = emptyList(),
         val moviesError: Throwable? = null,
         val isTextOverflowing: Boolean = false,
         val isExpandDescription: Boolean = false,
