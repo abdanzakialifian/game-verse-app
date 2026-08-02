@@ -1,5 +1,6 @@
 package com.gameverse.app.data.config
 
+import com.gameverse.app.config.BuildConfig
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClientConfig
@@ -22,7 +23,7 @@ fun HttpClientConfig<*>.defaultConfig() {
             protocol = URLProtocol.HTTPS
             host = "api.rawg.io"
             path("api/")
-            parameters.append("key", "8a3a5fce65fd47008dbffaa2a0470c0b")
+            parameters.append("key", BuildConfig.RAWG_API_KEY)
         }
         header(HttpHeaders.ContentType, ContentType.Application.Json)
     }
