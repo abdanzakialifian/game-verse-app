@@ -28,11 +28,11 @@ class HomeViewModel(
                 HomeReducer.Event.Expanded(intent.id)
             )
 
-            HomeReducer.Intent.NavigateToGameList -> sendEffect(HomeReducer.Effect.NavigateToGameList)
+            HomeReducer.Intent.NavigateToGameList -> sendEffect(HomeReducer.Effect.ShowGameList)
 
-            is HomeReducer.Intent.NavigateToGameSeries -> sendEffect(HomeReducer.Effect.NavigateToGameSeries(intent.gamePk))
+            is HomeReducer.Intent.NavigateToGameSeries -> sendEffect(HomeReducer.Effect.ShowGameSeries(intent.gamePk))
 
-            is HomeReducer.Intent.NavigateToDetail -> sendEffect(HomeReducer.Effect.NavigateToDetail(intent.gamePk))
+            is HomeReducer.Intent.NavigateToDetail -> sendEffect(HomeReducer.Effect.ShowDetail(intent.gamePk))
         }
     }
 

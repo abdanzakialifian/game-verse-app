@@ -18,8 +18,8 @@ class GameSeriesReducer : Reducer<GameSeriesReducer.State, GameSeriesReducer.Eve
 
     @Immutable
     sealed interface Effect : Reducer.ViewEffect {
-        data class NavigateToDetailGame(val id: Int) : Effect
-        data object NavigateBack : Effect
+        data class ShowDetail(val id: Int) : Effect
+        data object GoBack : Effect
     }
 
     @Immutable

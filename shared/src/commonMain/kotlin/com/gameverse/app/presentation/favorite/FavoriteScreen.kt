@@ -30,8 +30,8 @@ fun FavoriteScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect {
             when (it) {
-                is FavoriteReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(it.gamePk)
-                is FavoriteReducer.Effect.NavigateToDetail -> onNavigateToDetail(it.gamePk)
+                is FavoriteReducer.Effect.ShowGameSeries -> onNavigateToGameSeries(it.gamePk)
+                is FavoriteReducer.Effect.ShowDetail -> onNavigateToDetail(it.gamePk)
             }
         }
     }

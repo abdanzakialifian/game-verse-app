@@ -23,9 +23,9 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
 
     @Immutable
     sealed interface Effect : Reducer.ViewEffect {
-        data class NavigateToGameSeries(val gamePk: String) : Effect
-        data class NavigateToDetailGame(val id: Int) : Effect
-        data object NavigateBack : Effect
+        data class ShowGameSeries(val gamePk: String) : Effect
+        data class ShowDetail(val id: Int) : Effect
+        data object GoBack : Effect
     }
 
     @Immutable

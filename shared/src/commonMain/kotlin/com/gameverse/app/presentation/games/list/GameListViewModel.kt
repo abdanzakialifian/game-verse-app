@@ -34,15 +34,15 @@ class GameListViewModel(
             )
 
             is GameListReducer.Intent.NavigateToGameSeries -> sendEffect(
-                GameListReducer.Effect.NavigateToGameSeries(intent.gamePk)
+                GameListReducer.Effect.ShowGameSeries(intent.gamePk)
             )
 
             is GameListReducer.Intent.NavigateToDetail -> sendEffect(
-                GameListReducer.Effect.NavigateToDetailGame(intent.id)
+                GameListReducer.Effect.ShowDetail(intent.id)
             )
 
             GameListReducer.Intent.NavigateBack -> sendEffect(
-                GameListReducer.Effect.NavigateBack
+                GameListReducer.Effect.GoBack
             )
         }
     }

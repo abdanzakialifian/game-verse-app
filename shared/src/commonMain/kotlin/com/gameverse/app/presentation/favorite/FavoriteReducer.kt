@@ -18,8 +18,8 @@ class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
     }
 
     sealed interface Effect : Reducer.ViewEffect {
-        data class NavigateToGameSeries(val gamePk: String) : Effect
-        data class NavigateToDetail(val gamePk: String) : Effect
+        data class ShowGameSeries(val gamePk: String) : Effect
+        data class ShowDetail(val gamePk: String) : Effect
     }
 
     data class State(

@@ -56,8 +56,8 @@ fun GameSeriesScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                GameSeriesReducer.Effect.NavigateBack -> onNavigateBack()
-                is GameSeriesReducer.Effect.NavigateToDetailGame -> onNavigateToDetailGame(effect.id)
+                is GameSeriesReducer.Effect.GoBack -> onNavigateBack()
+                is GameSeriesReducer.Effect.ShowDetail -> onNavigateToDetailGame(effect.id)
             }
         }
     }

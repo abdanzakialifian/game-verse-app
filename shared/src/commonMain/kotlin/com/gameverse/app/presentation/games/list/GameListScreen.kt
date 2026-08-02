@@ -69,9 +69,9 @@ fun GameListScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is GameListReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
-                is GameListReducer.Effect.NavigateToDetailGame -> onNavigateToDetailGame(effect.id)
-                is GameListReducer.Effect.NavigateBack -> onNavigateBack()
+                is GameListReducer.Effect.ShowGameSeries -> onNavigateToGameSeries(effect.gamePk)
+                is GameListReducer.Effect.ShowDetail -> onNavigateToDetailGame(effect.id)
+                is GameListReducer.Effect.GoBack -> onNavigateBack()
             }
         }
     }

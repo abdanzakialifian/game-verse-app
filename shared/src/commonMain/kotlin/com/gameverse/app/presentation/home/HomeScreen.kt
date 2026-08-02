@@ -53,9 +53,9 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                HomeReducer.Effect.NavigateToGameList -> onNavigateToGameList()
-                is HomeReducer.Effect.NavigateToGameSeries -> onNavigateToGameSeries(effect.gamePk)
-                is HomeReducer.Effect.NavigateToDetail -> onNavigateToDetail(effect.gamePk)
+                HomeReducer.Effect.ShowGameList -> onNavigateToGameList()
+                is HomeReducer.Effect.ShowGameSeries -> onNavigateToGameSeries(effect.gamePk)
+                is HomeReducer.Effect.ShowDetail -> onNavigateToDetail(effect.gamePk)
             }
         }
     }

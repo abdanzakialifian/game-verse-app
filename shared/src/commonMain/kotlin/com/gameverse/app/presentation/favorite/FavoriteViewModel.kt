@@ -23,11 +23,11 @@ class FavoriteViewModel(
             FavoriteReducer.Intent.LoadFavorites -> getFavorites()
             is FavoriteReducer.Intent.Expand -> sendEvent(FavoriteReducer.Event.Expanded(intent.id))
             is FavoriteReducer.Intent.NavigateToDetail -> sendEffect(
-                FavoriteReducer.Effect.NavigateToDetail(intent.gamePk)
+                FavoriteReducer.Effect.ShowDetail(intent.gamePk)
             )
 
             is FavoriteReducer.Intent.NavigateToGameSeries -> sendEffect(
-                FavoriteReducer.Effect.NavigateToGameSeries(intent.gamePk)
+                FavoriteReducer.Effect.ShowGameSeries(intent.gamePk)
             )
         }
     }

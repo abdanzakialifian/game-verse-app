@@ -69,7 +69,7 @@ fun CatalogueScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is CatalogueReducer.Effect.NavigateToGameList -> onGenresClicked(effect.id)
+                is CatalogueReducer.Effect.ShowGameList -> onGenresClicked(effect.id)
             }
         }
     }

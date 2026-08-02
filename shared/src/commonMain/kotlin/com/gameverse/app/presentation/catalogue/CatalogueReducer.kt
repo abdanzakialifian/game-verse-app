@@ -14,7 +14,7 @@ class CatalogueReducer : Reducer<CatalogueReducer.State, CatalogueReducer.Event>
 
     @Immutable
     sealed interface Effect : Reducer.ViewEffect {
-        data class NavigateToGameList(val id: String) : Effect
+        data class ShowGameList(val id: String) : Effect
     }
 
     @Immutable

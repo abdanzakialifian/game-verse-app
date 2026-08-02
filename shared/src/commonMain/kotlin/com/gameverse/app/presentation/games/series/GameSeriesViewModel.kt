@@ -22,11 +22,11 @@ class GameSeriesViewModel(
             )
 
             is GameSeriesReducer.Intent.NavigateToDetail -> sendEffect(
-                GameSeriesReducer.Effect.NavigateToDetailGame(intent.id)
+                GameSeriesReducer.Effect.ShowDetail(intent.id)
             )
 
             GameSeriesReducer.Intent.NavigateBack -> sendEffect(
-                GameSeriesReducer.Effect.NavigateBack
+                GameSeriesReducer.Effect.GoBack
             )
         }
     }

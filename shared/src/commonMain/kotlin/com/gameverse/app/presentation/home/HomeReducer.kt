@@ -26,9 +26,9 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
 
     @Immutable
     sealed interface Effect : Reducer.ViewEffect {
-        data object NavigateToGameList : Effect
-        data class NavigateToGameSeries(val gamePk: String) : Effect
-        data class NavigateToDetail(val gamePk: String) : Effect
+        data object ShowGameList : Effect
+        data class ShowGameSeries(val gamePk: String) : Effect
+        data class ShowDetail(val gamePk: String) : Effect
     }
 
     @Immutable
