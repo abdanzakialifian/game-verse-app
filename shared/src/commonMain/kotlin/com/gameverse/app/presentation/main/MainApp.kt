@@ -93,13 +93,13 @@ fun MainApp() {
                     entry<MainRoutes.Home> {
                         HomeScreen(
                             paddingValues = innerPadding,
-                            onNavigateToGameList = {
+                            onShowGameList = {
                                 backStack.add(MainRoutes.GameList())
                             },
-                            onNavigateToGameSeries = { gamePk ->
+                            onShowGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
                             },
-                            onNavigateToDetail = { gamePk ->
+                            onShowDetail = { gamePk ->
                                 backStack.add(MainRoutes.Detail(gamePk))
                             }
                         )
@@ -108,7 +108,7 @@ fun MainApp() {
                     entry<MainRoutes.Catalogue> {
                         CatalogueScreen(
                             paddingValues = innerPadding,
-                            onGenresClicked = { id ->
+                            onShowGameList = { id ->
                                 backStack.add(MainRoutes.GameList(id))
                             }
                         )
@@ -117,10 +117,10 @@ fun MainApp() {
                     entry<MainRoutes.Favorite> {
                         FavoriteScreen(
                             paddingValues = innerPadding,
-                            onNavigateToGameSeries = { gamePk ->
+                            onShowGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
                             },
-                            onNavigateToDetail = { gamePk ->
+                            onShowDetail = { gamePk ->
                                 backStack.add(MainRoutes.Detail(gamePk))
                             }
                         )
@@ -133,13 +133,13 @@ fun MainApp() {
                     entry<MainRoutes.GameList>(metadata = Utils.slideAnimation()) {
                         GameListScreen(
                             genreId = it.genreId,
-                            onNavigateToGameSeries = { gamePk ->
+                            onShowGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
                             },
-                            onNavigateToDetailGame = { id ->
+                            onShowDetail = { id ->
                                 backStack.add(MainRoutes.Detail(id.toString()))
                             },
-                            onNavigateBack = {
+                            onGoBack = {
                                 backStack.removeLastOrNull()
                             }
                         )
@@ -148,10 +148,10 @@ fun MainApp() {
                     entry<MainRoutes.GameSeries>(metadata = Utils.slideAnimation()) {
                         GameSeriesScreen(
                             gamePk = it.gamePk,
-                            onNavigateBack = {
+                            onGoBack = {
                                 backStack.removeLastOrNull()
                             },
-                            onNavigateToDetailGame = { id ->
+                            onShowDetail = { id ->
                                 backStack.add(MainRoutes.Detail(id.toString()))
                             }
                         )

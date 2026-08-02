@@ -56,9 +56,9 @@ import org.koin.core.parameter.parametersOf
 fun GameListScreen(
     genreId: String?,
     viewModel: GameListViewModel = koinViewModel { parametersOf(genreId) },
-    onNavigateToGameSeries: (gamePk: String) -> Unit,
-    onNavigateToDetailGame: (id: Int) -> Unit,
-    onNavigateBack: () -> Unit,
+    onShowGameSeries: (gamePk: String) -> Unit,
+    onShowDetail: (id: Int) -> Unit,
+    onGoBack: () -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
@@ -69,9 +69,9 @@ fun GameListScreen(
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is GameListReducer.Effect.ShowGameSeries -> onNavigateToGameSeries(effect.gamePk)
-                is GameListReducer.Effect.ShowDetail -> onNavigateToDetailGame(effect.id)
-                is GameListReducer.Effect.GoBack -> onNavigateBack()
+                is GameListReducer.Effect.ShowGameSeries -> onShowGameSeries(effect.gamePk)
+                is GameListReducer.Effect.ShowDetail -> onShowDetail(effect.id)
+                is GameListReducer.Effect.GoBack -> onGoBack()
             }
         }
     }

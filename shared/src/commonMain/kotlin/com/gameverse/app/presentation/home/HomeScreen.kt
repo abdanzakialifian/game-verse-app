@@ -44,18 +44,18 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeScreen(
     paddingValues: PaddingValues,
     viewModel: HomeViewModel = koinViewModel(),
-    onNavigateToGameList: () -> Unit,
-    onNavigateToGameSeries: (gamePk: String) -> Unit,
-    onNavigateToDetail: (gamePk: String) -> Unit,
+    onShowGameList: () -> Unit,
+    onShowGameSeries: (gamePk: String) -> Unit,
+    onShowDetail: (gamePk: String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                HomeReducer.Effect.ShowGameList -> onNavigateToGameList()
-                is HomeReducer.Effect.ShowGameSeries -> onNavigateToGameSeries(effect.gamePk)
-                is HomeReducer.Effect.ShowDetail -> onNavigateToDetail(effect.gamePk)
+                HomeReducer.Effect.ShowGameList -> onShowGameList()
+                is HomeReducer.Effect.ShowGameSeries -> onShowGameSeries(effect.gamePk)
+                is HomeReducer.Effect.ShowDetail -> onShowDetail(effect.gamePk)
             }
         }
     }

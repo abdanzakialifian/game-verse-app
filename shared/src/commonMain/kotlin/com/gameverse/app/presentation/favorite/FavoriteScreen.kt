@@ -22,16 +22,16 @@ import org.koin.compose.viewmodel.koinViewModel
 fun FavoriteScreen(
     paddingValues: PaddingValues,
     viewModel: FavoriteViewModel = koinViewModel(),
-    onNavigateToGameSeries: (gamePk: String) -> Unit,
-    onNavigateToDetail: (gamePk: String) -> Unit,
+    onShowGameSeries: (gamePk: String) -> Unit,
+    onShowDetail: (gamePk: String) -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect {
             when (it) {
-                is FavoriteReducer.Effect.ShowGameSeries -> onNavigateToGameSeries(it.gamePk)
-                is FavoriteReducer.Effect.ShowDetail -> onNavigateToDetail(it.gamePk)
+                is FavoriteReducer.Effect.ShowGameSeries -> onShowGameSeries(it.gamePk)
+                is FavoriteReducer.Effect.ShowDetail -> onShowDetail(it.gamePk)
             }
         }
     }

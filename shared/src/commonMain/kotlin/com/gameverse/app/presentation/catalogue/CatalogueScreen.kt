@@ -62,14 +62,14 @@ import kotlin.time.Duration.Companion.milliseconds
 fun CatalogueScreen(
     paddingValues: PaddingValues,
     viewModel: CatalogueViewModel = koinViewModel(),
-    onGenresClicked: (id: String) -> Unit,
+    onShowGameList: (id: String) -> Unit,
 ) {
     val genresPaging = viewModel.getGenresPaging.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.effects.collect { effect ->
             when (effect) {
-                is CatalogueReducer.Effect.ShowGameList -> onGenresClicked(effect.id)
+                is CatalogueReducer.Effect.ShowGameList -> onShowGameList(effect.id)
             }
         }
     }
