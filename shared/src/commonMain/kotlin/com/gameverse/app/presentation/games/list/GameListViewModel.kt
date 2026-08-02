@@ -22,7 +22,7 @@ class GameListViewModel(
     override fun sendIntent(intent: GameListReducer.Intent) {
         when (intent) {
             is GameListReducer.Intent.ToggleSearch -> sendEvent(
-                GameListReducer.Event.SearchVisibility(intent.isSearchVisible)
+                GameListReducer.Event.SearchVisibilityChanged(intent.isSearchVisible)
             )
 
             is GameListReducer.Intent.Search -> sendEvent(

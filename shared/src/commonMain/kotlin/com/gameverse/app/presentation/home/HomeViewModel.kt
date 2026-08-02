@@ -38,14 +38,14 @@ class HomeViewModel(
 
     private fun getGames() {
         viewModelScope.launch {
-            sendEvent(HomeReducer.Event.GetGamesLoading(true))
+            sendEvent(HomeReducer.Event.GamesLoadingChanged(true))
             try {
                 val games = repository.getGames()
-                sendEvent(HomeReducer.Event.GetGamesData(games))
+                sendEvent(HomeReducer.Event.GamesLoaded(games))
             } catch (e: Exception) {
-                sendEvent(HomeReducer.Event.GetGamesError(e))
+                sendEvent(HomeReducer.Event.GamesErrorReceived(e))
             } finally {
-                sendEvent(HomeReducer.Event.GetGamesLoading(false))
+                sendEvent(HomeReducer.Event.GamesLoadingChanged(false))
             }
         }
     }

@@ -36,10 +36,10 @@ class FavoriteViewModel(
         viewModelScope.launch {
             repository.getFavorites()
                 .catch { throwable ->
-                    sendEvent(FavoriteReducer.Event.GetFavoritesError(throwable))
+                    sendEvent(FavoriteReducer.Event.FavoritesErrorReceived(throwable))
                 }
                 .collect { gameList ->
-                    sendEvent(FavoriteReducer.Event.GetFavoritesData(gameList))
+                    sendEvent(FavoriteReducer.Event.FavoritesLoaded(gameList))
                 }
         }
     }

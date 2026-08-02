@@ -12,8 +12,8 @@ class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
     }
 
     sealed interface Event : Reducer.ViewEvent {
-        data class GetFavoritesData(val data: List<GameModel>) : Event
-        data class GetFavoritesError(val error: Throwable) : Event
+        data class FavoritesLoaded(val data: List<GameModel>) : Event
+        data class FavoritesErrorReceived(val error: Throwable) : Event
         data class Expanded(val id: Int) : Event
     }
 
@@ -33,8 +33,8 @@ class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
         event: Event
     ): State {
         return when (event) {
-            is Event.GetFavoritesData -> state.copy(gameList = event.data)
-            is Event.GetFavoritesError -> state.copy(error = event.error)
+            is Event.FavoritesLoaded -> state.copy(gameList = event.data)
+            is Event.FavoritesErrorReceived -> state.copy(error = event.error)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {
                     state.expandedIds - event.id

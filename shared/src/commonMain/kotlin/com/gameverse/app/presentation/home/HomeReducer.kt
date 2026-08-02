@@ -18,9 +18,9 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     @Immutable
     sealed interface Event : Reducer.ViewEvent {
         data class SearchValueChanged(val value: String) : Event
-        data class GetGamesLoading(val isLoading: Boolean) : Event
-        data class GetGamesData(val data: List<GameModel>) : Event
-        data class GetGamesError(val error: Throwable) : Event
+        data class GamesLoadingChanged(val isLoading: Boolean) : Event
+        data class GamesLoaded(val data: List<GameModel>) : Event
+        data class GamesErrorReceived(val error: Throwable) : Event
         data class Expanded(val id: Int) : Event
     }
 
@@ -46,9 +46,9 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
     ): State {
         return when (event) {
             is Event.SearchValueChanged -> state.copy(searchValue = event.value)
-            is Event.GetGamesLoading -> state.copy(isGamesLoading = event.isLoading)
-            is Event.GetGamesData -> state.copy(gamesData = event.data, gamesError = null)
-            is Event.GetGamesError -> state.copy(gamesError = event.error)
+            is Event.GamesLoadingChanged -> state.copy(isGamesLoading = event.isLoading)
+            is Event.GamesLoaded -> state.copy(gamesData = event.data, gamesError = null)
+            is Event.GamesErrorReceived -> state.copy(gamesError = event.error)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {
                     state.expandedIds - event.id
