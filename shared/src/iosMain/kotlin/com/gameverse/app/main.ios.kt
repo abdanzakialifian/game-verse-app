@@ -16,7 +16,7 @@ import platform.Foundation.NSLog
 import platform.Foundation.NSUserDomainMask
 import platform.UIKit.UIDevice
 
-class IOSPlatform: Platform {
+class IOSPlatform : Platform {
     override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
 }
 
@@ -24,20 +24,20 @@ actual fun getPlatform(): Platform = IOSPlatform()
 
 actual object PlatformLogger {
     actual fun e(tag: String, message: String, throwable: Throwable?) {
-
-        if (throwable != null) {
-            NSLog("ERROR: [$tag] $message. Throwable: $throwable CAUSE ${throwable.cause}")
+        val fullMessage = if (throwable != null) {
+            "[ERROR] [$tag] $message | ${throwable.message} | cause: ${throwable.cause?.message}"
         } else {
-            NSLog("ERROR: [$tag] $message")
+            "[ERROR] [$tag] $message"
         }
+        NSLog("%@", fullMessage)
     }
 
     actual fun d(tag: String, message: String) {
-        NSLog("DEBUG: [$tag] $message")
+        NSLog("%@", "[DEBUG] [$tag] $message")
     }
 
     actual fun i(tag: String, message: String) {
-        NSLog("INFO: [$tag] $message")
+        NSLog("%@", "[INFO] [$tag] $message")
     }
 }
 
