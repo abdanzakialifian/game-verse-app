@@ -23,7 +23,7 @@ class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
     }
 
     data class State(
-        val gameList: List<GameModel> = emptyList(),
+        val favorites: List<GameModel> = emptyList(),
         val error: Throwable? = null,
         val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState
@@ -33,7 +33,7 @@ class FavoriteReducer : Reducer<FavoriteReducer.State, FavoriteReducer.Event> {
         event: Event
     ): State {
         return when (event) {
-            is Event.FavoritesLoaded -> state.copy(gameList = event.data)
+            is Event.FavoritesLoaded -> state.copy(favorites = event.data)
             is Event.FavoritesErrorReceived -> state.copy(error = event.error)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {

@@ -33,10 +33,10 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
 
     @Immutable
     data class State(
-        val searchValue: String = "",
-        val isGamesLoading: Boolean = true,
-        val gamesData: List<GameModel> = emptyList(),
-        val gamesError: Throwable? = null,
+        val query: String = "",
+        val isLoading: Boolean = true,
+        val games: List<GameModel> = emptyList(),
+        val error: Throwable? = null,
         val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState
 
@@ -45,10 +45,10 @@ class HomeReducer : Reducer<HomeReducer.State, HomeReducer.Event> {
         event: Event
     ): State {
         return when (event) {
-            is Event.SearchValueChanged -> state.copy(searchValue = event.value)
-            is Event.GamesLoadingChanged -> state.copy(isGamesLoading = event.isLoading)
-            is Event.GamesLoaded -> state.copy(gamesData = event.data, gamesError = null)
-            is Event.GamesErrorReceived -> state.copy(gamesError = event.error)
+            is Event.SearchValueChanged -> state.copy(query = event.value)
+            is Event.GamesLoadingChanged -> state.copy(isLoading = event.isLoading)
+            is Event.GamesLoaded -> state.copy(games = event.data, error = null)
+            is Event.GamesErrorReceived -> state.copy(error = event.error)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {
                     state.expandedIds - event.id

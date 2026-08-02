@@ -101,12 +101,12 @@ private fun DetailContent(
     gamesScreenshotsPaging: LazyPagingItems<ScreenshotModel>,
     onIntent: (DetailReducer.Intent) -> Unit,
 ) {
-    if (uiState.isDetailLoading) {
+    if (uiState.isLoading) {
         DetailPlaceholder()
         return
     }
 
-    if (uiState.detailError != null || uiState.detailData == null) {
+    if (uiState.error != null || uiState.detail == null) {
         GeneralError {
             onIntent(DetailReducer.Intent.LoadGameDetail(uiState.gameId))
         }
@@ -127,7 +127,7 @@ private fun DetailContent(
 
         val isMoviesError = uiState.moviesError != null
 
-        DetailHeaderInformation(uiState.detailData)
+        DetailHeaderInformation(uiState.detail)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -139,7 +139,7 @@ private fun DetailContent(
             }
             else -> MediaPager(
                 gamesScreenshotsPaging = gamesScreenshotsPaging,
-                moviesData = uiState.moviesData
+                moviesData = uiState.movies
             )
         }
 
@@ -147,7 +147,7 @@ private fun DetailContent(
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             DetailRatingWithFavorite(
-                detailData = uiState.detailData,
+                detailData = uiState.detail,
                 isFavorite = uiState.isFavorite,
                 onFavoriteClicked = { detailModel, isFavorite ->
                     onIntent(
@@ -167,13 +167,13 @@ private fun DetailContent(
                     onIntent(DetailReducer.Intent.TextOverflow(textLayoutResult.hasVisualOverflow))
                 },
                 onTextExpandClicked = {
-                    onIntent(DetailReducer.Intent.ExpandDescription(!uiState.isExpandDescription))
+                    onIntent(DetailReducer.Intent.ExpandDescription(!uiState.isDescriptionExpanded))
                 }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            DetailMoreInformation(uiState.detailData)
+            DetailMoreInformation(uiState.detail)
         }
     }
 }
@@ -378,14 +378,14 @@ private fun DetailAboutInformation(
         )
     ) {
         Text(
-            text = uiState.detailData?.description?.trimAfterDoubleNewline().orEmpty(),
+            text = uiState.detail?.description?.trimAfterDoubleNewline().orEmpty(),
             style = GVTypography.bodySmall,
-            maxLines = if (uiState.isExpandDescription) Int.MAX_VALUE else 4,
+            maxLines = if (uiState.isDescriptionExpanded) Int.MAX_VALUE else 4,
             overflow = TextOverflow.Ellipsis,
             onTextLayout = onTextLayout
         )
 
-        if (uiState.isTextOverflowing || uiState.isExpandDescription) {
+        if (uiState.isTextOverflowing || uiState.isDescriptionExpanded) {
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
@@ -394,7 +394,7 @@ private fun DetailAboutInformation(
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = onTextExpandClicked
                 ),
-                text = if (uiState.isExpandDescription) "Show less" else "Show more",
+                text = if (uiState.isDescriptionExpanded) "Show less" else "Show more",
                 style = GVTypography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = TextDecoration.Underline,
@@ -690,7 +690,7 @@ private fun DetailContentPreview() {
         ).collectAsLazyPagingItems()
         DetailContent(
             uiState = DetailReducer.State(
-                detailData = DetailModel(
+                detail = DetailModel(
                     id = 5599,
                     developerNames = listOf("Rockstar North", "Rockstar Games"),
                     rating = 4.5,

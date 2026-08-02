@@ -17,7 +17,7 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     @Immutable
     sealed interface Event : Reducer.ViewEvent {
         data class SearchVisibilityChanged(val isSearchVisible: Boolean) : Event
-        data class SearchValueChanged(val value: String) : Event
+        data class QueryChanged(val value: String) : Event
         data class Expanded(val id: Int) : Event
     }
 
@@ -31,7 +31,7 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     @Immutable
     data class State(
         val isSearchVisible: Boolean = false,
-        val searchValue: String = "",
+        val query: String = "",
         val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState
 
@@ -41,7 +41,7 @@ class GameListReducer : Reducer<GameListReducer.State, GameListReducer.Event> {
     ): State {
         return when (event) {
             is Event.SearchVisibilityChanged -> state.copy(isSearchVisible = event.isSearchVisible)
-            is Event.SearchValueChanged -> state.copy(searchValue = event.value)
+            is Event.QueryChanged -> state.copy(query = event.value)
             is Event.Expanded -> {
                 val expandedIds = if (event.id in state.expandedIds) {
                     state.expandedIds - event.id

@@ -59,7 +59,7 @@ private fun FavoriteContent(
         return
     }
 
-    if (uiState.gameList.isEmpty()) {
+    if (uiState.favorites.isEmpty()) {
         GeneralEmpty()
         return
     }
@@ -68,7 +68,7 @@ private fun FavoriteContent(
         modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(uiState.gameList, key = { it.id }) { result ->
+        items(uiState.favorites, key = { it.id }) { result ->
             GameListItem(
                 game = result,
                 expandedIds = uiState.expandedIds,

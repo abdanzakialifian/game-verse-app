@@ -37,14 +37,14 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     @Immutable
     data class State(
         val gameId: String = "",
-        val isDetailLoading: Boolean = false,
-        val detailData: DetailModel? = null,
-        val detailError: Throwable? = null,
+        val isLoading: Boolean = false,
+        val detail: DetailModel? = null,
+        val error: Throwable? = null,
         val isMoviesLoading: Boolean = false,
-        val moviesData: List<String> = emptyList(),
+        val movies: List<String> = emptyList(),
         val moviesError: Throwable? = null,
         val isTextOverflowing: Boolean = false,
-        val isExpandDescription: Boolean = false,
+        val isDescriptionExpanded: Boolean = false,
         val isFavorite: Boolean = false,
     ) : Reducer.ViewState
 
@@ -53,13 +53,13 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
         event: Event
     ): State {
         return when (event) {
-            is Event.GameDetailLoadingChanged -> state.copy(isDetailLoading = event.isLoading)
-            is Event.GameDetailLoaded -> state.copy(detailData = event.data, detailError = null)
-            is Event.GameDetailErrorReceived -> state.copy(detailError = event.error)
+            is Event.GameDetailLoadingChanged -> state.copy(isLoading = event.isLoading)
+            is Event.GameDetailLoaded -> state.copy(detail = event.data, error = null)
+            is Event.GameDetailErrorReceived -> state.copy(error = event.error)
             is Event.MoviesLoadingChanged -> state.copy(isMoviesLoading = event.isLoading)
-            is Event.MoviesLoaded -> state.copy(moviesData = event.data, moviesError = null)
+            is Event.MoviesLoaded -> state.copy(movies = event.data, moviesError = null)
             is Event.MoviesErrorReceived -> state.copy(moviesError = event.error)
-            is Event.ExpandDescriptionChanged -> state.copy(isExpandDescription = event.isExpandDescription)
+            is Event.ExpandDescriptionChanged -> state.copy(isDescriptionExpanded = event.isExpandDescription)
             is Event.TextOverflowChanged -> {
                 if (state.isTextOverflowing != event.isTextOverflowing) {
                     state.copy(isTextOverflowing = event.isTextOverflowing)

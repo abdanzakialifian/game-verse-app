@@ -156,7 +156,7 @@ private fun GameListContent(
                     GVSearch(
                         modifier = Modifier.focusRequester(focusRequester),
                         hint = "Search games....",
-                        value = uiState.searchValue,
+                        value = uiState.query,
                         onClear = {
                             onIntent(GameListReducer.Intent.Search(""))
                         },

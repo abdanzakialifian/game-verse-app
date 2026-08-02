@@ -135,14 +135,14 @@ private fun HomeContent(
         }
 
         when {
-            uiState.isGamesLoading -> LoadingPlaceholders()
-            uiState.gamesError != null -> GeneralError(
+            uiState.isLoading -> LoadingPlaceholders()
+            uiState.error != null -> GeneralError(
                 onButtonClicked = {
                     onIntent(HomeReducer.Intent.LoadGames)
                 }
             )
             else -> {
-                if (uiState.gamesData.isEmpty()) {
+                if (uiState.games.isEmpty()) {
                     GeneralEmpty()
                     return
                 }
@@ -151,7 +151,7 @@ private fun HomeContent(
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     contentPadding = PaddingValues(vertical = 16.dp)
                 ) {
-                    items(uiState.gamesData, key = { it.id }) { result ->
+                    items(uiState.games, key = { it.id }) { result ->
                         GameListItem(
                             game = result,
                             expandedIds = uiState.expandedIds,
@@ -189,7 +189,7 @@ private fun HomeContentPreview() {
         HomeContent(
             uiState = HomeReducer.State(
                 expandedIds = gamesData.map { it.id }.toSet(),
-                gamesData = gamesData
+                games = gamesData
             ),
             paddingValues = PaddingValues(),
             onIntent = {}

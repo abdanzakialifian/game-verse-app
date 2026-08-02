@@ -18,9 +18,7 @@ class CatalogueReducer : Reducer<CatalogueReducer.State, CatalogueReducer.Event>
     }
 
     @Immutable
-    data class State(
-        val data: String = ""
-    ) : Reducer.ViewState
+    class State : Reducer.ViewState
 
     override fun reduce(
         state: State,

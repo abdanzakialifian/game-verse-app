@@ -26,7 +26,7 @@ class GameListViewModel(
             )
 
             is GameListReducer.Intent.Search -> sendEvent(
-                GameListReducer.Event.SearchValueChanged(intent.value)
+                GameListReducer.Event.QueryChanged(intent.value)
             )
 
             is GameListReducer.Intent.Expand -> sendEvent(
@@ -48,7 +48,7 @@ class GameListViewModel(
     }
 
     val getGamesPaging = state
-        .map { it.searchValue.ifBlank { null } }
+        .map { it.query.ifBlank { null } }
         .debounce(500L)
         .distinctUntilChanged()
         .flatMapLatest { value ->

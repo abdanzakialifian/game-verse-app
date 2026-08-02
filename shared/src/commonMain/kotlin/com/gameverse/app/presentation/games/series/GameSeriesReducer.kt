@@ -24,7 +24,6 @@ class GameSeriesReducer : Reducer<GameSeriesReducer.State, GameSeriesReducer.Eve
 
     @Immutable
     data class State(
-        val searchValue: String = "",
         val expandedIds: Set<Int> = emptySet(),
     ) : Reducer.ViewState
 
