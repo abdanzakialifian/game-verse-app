@@ -14,6 +14,10 @@ plugins {
 }
 
 kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -40,37 +44,20 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(libs.compose.runtime)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material3)
-            implementation(libs.compose.ui)
-            implementation(libs.compose.components.resources)
-            implementation(libs.compose.uiToolingPreview)
-            implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(libs.androidx.lifecycle.runtimeCompose)
-            implementation(libs.jetbrains.navigation3.ui)
-            implementation(libs.jetbrains.lifecycle.viewmodelNavigation3)
+            implementation(libs.bundles.compose.core)
+            implementation(libs.bundles.lifecycle)
+            implementation(libs.bundles.navigation)
             implementation(project.dependencies.platform(libs.ktor.bom))
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.ktor.client.contentNegotiation)
-            implementation(libs.ktor.client.resources)
-            implementation(libs.ktor.client.logging)
+            implementation(libs.bundles.ktor.common)
             implementation(project.dependencies.platform(libs.koin.bom))
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.koin.compose.navigation)
-            implementation(libs.koin.annotations)
+            implementation(libs.bundles.koin.common)
+            implementation(libs.bundles.coil)
+            implementation(libs.bundles.paging)
+            implementation(libs.bundles.room)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.napier)
-            implementation(libs.coil.compose)
-            implementation(libs.coil.network.ktor3)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.androidx.paging.common)
-            implementation(libs.androidx.paging.compose)
+            implementation(libs.napier)
             implementation(libs.compose.multiplatform.media.player)
-            implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
         }
 
         iosMain.dependencies {
@@ -94,27 +81,39 @@ room {
 }
 
 android {
-    namespace = "com.gameverse.app"
+    namespace = "com.gameverse.app.shared"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 
     dependencies {
         debugImplementation(libs.compose.uiTooling)
     }
 }
 
-tasks.register("generateBuildConfig") {
+val generateBuildConfig = tasks.register("generateBuildConfig") {
     group = "build"
     description = "Generates BuildConfig.kt with API keys"
-    val outputFile = layout.buildDirectory.file("generated/ksp/commonMain/kotlin/com/gameverse/app/config/BuildConfig.kt")
+    val outputDir = layout.buildDirectory.dir("generated/source/buildConfig/commonMain/kotlin")
     val localPropertiesFile = layout.projectDirectory.file("../local.properties")
 
-    outputs.file(outputFile)
+    inputs.file(localPropertiesFile).optional()
+    outputs.dir(outputDir)
 
     doLast {
         val localProperties = Properties().apply {
-            localPropertiesFile.asFile.inputStream().use { load(it) }
+            val file = localPropertiesFile.asFile
+            if (file.exists()) {
+                file.inputStream().use { load(it) }
+            }
         }
         val rawgApiKey = localProperties.getProperty("rawgApiKey").orEmpty()
+
+        val outputFile = outputDir.get().file("com/gameverse/app/config/BuildConfig.kt").asFile
+        outputFile.parentFile.mkdirs()
 
         val content = """
             package com.gameverse.app.config
@@ -129,25 +128,16 @@ tasks.register("generateBuildConfig") {
             }
         """.trimIndent()
 
-        outputFile.get().asFile.parentFile.mkdirs()
-        outputFile.get().asFile.writeText(content)
-        println("Generated ${outputFile.get().asFile}")
+        outputFile.writeText(content)
     }
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    dependsOn("generateBuildConfig")
-}
-
-tasks.matching { it.name.startsWith("ksp") }.configureEach {
-    dependsOn("generateBuildConfig")
 }
 
 kotlin {
     sourceSets {
         commonMain {
-            kotlin.srcDir(layout.buildDirectory.dir("generated/ksp/commonMain/kotlin"))
+            kotlin.srcDir(generateBuildConfig.map { it.outputs.files })
         }
     }
 }
+
 

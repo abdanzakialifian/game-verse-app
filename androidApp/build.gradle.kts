@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinMultiplatform)
@@ -6,13 +8,17 @@ plugins {
 }
 
 kotlin {
-    androidTarget()
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 
     sourceSets {
-        val androidMain by getting {
-            dependencies {
-                implementation(projects.shared)
-            }
+        androidMain.dependencies {
+            implementation(projects.shared)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.compose.uiToolingPreview)
         }
     }
 }
@@ -36,7 +42,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
         }
     }
@@ -51,10 +57,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
 
-    dependencies {
-        implementation(libs.compose.uiToolingPreview)
-        implementation(libs.androidx.activity.compose)
-        debugImplementation(libs.compose.uiTooling)
-    }
+dependencies {
+    debugImplementation(libs.compose.uiTooling)
 }
