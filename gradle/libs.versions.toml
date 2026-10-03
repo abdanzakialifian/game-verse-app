@@ -72,7 +72,6 @@ ktor-client-resources = { module = "io.ktor:ktor-client-resources" }
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
 koin-compose = { module = "io.insert-koin:koin-compose" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
-koin-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation" }
 koin-annotations = { module = "io.insert-koin:koin-annotations" }
 
 # --- Kotlinx & Coroutines ---
@@ -91,7 +90,6 @@ androidx-paging-compose = { module = "androidx.paging:paging-compose", version.r
 # --- Room & SQLite ---
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-room-sqlite-wrapper = { module = "androidx.room:room-sqlite-wrapper", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 # --- Logging ---
@@ -124,7 +122,6 @@ ktor-common = [
 koin-common = [
     "koin-compose",
     "koin-compose-viewmodel",
-    "koin-compose-navigation",
     "koin-annotations",
 ]
 coil = [
