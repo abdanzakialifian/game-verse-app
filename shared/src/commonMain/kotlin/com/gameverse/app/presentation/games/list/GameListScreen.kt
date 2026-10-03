@@ -50,7 +50,7 @@ import gameverse.shared.generated.resources.games_all_games_title
 import gameverse.shared.generated.resources.games_search_hint
 import gameverse.shared.generated.resources.ic_back
 import gameverse.shared.generated.resources.ic_search
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -118,8 +118,7 @@ private fun GameListContent(
                     .fillMaxWidth()
                     .background(GVColor.secondaryContainer)
                     .statusBarsPadding()
-                    .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                    .padding(horizontal = 16.dp),
+                    .height(TopAppBarDefaults.TopAppBarExpandedHeight),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
@@ -221,27 +220,30 @@ private fun handleBackPressed(
 @Composable
 private fun GameListContentPreview() {
     GVTheme {
-        val gamesData = List(5) {
-            GameModel(
-                id = it,
-                name = "Grand Theft Auto V",
-                backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
-                released = "2013-09-17",
-                genreNames = listOf("Action", "RPG", "Shooter"),
-                platformIds = (1..10).toList(),
-            )
+        val gamesData = remember {
+            List(5) {
+                GameModel(
+                    id = it,
+                    name = "Grand Theft Auto V",
+                    backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                    released = "2013-09-17",
+                    genreNames = listOf("Action", "RPG", "Shooter"),
+                    platformIds = (1..10).toList(),
+                )
+            }
         }
-        val gamesPaging = flowOf(
-            PagingData.from(
-                sourceLoadStates = LoadStates(
-                    refresh = LoadState.NotLoading(endOfPaginationReached = false),
-                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                    append = LoadState.NotLoading(endOfPaginationReached = false)
-                ),
-                data = gamesData
+        val gamesPaging = remember(gamesData) {
+            MutableStateFlow(
+                PagingData.from(
+                    data = gamesData,
+                    sourceLoadStates = LoadStates(
+                        refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                        prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                        append = LoadState.NotLoading(endOfPaginationReached = true)
+                    )
+                )
             )
-        ).collectAsLazyPagingItems()
-
+        }.collectAsLazyPagingItems()
         GameListContent(
             uiState = GameListReducer.State(
                 expandedIds = gamesData.map { it.id }.toSet()

@@ -7,15 +7,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +41,7 @@ import gameverse.shared.generated.resources.Res
 import gameverse.shared.generated.resources.common_back
 import gameverse.shared.generated.resources.games_series_title
 import gameverse.shared.generated.resources.ic_back
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -70,6 +74,7 @@ fun GameSeriesScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun GameSeriesContent(
     uiState: GameSeriesReducer.State,
@@ -83,8 +88,7 @@ private fun GameSeriesContent(
                     .fillMaxWidth()
                     .background(GVColor.secondaryContainer)
                     .statusBarsPadding()
-                    .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                    .padding(horizontal = 16.dp),
+                    .height(TopAppBarDefaults.TopAppBarExpandedHeight),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
@@ -107,6 +111,8 @@ private fun GameSeriesContent(
                     style = GVTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center
                 )
+
+                Box(modifier = Modifier.size(IconButtonDefaults.smallContainerSize()))
             }
         }
     ) { innerPadding ->
@@ -133,27 +139,30 @@ private fun GameSeriesContent(
 @Composable
 private fun GameSeriesContentPreview() {
     GVTheme {
-        val gamesData = List(5) {
-            GameModel(
-                id = it,
-                name = "Grand Theft Auto V",
-                backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
-                released = "2013-09-17",
-                genreNames = listOf("Action", "RPG", "Shooter"),
-                platformIds = (1..10).toList(),
-            )
+        val gamesData = remember {
+            List(5) {
+                GameModel(
+                    id = it,
+                    name = "Grand Theft Auto V",
+                    backgroundImage = "https://media.rawg.io/media/games/20a/20aa03a10cda45239fe22d035c0ebe64.jpg",
+                    released = "2013-09-17",
+                    genreNames = listOf("Action", "RPG", "Shooter"),
+                    platformIds = (1..10).toList(),
+                )
+            }
         }
-        val gamesSeriesPaging = flowOf(
-            PagingData.from(
-                sourceLoadStates = LoadStates(
-                    refresh = LoadState.NotLoading(endOfPaginationReached = false),
-                    prepend = LoadState.NotLoading(endOfPaginationReached = true),
-                    append = LoadState.NotLoading(endOfPaginationReached = false)
-                ),
-                data = gamesData
+        val gamesSeriesPaging = remember(gamesData) {
+            MutableStateFlow(
+                PagingData.from(
+                    data = gamesData,
+                    sourceLoadStates = LoadStates(
+                        refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                        prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                        append = LoadState.NotLoading(endOfPaginationReached = true)
+                    )
+                )
             )
-        ).collectAsLazyPagingItems()
-
+        }.collectAsLazyPagingItems()
         GameSeriesContent(
             uiState = GameSeriesReducer.State(
                 expandedIds = gamesData.map { it.id }.toSet()
