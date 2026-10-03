@@ -1,0 +1,65 @@
+<resources>
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_catalogue">Catalogue</string>
+    <string name="nav_favorite">Favorite</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Good morning,</string>
+    <string name="greeting_afternoon">Good afternoon,</string>
+    <string name="greeting_evening">Good evening,</string>
+    <string name="greeting_night">Good night,</string>
+    <string name="home_view_all_games">View all 20+ games</string>
+
+    <!-- Detail -->
+    <string name="detail_reviews_count">%1$s Reviews</string>
+    <string name="detail_cd_add_favorite">Add to favorites</string>
+    <string name="detail_cd_remove_favorite">Remove from favorites</string>
+    <string name="detail_show_more">Show more</string>
+    <string name="detail_show_less">Show less</string>
+    <string name="detail_platforms_label">Platforms</string>
+    <string name="detail_genres_label">Genres</string>
+    <string name="detail_released_date_label">Released Date</string>
+    <string name="detail_last_modified_label">Last Modified</string>
+    <string name="detail_publishers_label">Publishers</string>
+    <string name="detail_developers_label">Developers</string>
+    <string name="detail_cd_retry_media">Retry loading media</string>
+
+    <!-- Catalogue -->
+    <string name="catalogue_popular_items">Popular Items</string>
+    <string name="catalogue_could_not_load_more">Couldn\'t load more genres</string>
+    <string name="catalogue_cd_retry_loading_genres">Retry loading genres</string>
+    <string name="catalogue_loading_more_genres_1">Loading more genres...</string>
+    <string name="catalogue_loading_more_genres_2">Discovering new genres...</string>
+    <string name="catalogue_loading_more_genres_3">Finding your next favorite genre...</string>
+    <string name="catalogue_loading_more_genres_4">Exploring gaming categories...</string>
+    <string name="catalogue_loading_more_genres_5">Preparing more genres for you...</string>
+
+    <!-- Games -->
+    <string name="games_all_games_title">All Games</string>
+    <string name="games_series_title">Game Series</string>
+    <string name="games_search_hint">Search games....</string>
+    <string name="games_loading_msg_1">Loading more games...</string>
+    <string name="games_loading_msg_2">Finding more games...</string>
+    <string name="games_loading_msg_3">Looking for hidden gems...</string>
+    <string name="games_loading_msg_4">Exploring new worlds...</string>
+    <string name="games_loading_msg_5">Preparing the next adventure...</string>
+
+    <!-- Common & States -->
+    <string name="common_back">Back</string>
+    <string name="common_search">Search</string>
+    <string name="common_clear_search">Clear search</string>
+    <string name="common_view_more">View more</string>
+    <string name="common_view_less">View less</string>
+    <string name="common_release_date_prefix">Release date:</string>
+    <string name="common_genres_prefix">Genres:</string>
+    <string name="common_show_more_like_this">Show more like this</string>
+    <string name="common_could_not_load_more_games">Couldn\'t load more games</string>
+    <string name="common_cd_retry_loading_games">Retry loading more games</string>
+    <string name="empty_games_title">No games found</string>
+    <string name="empty_games_description">There are no games to display at the moment.</string>
+    <string name="error_something_went_wrong">Oops! Something went wrong.</string>
+    <string name="error_could_not_load_games">We couldn't load the games right now.</string>
+    <string name="action_try_again">Try Again</string>
+</resources>

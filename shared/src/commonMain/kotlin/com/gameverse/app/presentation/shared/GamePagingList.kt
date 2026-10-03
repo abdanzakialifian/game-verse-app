@@ -35,18 +35,26 @@ import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.common_cd_retry_loading_games
+import gameverse.shared.generated.resources.common_could_not_load_more_games
+import gameverse.shared.generated.resources.games_loading_msg_1
+import gameverse.shared.generated.resources.games_loading_msg_2
+import gameverse.shared.generated.resources.games_loading_msg_3
+import gameverse.shared.generated.resources.games_loading_msg_4
+import gameverse.shared.generated.resources.games_loading_msg_5
 import gameverse.shared.generated.resources.ic_retry
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.milliseconds
 
 private val GAME_LOADING_MESSAGES = listOf(
-    "Loading more games...",
-    "Finding more games...",
-    "Looking for hidden gems...",
-    "Exploring new worlds...",
-    "Preparing the next adventure..."
+    Res.string.games_loading_msg_1,
+    Res.string.games_loading_msg_2,
+    Res.string.games_loading_msg_3,
+    Res.string.games_loading_msg_4,
+    Res.string.games_loading_msg_5,
 )
 
 @Composable
@@ -93,12 +101,12 @@ fun GamePagingList(
                 item {
                     when (gamesPaging.loadState.append) {
                         is LoadState.Loading -> {
-                            var loadingText by remember { mutableStateOf(GAME_LOADING_MESSAGES.random()) }
+                            var loadingTextRes by remember { mutableStateOf(GAME_LOADING_MESSAGES.random()) }
 
                             LaunchedEffect(Unit) {
                                 while (true) {
                                     delay(1000L.milliseconds)
-                                    loadingText = GAME_LOADING_MESSAGES.random()
+                                    loadingTextRes = GAME_LOADING_MESSAGES.random()
                                 }
                             }
 
@@ -109,7 +117,7 @@ fun GamePagingList(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = loadingText,
+                                    text = stringResource(loadingTextRes),
                                     style = GVTypography.labelLarge,
                                 )
                             }
@@ -126,14 +134,14 @@ fun GamePagingList(
                                     Icon(
                                         painter = painterResource(Res.drawable.ic_retry),
                                         tint = GVColor.onPrimary,
-                                        contentDescription = "Retry loading more games",
+                                        contentDescription = stringResource(Res.string.common_cd_retry_loading_games),
                                     )
                                 }
 
                                 Spacer(modifier = Modifier.height(4.dp))
 
                                 Text(
-                                    text = "Couldn't load more games",
+                                    text = stringResource(Res.string.common_could_not_load_more_games),
                                     style = GVTypography.labelLarge,
                                 )
                             }

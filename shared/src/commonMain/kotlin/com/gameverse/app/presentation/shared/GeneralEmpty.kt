@@ -17,14 +17,17 @@ import androidx.compose.ui.unit.dp
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.empty_games_description
+import gameverse.shared.generated.resources.empty_games_title
 import gameverse.shared.generated.resources.img_empty_illustration
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GeneralEmpty(
     modifier: Modifier = Modifier,
-    title: String = "No games found",
-    description: String = "There are no games to display at the moment.",
+    title: String = stringResource(Res.string.empty_games_title),
+    description: String = stringResource(Res.string.empty_games_description),
 ) {
     Column(
         modifier = modifier.fillMaxSize(),

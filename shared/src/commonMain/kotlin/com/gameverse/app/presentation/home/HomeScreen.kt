@@ -33,8 +33,14 @@ import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.greeting_afternoon
+import gameverse.shared.generated.resources.greeting_evening
+import gameverse.shared.generated.resources.greeting_morning
+import gameverse.shared.generated.resources.greeting_night
+import gameverse.shared.generated.resources.home_view_all_games
 import gameverse.shared.generated.resources.ic_profile
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -91,10 +97,10 @@ private fun HomeContent(
             ) {
                 Text(
                     text = when (Utils.getDayPeriod()) {
-                        DayPeriod.MORNING -> "Good morning,"
-                        DayPeriod.AFTERNOON -> "Good afternoon,"
-                        DayPeriod.EVENING -> "Good evening,"
-                        DayPeriod.NIGHT -> "Good night,"
+                        DayPeriod.MORNING -> stringResource(Res.string.greeting_morning)
+                        DayPeriod.AFTERNOON -> stringResource(Res.string.greeting_afternoon)
+                        DayPeriod.EVENING -> stringResource(Res.string.greeting_evening)
+                        DayPeriod.NIGHT -> stringResource(Res.string.greeting_night)
                     },
                     style = GVTypography.titleSmall
                 )
@@ -160,7 +166,7 @@ private fun HomeContent(
                             }
                         ) {
                             Text(
-                                text = "View all 20+ games",
+                                text = stringResource(Res.string.home_view_all_games),
                                 style = GVTypography.labelSmall
                             )
                         }

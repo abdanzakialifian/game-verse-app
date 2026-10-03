@@ -76,11 +76,25 @@ import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.common_back
+import gameverse.shared.generated.resources.detail_cd_add_favorite
+import gameverse.shared.generated.resources.detail_cd_remove_favorite
+import gameverse.shared.generated.resources.detail_cd_retry_media
+import gameverse.shared.generated.resources.detail_developers_label
+import gameverse.shared.generated.resources.detail_genres_label
+import gameverse.shared.generated.resources.detail_last_modified_label
+import gameverse.shared.generated.resources.detail_platforms_label
+import gameverse.shared.generated.resources.detail_publishers_label
+import gameverse.shared.generated.resources.detail_released_date_label
+import gameverse.shared.generated.resources.detail_reviews_count
+import gameverse.shared.generated.resources.detail_show_less
+import gameverse.shared.generated.resources.detail_show_more
 import gameverse.shared.generated.resources.ic_back
 import gameverse.shared.generated.resources.ic_favorite
 import gameverse.shared.generated.resources.ic_retry
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -234,7 +248,7 @@ private fun DetailPlaceholder(
                     Icon(
                         painter = painterResource(Res.drawable.ic_back),
                         tint = GVColor.onPrimary,
-                        contentDescription = "Back",
+                        contentDescription = stringResource(Res.string.common_back),
                     )
                 }
             }
@@ -377,7 +391,7 @@ private fun DetailHeaderInformation(
                 Icon(
                     painter = painterResource(Res.drawable.ic_back),
                     tint = GVColor.onPrimary,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(Res.string.common_back),
                 )
             }
         }
@@ -403,7 +417,10 @@ private fun DetailRatingWithFavorite(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "${detailData.reviewsCount.toFormattedNumber()} Reviews",
+                text = stringResource(
+                    Res.string.detail_reviews_count,
+                    detailData.reviewsCount.toFormattedNumber()
+                ),
                 style = GVTypography.bodySmall,
                 color = GVColor.onSurfaceVariant
             )
@@ -420,7 +437,9 @@ private fun DetailRatingWithFavorite(
                 modifier = Modifier.size(32.dp),
                 painter = painterResource(Res.drawable.ic_favorite),
                 tint = if (isFavorite) Color.Red else GVColor.onBackground,
-                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites"
+                contentDescription = stringResource(
+                    if (isFavorite) Res.string.detail_cd_remove_favorite else Res.string.detail_cd_add_favorite
+                )
             )
         }
     }
@@ -455,7 +474,9 @@ private fun DetailAboutInformation(
                 modifier = Modifier.clickable {
                     onTextExpandClicked()
                 },
-                text = if (uiState.isDescriptionExpanded) "Show less" else "Show more",
+                text = stringResource(
+                    if (uiState.isDescriptionExpanded) Res.string.detail_show_less else Res.string.detail_show_more
+                ),
                 style = GVTypography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = TextDecoration.Underline,
@@ -472,7 +493,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
         ) {
             Column(modifier = Modifier.weight(1F)) {
                 Text(
-                    text = "Platforms",
+                    text = stringResource(Res.string.detail_platforms_label),
                     style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = GVColor.outline
                 )
@@ -488,7 +509,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
 
             Column(modifier = Modifier.weight(1F)) {
                 Text(
-                    text = "Genres",
+                    text = stringResource(Res.string.detail_genres_label),
                     style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = GVColor.outline
                 )
@@ -510,7 +531,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
         ) {
             Column(modifier = Modifier.weight(1F)) {
                 Text(
-                    text = "Released Date",
+                    text = stringResource(Res.string.detail_released_date_label),
                     style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = GVColor.outline
                 )
@@ -526,7 +547,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
 
             Column(modifier = Modifier.weight(1F)) {
                 Text(
-                    text = "Last Modified",
+                    text = stringResource(Res.string.detail_last_modified_label),
                     style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = GVColor.outline
                 )
@@ -548,7 +569,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
         ) {
             Column(modifier = Modifier.weight(1F)) {
                 Text(
-                    text = "Publishers",
+                    text = stringResource(Res.string.detail_publishers_label),
                     style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = GVColor.outline
                 )
@@ -564,7 +585,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
 
             Column(modifier = Modifier.weight(1F)) {
                 Text(
-                    text = "Developers",
+                    text = stringResource(Res.string.detail_developers_label),
                     style = GVTypography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                     color = GVColor.outline
                 )
@@ -713,7 +734,7 @@ private fun MediaErrors(onRetry: () -> Unit) {
                 Icon(
                     modifier = Modifier.size(36.dp),
                     painter = painterResource(Res.drawable.ic_retry),
-                    contentDescription = "Retry loading media",
+                    contentDescription = stringResource(Res.string.detail_cd_retry_media),
                     tint = GVColor.onSurfaceVariant
                 )
             }

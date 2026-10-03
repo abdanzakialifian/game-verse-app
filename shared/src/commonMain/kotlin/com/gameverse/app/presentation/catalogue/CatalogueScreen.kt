@@ -50,19 +50,28 @@ import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.catalogue_cd_retry_loading_genres
+import gameverse.shared.generated.resources.catalogue_could_not_load_more
+import gameverse.shared.generated.resources.catalogue_loading_more_genres_1
+import gameverse.shared.generated.resources.catalogue_loading_more_genres_2
+import gameverse.shared.generated.resources.catalogue_loading_more_genres_3
+import gameverse.shared.generated.resources.catalogue_loading_more_genres_4
+import gameverse.shared.generated.resources.catalogue_loading_more_genres_5
+import gameverse.shared.generated.resources.catalogue_popular_items
 import gameverse.shared.generated.resources.ic_retry
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration.Companion.milliseconds
 
 private val GENRE_LOADING_MESSAGES = listOf(
-    "Loading more genres...",
-    "Discovering new genres...",
-    "Finding your next favorite genre...",
-    "Exploring gaming categories...",
-    "Preparing more genres for you..."
+    Res.string.catalogue_loading_more_genres_1,
+    Res.string.catalogue_loading_more_genres_2,
+    Res.string.catalogue_loading_more_genres_3,
+    Res.string.catalogue_loading_more_genres_4,
+    Res.string.catalogue_loading_more_genres_5,
 )
 
 @Composable
@@ -172,7 +181,7 @@ private fun CatalogueContent(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = "Popular Items",
+                                        text = stringResource(Res.string.catalogue_popular_items),
                                         style = GVTypography.labelLarge.copy(fontWeight = FontWeight.Bold)
                                     )
 
@@ -222,12 +231,12 @@ private fun CatalogueContent(
             item {
                 when (genresPaging.loadState.append) {
                     is LoadState.Loading -> {
-                        var loadingText by remember { mutableStateOf(GENRE_LOADING_MESSAGES.random()) }
+                        var loadingTextRes by remember { mutableStateOf(GENRE_LOADING_MESSAGES.random()) }
 
                         LaunchedEffect(Unit) {
                             while (true) {
                                 delay(1000L.milliseconds)
-                                loadingText = GENRE_LOADING_MESSAGES.random()
+                                loadingTextRes = GENRE_LOADING_MESSAGES.random()
                             }
                         }
 
@@ -238,7 +247,7 @@ private fun CatalogueContent(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = loadingText,
+                                text = stringResource(loadingTextRes),
                                 style = GVTypography.labelLarge,
                             )
                         }
@@ -255,14 +264,14 @@ private fun CatalogueContent(
                                 Icon(
                                     painter = painterResource(Res.drawable.ic_retry),
                                     tint = GVColor.onPrimary,
-                                    contentDescription = "Retry loading genres",
+                                    contentDescription = stringResource(Res.string.catalogue_cd_retry_loading_genres),
                                 )
                             }
 
                             Spacer(modifier = Modifier.height(4.dp))
 
                             Text(
-                                text = "Couldn't load more genres",
+                                text = stringResource(Res.string.catalogue_could_not_load_more),
                                 style = GVTypography.labelLarge,
                             )
                         }

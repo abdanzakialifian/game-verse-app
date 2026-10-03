@@ -34,9 +34,12 @@ import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.common_back
+import gameverse.shared.generated.resources.games_series_title
 import gameverse.shared.generated.resources.ic_back
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -92,7 +95,7 @@ private fun GameSeriesContent(
                     Icon(
                         painter = painterResource(Res.drawable.ic_back),
                         tint = GVColor.onPrimary,
-                        contentDescription = "Back",
+                        contentDescription = stringResource(Res.string.common_back),
                     )
                 }
 
@@ -100,7 +103,7 @@ private fun GameSeriesContent(
                     modifier = Modifier
                         .weight(1F)
                         .padding(horizontal = 8.dp),
-                    text = "Game Series",
+                    text = stringResource(Res.string.games_series_title),
                     style = GVTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center
                 )

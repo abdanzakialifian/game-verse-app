@@ -44,6 +44,7 @@ import com.gameverse.app.theme.GVTypography
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MainApp() {
@@ -197,12 +198,12 @@ private fun MainBottomBar(
                     icon = {
                         Icon(
                             painter = painterResource(destination.icon),
-                            contentDescription = destination.contentDescription,
+                            contentDescription = stringResource(destination.contentDescription),
                         )
                     },
                     label = {
                         Text(
-                            text = destination.label,
+                            text = stringResource(destination.label),
                             style = GVTypography.labelSmall,
                         )
                     },

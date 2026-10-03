@@ -1,0 +1,65 @@
+<resources>
+    <!-- Navigation -->
+    <string name="nav_home">Beranda</string>
+    <string name="nav_catalogue">Katalog</string>
+    <string name="nav_favorite">Favorit</string>
+    <string name="nav_profile">Profil</string>
+
+    <!-- Home -->
+    <string name="greeting_morning">Selamat pagi,</string>
+    <string name="greeting_afternoon">Selamat siang,</string>
+    <string name="greeting_evening">Selamat sore,</string>
+    <string name="greeting_night">Selamat malam,</string>
+    <string name="home_view_all_games">Lihat semua 20+ game</string>
+
+    <!-- Detail -->
+    <string name="detail_reviews_count">%1$s Ulasan</string>
+    <string name="detail_cd_add_favorite">Tambah ke favorit</string>
+    <string name="detail_cd_remove_favorite">Hapus dari favorit</string>
+    <string name="detail_show_more">Selengkapnya</string>
+    <string name="detail_show_less">Lebih sedikit</string>
+    <string name="detail_platforms_label">Platform</string>
+    <string name="detail_genres_label">Genre</string>
+    <string name="detail_released_date_label">Tanggal Rilis</string>
+    <string name="detail_last_modified_label">Terakhir Diperbarui</string>
+    <string name="detail_publishers_label">Penerbit</string>
+    <string name="detail_developers_label">Pengembang</string>
+    <string name="detail_cd_retry_media">Coba muat ulang media</string>
+
+    <!-- Catalogue -->
+    <string name="catalogue_popular_items">Item Populer</string>
+    <string name="catalogue_could_not_load_more">Gagal memuat genre lainnya</string>
+    <string name="catalogue_cd_retry_loading_genres">Coba muat ulang genre</string>
+    <string name="catalogue_loading_more_genres_1">Memuat genre lainnya...</string>
+    <string name="catalogue_loading_more_genres_2">Menemukan genre baru...</string>
+    <string name="catalogue_loading_more_genres_3">Mencari genre favorit Anda berikutnya...</string>
+    <string name="catalogue_loading_more_genres_4">Menjelajahi kategori game...</string>
+    <string name="catalogue_loading_more_genres_5">Menyiapkan lebih banyak genre untuk Anda...</string>
+
+    <!-- Games -->
+    <string name="games_all_games_title">Semua Game</string>
+    <string name="games_series_title">Seri Game</string>
+    <string name="games_search_hint">Cari game....</string>
+    <string name="games_loading_msg_1">Memuat game lainnya...</string>
+    <string name="games_loading_msg_2">Mencari game lainnya...</string>
+    <string name="games_loading_msg_3">Mencari game tersembunyi...</string>
+    <string name="games_loading_msg_4">Menjelajahi dunia baru...</string>
+    <string name="games_loading_msg_5">Menyiapkan petualangan berikutnya...</string>
+
+    <!-- Common & States -->
+    <string name="common_back">Kembali</string>
+    <string name="common_search">Cari</string>
+    <string name="common_clear_search">Hapus pencarian</string>
+    <string name="common_view_more">Lihat lebih banyak</string>
+    <string name="common_view_less">Lebih sedikit</string>
+    <string name="common_release_date_prefix">Tanggal rilis:</string>
+    <string name="common_genres_prefix">Genre:</string>
+    <string name="common_show_more_like_this">Lihat lebih banyak yang serupa</string>
+    <string name="common_could_not_load_more_games">Gagal memuat game lainnya</string>
+    <string name="common_cd_retry_loading_games">Coba muat ulang game</string>
+    <string name="empty_games_title">Tidak ada game ditemukan</string>
+    <string name="empty_games_description">Tidak ada game yang dapat ditampilkan saat ini.</string>
+    <string name="error_something_went_wrong">Ups! Terjadi kesalahan.</string>
+    <string name="error_could_not_load_games">Gagal memuat game saat ini.</string>
+    <string name="action_try_again">Coba Lagi</string>
+</resources>

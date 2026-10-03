@@ -36,6 +36,13 @@ import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
+import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.common_genres_prefix
+import gameverse.shared.generated.resources.common_release_date_prefix
+import gameverse.shared.generated.resources.common_show_more_like_this
+import gameverse.shared.generated.resources.common_view_less
+import gameverse.shared.generated.resources.common_view_more
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GameListItem(
@@ -100,7 +107,9 @@ fun GameListItem(
                     .clickable {
                         onExpand(game.id)
                     },
-                text = if (game.id in expandedIds) "View less" else "View more",
+                text = stringResource(
+                    if (game.id in expandedIds) Res.string.common_view_less else Res.string.common_view_more
+                ),
                 style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
             )
 
@@ -131,7 +140,7 @@ private fun GameMetadata(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Release date:",
+                    text = stringResource(Res.string.common_release_date_prefix),
                     style = GVTypography.labelSmall
                 )
 
@@ -150,7 +159,7 @@ private fun GameMetadata(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Genres:",
+                    text = stringResource(Res.string.common_genres_prefix),
                     style = GVTypography.labelSmall
                 )
 
@@ -172,7 +181,7 @@ private fun GameMetadata(
                     onClick = onButtonClicked
                 ) {
                     Text(
-                        text = "Show more like this",
+                        text = stringResource(Res.string.common_show_more_like_this),
                         style = GVTypography.labelSmall
                     )
                 }

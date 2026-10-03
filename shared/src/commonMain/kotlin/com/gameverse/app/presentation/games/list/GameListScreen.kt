@@ -44,10 +44,15 @@ import com.gameverse.app.theme.GVColor
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.common_back
+import gameverse.shared.generated.resources.common_search
+import gameverse.shared.generated.resources.games_all_games_title
+import gameverse.shared.generated.resources.games_search_hint
 import gameverse.shared.generated.resources.ic_back
 import gameverse.shared.generated.resources.ic_search
 import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -128,7 +133,7 @@ private fun GameListContent(
                     Icon(
                         painter = painterResource(Res.drawable.ic_back),
                         tint = GVColor.onPrimary,
-                        contentDescription = "Back",
+                        contentDescription = stringResource(Res.string.common_back),
                     )
                 }
 
@@ -136,7 +141,7 @@ private fun GameListContent(
                     modifier = Modifier
                         .weight(1F)
                         .padding(horizontal = 8.dp),
-                    text = "All Games",
+                    text = stringResource(Res.string.games_all_games_title),
                     style = GVTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     textAlign = TextAlign.Center
                 )
@@ -153,7 +158,7 @@ private fun GameListContent(
                 ) {
                     GVSearch(
                         modifier = Modifier.focusRequester(focusRequester),
-                        hint = "Search games....",
+                        hint = stringResource(Res.string.games_search_hint),
                         value = uiState.query,
                         onClear = {
                             onIntent(GameListReducer.Intent.Search(""))
@@ -172,7 +177,7 @@ private fun GameListContent(
                     Icon(
                         painter = painterResource(Res.drawable.ic_search),
                         tint = GVColor.onPrimary,
-                        contentDescription = "Search",
+                        contentDescription = stringResource(Res.string.common_search),
                     )
                 }
             }

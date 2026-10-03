@@ -26,9 +26,11 @@ import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.common_clear_search
 import gameverse.shared.generated.resources.ic_close
 import gameverse.shared.generated.resources.ic_search
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GVSearch(
@@ -86,7 +88,7 @@ fun GVSearch(
                             modifier = Modifier.size(18.dp),
                             painter = painterResource(Res.drawable.ic_close),
                             tint = GVColor.onSurfaceVariant,
-                            contentDescription = "Clear search",
+                            contentDescription = stringResource(Res.string.common_clear_search),
                         )
                     }
                 }

@@ -21,8 +21,12 @@ import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.action_try_again
+import gameverse.shared.generated.resources.error_could_not_load_games
+import gameverse.shared.generated.resources.error_something_went_wrong
 import gameverse.shared.generated.resources.img_error_illustration
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GeneralError(
@@ -41,14 +45,14 @@ fun GeneralError(
         )
 
         Text(
-            text = "Oops! Something went wrong.",
+            text = stringResource(Res.string.error_something_went_wrong),
             style = GVTypography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
         )
 
         Spacer(modifier = Modifier.height(6.dp))
 
         Text(
-            text = "We couldn't load the games right now.",
+            text = stringResource(Res.string.error_could_not_load_games),
             style = GVTypography.labelMedium
         )
 
@@ -60,7 +64,7 @@ fun GeneralError(
             onClick = onButtonClicked
         ) {
             Text(
-                text = "Try Again",
+                text = stringResource(Res.string.action_try_again),
                 style = GVTypography.labelMedium
             )
         }
