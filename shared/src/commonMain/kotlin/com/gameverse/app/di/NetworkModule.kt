@@ -8,5 +8,5 @@ import org.koin.core.annotation.Singleton
 @Module
 class NetworkModule {
     @Singleton
-    fun providesHttpClientFactory(): HttpClient = HttpClientFactory().create()
+    fun provideHttpClient(): HttpClient = HttpClientFactory().create()
 }

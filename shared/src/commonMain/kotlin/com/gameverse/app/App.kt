@@ -13,6 +13,7 @@ import org.koin.plugin.module.dsl.koinConfiguration
 fun App(database: AppDatabase) {
     KoinApplication(
         configuration = koinConfiguration<AppModule> {
+            printLogger()
             modules(
                 module {
                     single<AppDatabase> { database }
