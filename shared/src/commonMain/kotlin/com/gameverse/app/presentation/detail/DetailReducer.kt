@@ -15,6 +15,7 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
             val isFavorite: Boolean,
             val detailModel: DetailModel
         ) : Intent
+        data object NavigateBack : Intent
     }
 
     @Immutable
@@ -32,7 +33,9 @@ class DetailReducer : Reducer<DetailReducer.State, DetailReducer.Event> {
     }
 
     @Immutable
-    sealed interface Effect : Reducer.ViewEffect
+    sealed interface Effect : Reducer.ViewEffect {
+        data object GoBack : Effect
+    }
 
     @Immutable
     data class State(

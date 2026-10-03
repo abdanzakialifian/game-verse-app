@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +41,14 @@ import kotlinx.coroutines.flow.flowOf
 import org.jetbrains.compose.resources.painterResource
 import kotlin.time.Duration.Companion.milliseconds
 
+private val GAME_LOADING_MESSAGES = listOf(
+    "Loading more games...",
+    "Finding more games...",
+    "Looking for hidden gems...",
+    "Exploring new worlds...",
+    "Preparing the next adventure..."
+)
+
 @Composable
 fun GamePagingList(
     expandedIds: Set<Int>,
@@ -50,15 +59,17 @@ fun GamePagingList(
     onItemClicked: (id: Int) -> Unit
 ) {
     when (gamesPaging.loadState.refresh) {
-        is LoadState.Loading -> LoadingPlaceholders()
+        is LoadState.Loading -> LoadingPlaceholders(modifier = modifier)
         is LoadState.Error -> GeneralError(
+            modifier = modifier,
             onButtonClicked = {
                 gamesPaging.retry()
             }
         )
+
         else -> {
             if (gamesPaging.itemCount == 0) {
-                GeneralEmpty()
+                GeneralEmpty(modifier = modifier)
                 return
             }
 
@@ -82,25 +93,17 @@ fun GamePagingList(
                 item {
                     when (gamesPaging.loadState.append) {
                         is LoadState.Loading -> {
-                            val loadingMessages = listOf(
-                                "Loading more games...",
-                                "Finding more games...",
-                                "Looking for hidden gems...",
-                                "Exploring new worlds...",
-                                "Preparing the next adventure..."
-                            )
-
-                            var loadingText by remember { mutableStateOf(loadingMessages.random()) }
+                            var loadingText by remember { mutableStateOf(GAME_LOADING_MESSAGES.random()) }
 
                             LaunchedEffect(Unit) {
                                 while (true) {
                                     delay(1000L.milliseconds)
-                                    loadingText = loadingMessages.random()
+                                    loadingText = GAME_LOADING_MESSAGES.random()
                                 }
                             }
 
                             Box(
-                                modifier = modifier
+                                modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 12.dp),
                                 contentAlignment = Alignment.Center
@@ -116,21 +119,18 @@ fun GamePagingList(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 12.dp)
-                                    .clickable(
-                                        indication = null,
-                                        interactionSource = remember { MutableInteractionSource() },
-                                        onClick = { gamesPaging.retry() }
-                                    ),
+                                    .padding(vertical = 12.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Icon(
-                                    painter = painterResource(Res.drawable.ic_retry),
-                                    tint = GVColor.onPrimary,
-                                    contentDescription = null,
-                                )
+                                IconButton(onClick = { gamesPaging.retry() }) {
+                                    Icon(
+                                        painter = painterResource(Res.drawable.ic_retry),
+                                        tint = GVColor.onPrimary,
+                                        contentDescription = "Retry loading more games",
+                                    )
+                                }
 
-                                Spacer(modifier = Modifier.height(6.dp))
+                                Spacer(modifier = Modifier.height(4.dp))
 
                                 Text(
                                     text = "Couldn't load more games",

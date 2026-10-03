@@ -38,6 +38,7 @@ class DetailViewModel(
                     saveFavorite(intent.detailModel)
                 }
             }
+            is DetailReducer.Intent.NavigateBack -> sendEffect(DetailReducer.Effect.GoBack)
         }
     }
 

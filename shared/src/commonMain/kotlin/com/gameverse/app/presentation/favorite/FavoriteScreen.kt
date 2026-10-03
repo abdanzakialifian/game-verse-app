@@ -65,7 +65,7 @@ private fun FavoriteContent(
     }
 
     LazyColumn(
-        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+        contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(uiState.favorites, key = { it.id }) { result ->

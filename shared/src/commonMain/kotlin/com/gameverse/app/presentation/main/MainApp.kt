@@ -50,16 +50,18 @@ fun MainApp() {
     val startDestination = NavBarDestination.Home
 
     val backStack = rememberNavBackStack(
-        SavedStateConfiguration {
-            serializersModule = SerializersModule {
-                polymorphic(NavKey::class) {
-                    subclass(MainRoutes.Home::class, MainRoutes.Home.serializer())
-                    subclass(MainRoutes.Catalogue::class, MainRoutes.Catalogue.serializer())
-                    subclass(MainRoutes.Favorite::class, MainRoutes.Favorite.serializer())
-                    subclass(MainRoutes.Profile::class, MainRoutes.Profile.serializer())
-                    subclass(MainRoutes.GameList::class, MainRoutes.GameList.serializer())
-                    subclass(MainRoutes.GameSeries::class, MainRoutes.GameSeries.serializer())
-                    subclass(MainRoutes.Detail::class, MainRoutes.Detail.serializer())
+        remember {
+            SavedStateConfiguration {
+                serializersModule = SerializersModule {
+                    polymorphic(NavKey::class) {
+                        subclass(MainRoutes.Home::class, MainRoutes.Home.serializer())
+                        subclass(MainRoutes.Catalogue::class, MainRoutes.Catalogue.serializer())
+                        subclass(MainRoutes.Favorite::class, MainRoutes.Favorite.serializer())
+                        subclass(MainRoutes.Profile::class, MainRoutes.Profile.serializer())
+                        subclass(MainRoutes.GameList::class, MainRoutes.GameList.serializer())
+                        subclass(MainRoutes.GameSeries::class, MainRoutes.GameSeries.serializer())
+                        subclass(MainRoutes.Detail::class, MainRoutes.Detail.serializer())
+                    }
                 }
             }
         },
@@ -70,12 +72,16 @@ fun MainApp() {
 
     Scaffold(
         bottomBar = {
-            val isShowBottomBar = currentRoute in NavBarDestination.entries.map { it.route }
+            val isShowBottomBar = remember(currentRoute) {
+                NavBarDestination.entries.any { it.route == currentRoute }
+            }
             MainBottomBar(
                 isVisible = isShowBottomBar,
                 selectedDestination = currentRoute,
                 onBottomBarClicked = { route ->
-                    backStack.add(route)
+                    if (currentRoute != route) {
+                        backStack.add(route)
+                    }
                 }
             )
         }
@@ -160,6 +166,9 @@ fun MainApp() {
                     entry<MainRoutes.Detail>(metadata = Utils.slideAnimation()) {
                         DetailScreen(
                             gameId = it.gameId,
+                            onGoBack = {
+                                backStack.removeLastOrNull()
+                            }
                         )
                     }
                 }
@@ -186,19 +195,16 @@ private fun MainBottomBar(
                 NavigationBarItem(
                     selected = selectedDestination == destination.route,
                     icon = {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                painter = painterResource(destination.icon),
-                                contentDescription = destination.contentDescription,
-                            )
-
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Text(
-                                text = destination.label,
-                                style = GVTypography.labelSmall,
-                            )
-                        }
+                        Icon(
+                            painter = painterResource(destination.icon),
+                            contentDescription = destination.contentDescription,
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = destination.label,
+                            style = GVTypography.labelSmall,
+                        )
                     },
                     onClick = {
                         onBottomBarClicked(destination.route)

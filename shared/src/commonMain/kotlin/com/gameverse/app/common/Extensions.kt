@@ -66,13 +66,15 @@ fun String.trimAfterDoubleNewline(): String? =
 @Composable
 fun Modifier.shimmer(
     cornerRadius: Dp = 0.dp,
-    shimmerColors: List<Color> = listOf(
+    shimmerColors: List<Color>? = null,
+): Modifier {
+    val colors = shimmerColors ?: listOf(
         GVColor.outline.copy(alpha = 0.8f),
         GVColor.onSurfaceVariant.copy(alpha = 0.3f),
         GVColor.outline.copy(alpha = 0.8f)
     )
-): Modifier {
-    val transition = rememberInfiniteTransition()
+
+    val transition = rememberInfiniteTransition(label = "ShimmerTransition")
 
     val progress by transition.animateFloat(
         initialValue = 0f,
@@ -84,6 +86,7 @@ fun Modifier.shimmer(
             ),
             repeatMode = RepeatMode.Restart
         ),
+        label = "ShimmerProgress"
     )
 
     return this.drawWithCache {
@@ -93,7 +96,7 @@ fun Modifier.shimmer(
         val endX = startX + size.width
 
         val brush = Brush.horizontalGradient(
-            colors = shimmerColors,
+            colors = colors,
             startX = startX,
             endX = endX
         )

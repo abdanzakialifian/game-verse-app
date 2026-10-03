@@ -1,9 +1,9 @@
 package com.gameverse.app
 
 import android.content.Context
-import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -15,7 +15,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 
 class AndroidPlatform : Platform {
-    override val name: String = "Android ${Build.VERSION.SDK_INT}"
+    override val type: PlatformType
+        get() = PlatformType.Android
 }
 
 actual fun getPlatform(): Platform = AndroidPlatform()
@@ -56,7 +57,9 @@ fun getDatabaseBuilder(context: Context): RoomDatabase.Builder<AppDatabase> {
 @Composable
 fun MainView() {
     val context = LocalContext.current
-    val builder = getDatabaseBuilder(context)
-    val database = getRoomDatabase(builder)
+    val database = remember(context) {
+        val builder = getDatabaseBuilder(context)
+        getRoomDatabase(builder)
+    }
     App(database)
 }

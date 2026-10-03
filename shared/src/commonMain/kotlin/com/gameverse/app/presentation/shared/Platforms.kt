@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,11 +19,12 @@ fun Platforms(
     platforms: List<Int>,
     modifier: Modifier = Modifier,
 ) {
+    val platformTypeIcons = remember(platforms) { PlatformType.iconFromIds(platforms) }
+
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        val platformTypeIcons = PlatformType.iconFromIds(platforms)
         platformTypeIcons.forEach { iconDrawable ->
             Icon(
                 modifier = Modifier.size(16.dp),

@@ -1,8 +1,6 @@
 package com.gameverse.app.presentation.catalogue
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +17,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -58,6 +57,14 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Duration.Companion.milliseconds
 
+private val GENRE_LOADING_MESSAGES = listOf(
+    "Loading more genres...",
+    "Discovering new genres...",
+    "Finding your next favorite genre...",
+    "Exploring gaming categories...",
+    "Preparing more genres for you..."
+)
+
 @Composable
 fun CatalogueScreen(
     paddingValues: PaddingValues,
@@ -89,6 +96,7 @@ private fun CatalogueContent(
 ) {
     when (genresPaging.loadState.refresh) {
         is LoadState.Loading -> GenresPlaceholder(paddingValues)
+
         is LoadState.Error -> GeneralError(
             modifier = Modifier.padding(paddingValues),
             onButtonClicked = {
@@ -97,7 +105,7 @@ private fun CatalogueContent(
         )
 
         else -> LazyColumn(
-            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+            contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(genresPaging.itemCount, key = genresPaging.itemKey { it.id }) { index ->
@@ -106,22 +114,19 @@ private fun CatalogueContent(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp)
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() },
-                            onClick = {
-                                onIntent(CatalogueReducer.Intent.SelectCategory(result.id.toString()))
-                            }
-                        ),
+                        .height(300.dp),
                     shape = GVShapes.medium,
-                    colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
+                    colors = CardDefaults.cardColors(contentColor = GVColor.secondary),
+                    onClick = {
+                        onIntent(CatalogueReducer.Intent.SelectCategory(result.id.toString()))
+                    }
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         AsyncImage(
                             modifier = Modifier.fillMaxSize(),
                             model = result.imageBackground,
                             placeholder = ColorPainter(GVColor.outline),
+                            error = ColorPainter(GVColor.outline),
                             contentScale = ContentScale.Crop,
                             contentDescription = null,
                             filterQuality = FilterQuality.Medium,
@@ -217,20 +222,12 @@ private fun CatalogueContent(
             item {
                 when (genresPaging.loadState.append) {
                     is LoadState.Loading -> {
-                        val loadingMessages = listOf(
-                            "Loading more genres...",
-                            "Discovering new genres...",
-                            "Finding your next favorite genre...",
-                            "Exploring gaming categories...",
-                            "Preparing more genres for you..."
-                        )
-
-                        var loadingText by remember { mutableStateOf(loadingMessages.random()) }
+                        var loadingText by remember { mutableStateOf(GENRE_LOADING_MESSAGES.random()) }
 
                         LaunchedEffect(Unit) {
                             while (true) {
                                 delay(1000L.milliseconds)
-                                loadingText = loadingMessages.random()
+                                loadingText = GENRE_LOADING_MESSAGES.random()
                             }
                         }
 
@@ -250,24 +247,22 @@ private fun CatalogueContent(
                     is LoadState.Error -> {
                         Column(
                             modifier = Modifier
-                                .padding(vertical = 12.dp)
-                                .clickable(
-                                    indication = null,
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    onClick = { genresPaging.retry() }
-                                ),
+                                .fillMaxWidth()
+                                .padding(vertical = 12.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(
-                                painter = painterResource(Res.drawable.ic_retry),
-                                tint = GVColor.onPrimary,
-                                contentDescription = null,
-                            )
+                            IconButton(onClick = { genresPaging.retry() }) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_retry),
+                                    tint = GVColor.onPrimary,
+                                    contentDescription = "Retry loading genres",
+                                )
+                            }
 
-                            Spacer(modifier = Modifier.height(6.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
 
                             Text(
-                                text = "Couldn't load more games",
+                                text = "Couldn't load more genres",
                                 style = GVTypography.labelLarge,
                             )
                         }
@@ -281,9 +276,13 @@ private fun CatalogueContent(
 }
 
 @Composable
-private fun GenresPlaceholder(paddingValues: PaddingValues) {
+private fun GenresPlaceholder(
+    paddingValues: PaddingValues,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(
-        modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding()),
+        modifier = modifier,
+        contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding()),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(10) {

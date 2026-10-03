@@ -5,7 +5,6 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -29,8 +29,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -57,6 +59,7 @@ import chaintech.videoplayer.host.MediaPlayerHost
 import chaintech.videoplayer.model.VideoPlayerConfig
 import chaintech.videoplayer.ui.video.VideoPlayerComposable
 import coil3.compose.AsyncImage
+import com.gameverse.app.PlatformType
 import com.gameverse.app.common.formatDate
 import com.gameverse.app.common.formatDateTime
 import com.gameverse.app.common.shimmer
@@ -65,6 +68,7 @@ import com.gameverse.app.common.trimAfterDoubleNewline
 import com.gameverse.app.component.GVRatingBadge
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.ScreenshotModel
+import com.gameverse.app.getPlatform
 import com.gameverse.app.presentation.shared.Platforms
 import com.gameverse.app.presentation.shared.GeneralError
 import com.gameverse.app.theme.GVColor
@@ -72,6 +76,7 @@ import com.gameverse.app.theme.GVShapes
 import com.gameverse.app.theme.GVTheme
 import com.gameverse.app.theme.GVTypography
 import gameverse.shared.generated.resources.Res
+import gameverse.shared.generated.resources.ic_back
 import gameverse.shared.generated.resources.ic_favorite
 import gameverse.shared.generated.resources.ic_retry
 import kotlinx.coroutines.flow.flowOf
@@ -83,10 +88,19 @@ import org.koin.core.parameter.parametersOf
 fun DetailScreen(
     gameId: String,
     viewModel: DetailViewModel = koinViewModel { parametersOf(gameId) },
+    onGoBack: () -> Unit,
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     val gamesScreenshotsPaging = viewModel.gamesScreenshotsPaging.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        viewModel.effects.collect { effect ->
+            when(effect) {
+                DetailReducer.Effect.GoBack -> onGoBack()
+            }
+        }
+    }
 
     DetailContent(
         uiState = uiState,
@@ -102,7 +116,11 @@ private fun DetailContent(
     onIntent: (DetailReducer.Intent) -> Unit,
 ) {
     if (uiState.isLoading) {
-        DetailPlaceholder()
+        DetailPlaceholder(
+            onGoBack = {
+                onIntent(DetailReducer.Intent.NavigateBack)
+            }
+        )
         return
     }
 
@@ -127,7 +145,12 @@ private fun DetailContent(
 
         val isMoviesError = uiState.moviesError != null
 
-        DetailHeaderInformation(uiState.detail)
+        DetailHeaderInformation(
+            detailData = uiState.detail,
+            onGoBack = {
+                onIntent(DetailReducer.Intent.NavigateBack)
+            }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -179,9 +202,12 @@ private fun DetailContent(
 }
 
 @Composable
-private fun DetailPlaceholder() {
+private fun DetailPlaceholder(
+    modifier: Modifier = Modifier,
+    onGoBack: () -> Unit
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .navigationBarsPadding()
@@ -191,8 +217,28 @@ private fun DetailPlaceholder() {
                 .fillMaxWidth()
                 .height(350.dp)
                 .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-                .shimmer()
-        )
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .shimmer()
+            )
+
+            if (getPlatform().type == PlatformType.IOS) {
+                IconButton(
+                    modifier = Modifier
+                        .statusBarsPadding()
+                        .align(Alignment.TopStart),
+                    onClick = onGoBack
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_back),
+                        tint = GVColor.onPrimary,
+                        contentDescription = "Back",
+                    )
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -280,7 +326,10 @@ private fun DetailPlaceholder() {
 }
 
 @Composable
-private fun DetailHeaderInformation(detailData: DetailModel) {
+private fun DetailHeaderInformation(
+    detailData: DetailModel,
+    onGoBack: () -> Unit = {}
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -291,6 +340,7 @@ private fun DetailHeaderInformation(detailData: DetailModel) {
             modifier = Modifier.fillMaxSize(),
             model = detailData.backgroundImage,
             placeholder = ColorPainter(GVColor.outline),
+            error = ColorPainter(GVColor.outline),
             contentScale = ContentScale.Crop,
             contentDescription = null,
             filterQuality = FilterQuality.Medium,
@@ -316,6 +366,21 @@ private fun DetailHeaderInformation(detailData: DetailModel) {
                 style = GVTypography.titleLarge.copy(fontWeight = FontWeight.Bold)
             )
         }
+
+        if (getPlatform().type == PlatformType.IOS) {
+            IconButton(
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .align(Alignment.TopStart),
+                onClick = onGoBack
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_back),
+                    tint = GVColor.onPrimary,
+                    contentDescription = "Back",
+                )
+            }
+        }
     }
 }
 
@@ -326,7 +391,8 @@ private fun DetailRatingWithFavorite(
     onFavoriteClicked: (detailModel: DetailModel, isFavorite: Boolean) -> Unit,
 ) {
     Row(
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
             modifier = Modifier.weight(1F),
@@ -345,22 +411,19 @@ private fun DetailRatingWithFavorite(
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        Icon(
-            modifier = Modifier
-                .size(36.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = {
-                        onFavoriteClicked(detailData, isFavorite)
-                    }
-                ),
-            painter = painterResource(Res.drawable.ic_favorite),
-            tint = if (isFavorite) Color.Red else GVColor.onBackground,
-            contentDescription = null
-        )
+        IconButton(
+            onClick = {
+                onFavoriteClicked(detailData, isFavorite)
+            }
+        ) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                painter = painterResource(Res.drawable.ic_favorite),
+                tint = if (isFavorite) Color.Red else GVColor.onBackground,
+                contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites"
+            )
+        }
     }
-
 }
 
 @Composable
@@ -389,11 +452,9 @@ private fun DetailAboutInformation(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                modifier = Modifier.clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onTextExpandClicked
-                ),
+                modifier = Modifier.clickable {
+                    onTextExpandClicked()
+                },
                 text = if (uiState.isDescriptionExpanded) "Show less" else "Show more",
                 style = GVTypography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                 overflow = TextOverflow.Ellipsis,
@@ -532,8 +593,10 @@ private fun MediaPager(
     val mediaPlayerHost = remember(videoUrl) { MediaPlayerHost(mediaUrl = videoUrl) }
 
     val mediaPagerState = rememberPagerState {
-        if (hasVideo) gamesScreenshotsPaging.itemCount + 1  else gamesScreenshotsPaging.itemCount
+        if (hasVideo) gamesScreenshotsPaging.itemCount + 1 else gamesScreenshotsPaging.itemCount
     }
+
+    val pageSize = rememberEightyPercentPageSize()
 
     HorizontalPager(
         modifier = Modifier.fillMaxWidth(),
@@ -541,12 +604,7 @@ private fun MediaPager(
         contentPadding = PaddingValues(horizontal = 8.dp),
         pageSpacing = 12.dp,
         beyondViewportPageCount = 1,
-        pageSize = object : PageSize {
-            override fun Density.calculateMainAxisPageSize(
-                availableSpace: Int,
-                pageSpacing: Int
-            ): Int = (availableSpace * 0.80f).toInt()
-        },
+        pageSize = pageSize,
         key = { index ->
             if (index == 0 && hasVideo) {
                 index
@@ -586,6 +644,7 @@ private fun MediaPager(
                     .clip(GVShapes.small),
                 model = result?.image,
                 placeholder = ColorPainter(GVColor.outline),
+                error = ColorPainter(GVColor.outline),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 filterQuality = FilterQuality.Medium,
@@ -595,8 +654,21 @@ private fun MediaPager(
 }
 
 @Composable
+private fun rememberEightyPercentPageSize(): PageSize {
+    return remember {
+        object : PageSize {
+            override fun Density.calculateMainAxisPageSize(
+                availableSpace: Int,
+                pageSpacing: Int
+            ): Int = (availableSpace * 0.80f).toInt()
+        }
+    }
+}
+
+@Composable
 private fun MediaPlaceholders() {
     val pagerState = rememberPagerState { 5 }
+    val pageSize = rememberEightyPercentPageSize()
 
     HorizontalPager(
         modifier = Modifier.fillMaxWidth(),
@@ -604,12 +676,7 @@ private fun MediaPlaceholders() {
         contentPadding = PaddingValues(horizontal = 8.dp),
         pageSpacing = 12.dp,
         beyondViewportPageCount = 1,
-        pageSize = object : PageSize {
-            override fun Density.calculateMainAxisPageSize(
-                availableSpace: Int,
-                pageSpacing: Int
-            ): Int = (availableSpace * 0.80f).toInt()
-        },
+        pageSize = pageSize,
     ) {
         Box(
             modifier = Modifier
@@ -624,6 +691,7 @@ private fun MediaPlaceholders() {
 @Composable
 private fun MediaErrors(onRetry: () -> Unit) {
     val pagerState = rememberPagerState { 5 }
+    val pageSize = rememberEightyPercentPageSize()
 
     HorizontalPager(
         modifier = Modifier.fillMaxWidth(),
@@ -631,32 +699,24 @@ private fun MediaErrors(onRetry: () -> Unit) {
         contentPadding = PaddingValues(horizontal = 8.dp),
         pageSpacing = 12.dp,
         beyondViewportPageCount = 1,
-        pageSize = object : PageSize {
-            override fun Density.calculateMainAxisPageSize(
-                availableSpace: Int,
-                pageSpacing: Int
-            ): Int = (availableSpace * 0.80f).toInt()
-        },
+        pageSize = pageSize,
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(16f / 9f)
                 .clip(GVShapes.small)
-                .background(GVColor.outline)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onRetry
-                ),
+                .background(GVColor.outline),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                modifier = Modifier.size(36.dp),
-                painter = painterResource(Res.drawable.ic_retry),
-                contentDescription = null,
-                tint = GVColor.onSurfaceVariant
-            )
+            IconButton(onClick = onRetry) {
+                Icon(
+                    modifier = Modifier.size(36.dp),
+                    painter = painterResource(Res.drawable.ic_retry),
+                    contentDescription = "Retry loading media",
+                    tint = GVColor.onSurfaceVariant
+                )
+            }
         }
     }
 }
@@ -704,7 +764,7 @@ private fun DetailContentPreview() {
                     reviewsCount = 1654,
                     description = "Rockstar Games went bigger, since their previous installment of the series. You get the complicated and realistic world-building from Liberty City of GTA4 in the setting of lively and diverse Los Santos, from an old fan favorite GTA San Andreas. 561 different vehicles (including every transport you can operate) and the amount is rising with every update. \\nSimultaneous storytelling from three unique perspectives: \\nFollow Michael, ex-criminal living his life of leisure away from the past, Franklin, a kid that seeks the better future, and Trevor, the exact past Michael is trying to run away from. \\nGTA Online will provide a lot of additional challenge even for the experienced players, coming fresh from the story mode. Now you will have other players around that can help you just as likely as ruin your mission. Every GTA mechanic up to date can be experienced by players through the unique customizable character, and community content paired with the leveling system tends to keep everyone busy and engaged.\\n\\nEspañol\\nRockstar Games se hizo más grande desde su entrega anterior de la serie. Obtienes la construcción del mundo complicada y realista de Liberty City de GTA4 en el escenario de Los Santos, un viejo favorito de los fans, GTA San Andreas. 561 vehículos diferentes (incluidos todos los transportes que puede operar) y la cantidad aumenta con cada actualización.\\nNarración simultánea desde tres perspectivas únicas:\\nSigue a Michael, ex-criminal que vive su vida de ocio lejos del pasado, Franklin, un niño que busca un futuro mejor, y Trevor, el pasado exacto del que Michael está tratando de huir.\\nGTA Online proporcionará muchos desafíos adicionales incluso para los jugadores experimentados, recién llegados del modo historia. Ahora tendrás otros jugadores cerca que pueden ayudarte con la misma probabilidad que arruinar tu misión. Los jugadores pueden experimentar todas las mecánicas de GTA actualizadas a través del personaje personalizable único, y el contenido de la comunidad combinado con el sistema de nivelación tiende a mantener a todos ocupados y comprometidos.",
                     genreNames = listOf("Action", "RPG", "Shooter"),
-                    )
+                )
             ),
             gamesScreenshotsPaging = gamesScreenshotsPaging,
             onIntent = {}

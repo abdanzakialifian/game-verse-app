@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -118,21 +117,20 @@ private fun GameListContent(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    modifier = Modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = {
-                            handleBackPressed(
-                                isSearchVisible = uiState.isSearchVisible,
-                                onIntent = onIntent,
-                            )
-                        }
-                    ),
-                    painter = painterResource(Res.drawable.ic_back),
-                    tint = GVColor.onPrimary,
-                    contentDescription = null,
-                )
+                IconButton(
+                    onClick = {
+                        handleBackPressed(
+                            isSearchVisible = uiState.isSearchVisible,
+                            onIntent = onIntent,
+                        )
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_back),
+                        tint = GVColor.onPrimary,
+                        contentDescription = "Back",
+                    )
+                }
 
                 Text(
                     modifier = Modifier
@@ -166,18 +164,17 @@ private fun GameListContent(
                     )
                 }
 
-                Icon(
-                    modifier = Modifier.clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = {
-                            onIntent(GameListReducer.Intent.ToggleSearch(true))
-                        }
-                    ),
-                    painter = painterResource(Res.drawable.ic_search),
-                    tint = GVColor.onPrimary,
-                    contentDescription = null,
-                )
+                IconButton(
+                    onClick = {
+                        onIntent(GameListReducer.Intent.ToggleSearch(true))
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_search),
+                        tint = GVColor.onPrimary,
+                        contentDescription = "Search",
+                    )
+                }
             }
         }
     ) { innerPadding ->

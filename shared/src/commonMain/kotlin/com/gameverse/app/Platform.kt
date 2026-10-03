@@ -3,7 +3,12 @@ package com.gameverse.app
 import io.ktor.client.HttpClient
 
 interface Platform {
-    val name: String
+    val type: PlatformType
+}
+
+enum class PlatformType {
+    Android,
+    IOS,
 }
 
 expect fun getPlatform(): Platform

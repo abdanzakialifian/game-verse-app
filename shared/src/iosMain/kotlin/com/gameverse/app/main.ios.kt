@@ -1,5 +1,6 @@
 package com.gameverse.app
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.window.ComposeUIViewController
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,10 +15,10 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSLog
 import platform.Foundation.NSUserDomainMask
-import platform.UIKit.UIDevice
 
 class IOSPlatform : Platform {
-    override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion
+    override val type: PlatformType
+        get() = PlatformType.IOS
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
@@ -67,7 +68,9 @@ private fun documentDirectory(): String {
 }
 
 fun MainViewController() = ComposeUIViewController {
-    val builder = getDatabaseBuilder()
-    val database = getRoomDatabase(builder)
+    val database = remember {
+        val builder = getDatabaseBuilder()
+        getRoomDatabase(builder)
+    }
     App(database)
 }

@@ -47,23 +47,19 @@ fun GameListItem(
     onItemClicked: (id: Int) -> Unit
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = {
-                    onItemClicked(game.id)
-                }
-            ),
+        modifier = modifier.fillMaxWidth(),
         shape = GVShapes.medium,
-        colors = CardDefaults.cardColors(contentColor = GVColor.secondary)
+        colors = CardDefaults.cardColors(contentColor = GVColor.secondary),
+        onClick = {
+            onItemClicked(game.id)
+        }
     ) {
         Column {
             AsyncImage(
                 modifier = Modifier.fillMaxWidth().height(200.dp),
                 model = game.backgroundImage,
                 placeholder = ColorPainter(GVColor.outline),
+                error = ColorPainter(GVColor.outline),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 filterQuality = FilterQuality.Medium,
@@ -101,13 +97,9 @@ fun GameListItem(
             Text(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = {
-                            onExpand(game.id)
-                        }
-                    ),
+                    .clickable {
+                        onExpand(game.id)
+                    },
                 text = if (game.id in expandedIds) "View less" else "View more",
                 style = GVTypography.labelMedium.copy(textDecoration = TextDecoration.Underline),
             )
