@@ -2,8 +2,8 @@ package com.gameverse.app.presentation.detail
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.domain.model.DetailModel
+import com.gameverse.app.domain.model.GameModel
 import com.gameverse.app.domain.repository.GVRepository
 import com.gameverse.app.mvi.BaseViewModel
 import kotlinx.coroutines.launch
@@ -82,7 +82,7 @@ class DetailViewModel(
 
     private fun saveFavorite(detailModel: DetailModel) {
         viewModelScope.launch {
-            val favorite = FavoriteEntity(
+            val gameModel = GameModel(
                 id = detailModel.id,
                 name = detailModel.name,
                 backgroundImage = detailModel.backgroundImage,
@@ -90,7 +90,7 @@ class DetailViewModel(
                 genreNames = detailModel.genreNames,
                 platformIds = detailModel.platformIds
             )
-            repository.saveFavorite(favorite)
+            repository.saveFavorite(gameModel)
         }
     }
 

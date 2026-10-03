@@ -6,12 +6,12 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.gameverse.app.data.api.GVService
 import com.gameverse.app.data.dao.GVFavoriteDao
-import com.gameverse.app.data.entity.FavoriteEntity
 import com.gameverse.app.data.mapper.toDomain
+import com.gameverse.app.data.mapper.toFavoriteEntity
 import com.gameverse.app.data.paging.GamesPagingSource
+import com.gameverse.app.data.paging.GenresPagingSource
 import com.gameverse.app.data.paging.ScreenshotsPagingSource
 import com.gameverse.app.data.paging.SeriesPagingSource
-import com.gameverse.app.data.paging.GenresPagingSource
 import com.gameverse.app.di.IoDispatcher
 import com.gameverse.app.domain.model.DetailModel
 import com.gameverse.app.domain.model.GameModel
@@ -119,8 +119,8 @@ class GVRepositoryImpl(
         }.orEmpty()
     }
 
-    override suspend fun saveFavorite(favoriteEntity: FavoriteEntity) {
-        favoriteDao.insert(favoriteEntity)
+    override suspend fun saveFavorite(gameModel: GameModel) {
+        favoriteDao.insert(gameModel.toFavoriteEntity())
     }
 
     override suspend fun deleteFavoriteById(id: Int) {

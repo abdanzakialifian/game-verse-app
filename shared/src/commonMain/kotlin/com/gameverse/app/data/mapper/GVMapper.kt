@@ -89,3 +89,12 @@ fun FavoriteEntity.toDomain(): GameModel = GameModel(
     genreNames = genreNames,
     platformIds = platformIds
 )
+
+fun GameModel.toFavoriteEntity(): FavoriteEntity = FavoriteEntity(
+    id = id,
+    name = name,
+    backgroundImage = backgroundImage,
+    released = released,
+    genreNames = genreNames,
+    platformIds = platformIds
+)
