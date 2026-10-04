@@ -501,7 +501,7 @@ private fun DetailMoreInformation(detailData: DetailModel) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = detailData.platformIds.joinToString(", "),
+                    text = detailData.platformNames.joinToString(", "),
                     style = GVTypography.labelSmall,
                     color = GVColor.outlineVariant
                 )
@@ -778,6 +778,7 @@ private fun DetailContentPreview() {
                     rating = 4.5,
                     publisherNames = listOf("Rockstar Games"),
                     platformIds = (1..10).toList(),
+                    platformNames = listOf("PC", "Playstation"),
                     ratingsCount = 9344,
                     released = "2013-09-17",
                     updated = "2026-07-03T12:09:55",

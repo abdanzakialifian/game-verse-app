@@ -7,6 +7,7 @@ data class DetailModel(
     val reviewsCount: Int,
     val publisherNames: List<String>,
     val platformIds: List<Int>,
+    val platformNames: List<String>,
     val ratingsCount: Int,
     val released: String,
     val updated: String,

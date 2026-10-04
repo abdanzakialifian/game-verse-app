@@ -64,6 +64,9 @@ fun GameDetailResponse.toDomain(): DetailModel = DetailModel(
     platformIds = parentPlatforms?.map {
         it.platform?.id ?: 0
     }.orEmpty(),
+    platformNames = parentPlatforms?.map {
+        it.platform?.name.orEmpty()
+    }.orEmpty(),
     ratingsCount = ratingsCount ?: 0,
     released = released.orEmpty(),
     updated = updated.orEmpty(),
