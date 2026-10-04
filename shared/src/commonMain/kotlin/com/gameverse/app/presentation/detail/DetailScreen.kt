@@ -650,6 +650,7 @@ private fun MediaPager(
                         isScreenLockEnabled = false,
                         isScreenResizeEnabled = false,
                         isFullScreenEnabled = false,
+                        enableFullEdgeToEdge = false,
                     )
                 )
             }
