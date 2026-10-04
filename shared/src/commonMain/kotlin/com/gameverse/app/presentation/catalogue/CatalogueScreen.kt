@@ -104,7 +104,7 @@ private fun CatalogueContent(
     onIntent: (CatalogueReducer.Intent) -> Unit,
 ) {
     when (genresPaging.loadState.refresh) {
-        is LoadState.Loading -> GenresPlaceholder(paddingValues)
+        is LoadState.Loading -> CataloguePlaceholder()
 
         is LoadState.Error -> GeneralError(
             modifier = Modifier.padding(paddingValues),
@@ -285,16 +285,12 @@ private fun CatalogueContent(
 }
 
 @Composable
-private fun GenresPlaceholder(
-    paddingValues: PaddingValues,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(bottom = paddingValues.calculateBottomPadding()),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+private fun CataloguePlaceholder(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.padding(top = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(10) {
+        repeat(10) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
