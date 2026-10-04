@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,10 +13,15 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
@@ -70,6 +73,8 @@ fun MainApp() {
     )
 
     val currentRoute = backStack.lastOrNull()
+    
+    var navBarHeight by remember { mutableStateOf(0.dp) }
 
     Scaffold(
         bottomBar = {
@@ -79,6 +84,9 @@ fun MainApp() {
             MainBottomBar(
                 isVisible = isShowBottomBar,
                 selectedDestination = currentRoute,
+                onHeightChanged = { height ->
+                    navBarHeight = height
+                },
                 onBottomBarClicked = { route ->
                     if (currentRoute != route) {
                         backStack.add(route)
@@ -87,6 +95,15 @@ fun MainApp() {
             )
         }
     ) { innerPadding ->
+        val currentBottomPadding = innerPadding.calculateBottomPadding()
+        val effectiveBottomPadding = maxOf(currentBottomPadding, navBarHeight)
+        val navBarPadding = remember(innerPadding, effectiveBottomPadding) {
+            PaddingValues(
+                top = innerPadding.calculateTopPadding(),
+                bottom = effectiveBottomPadding
+            )
+        }
+
         SharedTransitionLayout {
             NavDisplay(
                 modifier = Modifier.fillMaxSize(),
@@ -99,7 +116,7 @@ fun MainApp() {
                 entryProvider = entryProvider {
                     entry<MainRoutes.Home> {
                         HomeScreen(
-                            paddingValues = innerPadding,
+                            paddingValues = navBarPadding,
                             onShowGameList = {
                                 backStack.add(MainRoutes.GameList())
                             },
@@ -114,7 +131,7 @@ fun MainApp() {
 
                     entry<MainRoutes.Catalogue> {
                         CatalogueScreen(
-                            paddingValues = innerPadding,
+                            paddingValues = navBarPadding,
                             onShowGameList = { id ->
                                 backStack.add(MainRoutes.GameList(id))
                             }
@@ -123,7 +140,7 @@ fun MainApp() {
 
                     entry<MainRoutes.Favorite> {
                         FavoriteScreen(
-                            paddingValues = innerPadding,
+                            paddingValues = navBarPadding,
                             onShowGameSeries = { gamePk ->
                                 backStack.add(MainRoutes.GameSeries(gamePk))
                             },
@@ -182,14 +199,22 @@ fun MainApp() {
 private fun MainBottomBar(
     isVisible: Boolean,
     selectedDestination: NavKey?,
+    onHeightChanged: (Dp) -> Unit = {},
     onBottomBarClicked: (route: MainRoutes) -> Unit,
 ) {
+    val density = LocalDensity.current
     AnimatedVisibility(
         visible = isVisible,
         enter = expandVertically(),
         exit = shrinkVertically()
     ) {
         NavigationBar(
+            modifier = Modifier.onSizeChanged { size ->
+                val heightDp = with(density) { size.height.toDp() }
+                if (heightDp > 0.dp) {
+                    onHeightChanged(heightDp)
+                }
+            },
             containerColor = GVColor.background
         ) {
             NavBarDestination.entries.forEach { destination ->
