@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 
 /**
  * BaseViewModel implements the core MVI flow using Intent–Event–State separation.
@@ -44,7 +45,7 @@ abstract class BaseViewModel<State : Reducer.ViewState, Event : Reducer.ViewEven
      * Effects are triggered by Intent handling,
      * not by the Reducer.
      */
-    private val _effects: Channel<Effect> = Channel(capacity = Channel.CONFLATED)
+    private val _effects: Channel<Effect> = Channel(capacity = Channel.BUFFERED)
 
     /**
      * Flow exposed to the UI for collecting effects.
@@ -69,7 +70,9 @@ abstract class BaseViewModel<State : Reducer.ViewState, Event : Reducer.ViewEven
      * has been processed.
      */
     protected fun sendEvent(event: Event) {
-        _state.value = reducer.reduce(state.value, event)
+        _state.update { currentState ->
+            reducer.reduce(currentState, event)
+        }
     }
 
     /**
