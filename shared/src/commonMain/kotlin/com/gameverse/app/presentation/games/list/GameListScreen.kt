@@ -82,6 +82,7 @@ fun GameListScreen(
 
     NavigationBackHandler(
         state = navigationEventState,
+        isBackEnabled = uiState.isSearchVisible,
         onBackCompleted = {
             handleBackPressed(
                 isSearchVisible = uiState.isSearchVisible,
